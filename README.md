@@ -1,5 +1,7 @@
 # React Notes (ver.16.x):
 -------------------------
+These are some notes I've taken while following tutorials and reading docs and posts on React.
+
 ## Installation, creating, and running an app:
 * ```npm install -g npm@latest```
 * ```cd c:\repos```
@@ -75,12 +77,12 @@
 * Items in an array are rendered by using ```Array.map()``` function and mapped to JSX elements, elements rendered this way should each have unique key property, do not use array index as key because as items are inserted or deleted in the middle of the array, index of existing items change and this confuses React and causes issues
 * State is private to each component, to update state of a parent component, the child component should use the callback function passed to it via props
 * React components can change their state or their parent components' state by calling callback functions via props, on events like button click, link click, form submit, timer tick, ajax requests, etc.
-* Css class attribute is used as className in JSX and HTML label attribute for is used as htmlForm, because JSX is compiled to js, and class and for are reserved words in js
+* Css class attribute is used as ```className``` in JSX and HTML label attribute for is used as ```htmlFor```, because JSX is compiled to js, and class and for are reserved words in js
 * Binding syntax is placing simple js statements inside {}, props object is references by ```{this.props.someProp}```, state objects   referenced by ```{this.state.someState}```, callback function prop can be referenced by 
   ```jsx
   onClick={(e) => this.props.someParentFunction(e)}
   ```
-there are other alternative ways to bind callback functions
+* There are other alternative ways to bind callback functions, see the Binding section
 * UI container components such as panel or dialog components, can render whatever is passed inside the opening and closing tags, using   ```this.props.children```, like 
   ```jsx
   <Dialog>
@@ -149,7 +151,8 @@ there are other alternative ways to bind callback functions
   async componentDidMount() { 
     let data = await api.fetchData(); 
     this.setState({data: data});
-  }```
+  }
+  ```
 * If manipulating the DOM, or polling periodically for new data, we can use 
   ```jsx
   this.timer = setInterval(...)
