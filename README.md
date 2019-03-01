@@ -1,8 +1,9 @@
 # React Notes (react ver.16, react-router-dom ver.4):
 -------------------------
-These are some notes I've taken while following tutorials and reading docs and posts on React.
+These are some notes I've taken while following through tutorials and reading docs and posts on React and React Router, hope it helps others starting with React, most of the concepts are at beginner to intermediate level, very few of them are at advanced level, I do not mention Redux. You need to apply these concepts at a hands-on project to get competent on React programming, and forget what you know about the way things are done in Angular (there is no controllers, services, or DI on React, only components with props and state).
 
 ## Installation, creating, and running an app:
+* Easiest way to start developing in React without getting lost in ```webpack``` and ```babel``` tool configuration, is using the official CLI ```create-react-app```
 * ```npm install -g npm@latest```
 * ```cd c:\repos```
 * ```npx create-react-app MyReactApp``` (npx installs create-react-app if missing, you can ```npm install -g create-react-app``` and ```create-react-app MyReactApp``` instead)
@@ -36,7 +37,7 @@ These are some notes I've taken while following tutorials and reading docs and p
     );
   };
   ``` 
-  or with an evetn handler like 
+  or with an event handler like 
   ```jsx
   const MyComponent = (props) => {
     const handleClick = (e) => {
