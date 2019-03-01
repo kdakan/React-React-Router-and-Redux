@@ -8,7 +8,7 @@ These are some notes I've taken while following tutorials and reading docs and p
 * ```npx create-react-app MyReactApp``` (npx installs create-react-app if missing, you can ```npm install -g create-react-app``` and ```create-react-app MyReactApp``` instead)
 * ```cd MyReactApp```
 * ```npm install --save bootstrap``` (necessary if using bootstrap.css for styling)
-* (Note that with npm ver. 5, there is no need to give the --save option, npm install somePackage works the same way as npm install --save somePackage, so that it adds somePackage to the dependencies section in packages.json file)
+* (Note that with npm ver. 5, there is no need to give the ```--save``` option, ```npm install somePackage``` works the same way as ```npm install --save somePackage```, so that it adds somePackage to the ```dependencies``` section in ```packages.json``` file)
 * ```npm install --save prop-types``` (necessary if using PropTypes for type cecking on props)
 * ```npm install --save react-router-dom``` (necessary if using the router)
 * ```npm start``` (starts the app in development mode, with hot reload)
@@ -20,11 +20,11 @@ These are some notes I've taken while following tutorials and reading docs and p
  
 ## Component, props, state, JSX, array rendering, etc.:
 * A React app is a tree of components, which communicate with each other via their props, which can be of any type, including primitives, objects, arrays, sets, and callback functions
-* There is a root App component, which hosts all other components, and is rendered on a ```div``` with ```id=app``` inside   ```index.html```, using 
+* There is a root ```App``` component, which hosts all other components, and is rendered on a ```div``` with ```id=app``` inside   ```index.html```, using 
   ```jsx 
   ReactDOM.render(<App>, document.getElementById("app"))
   ```
-  (App and app naming is conventional, can be anything)
+  (```App``` and ```app``` naming is conventional, can be anything)
 * Each component is preferably defined in a single file that exports it as an ES6 module, and can import other components or js modules
 * Component names should begin with an uppercase character, else React may confuse it with regular HTML tags, like ```<Button>``` vs     ```<button>```
 * Props and state changes trigger the ```render()``` method of components
@@ -50,7 +50,7 @@ These are some notes I've taken while following tutorials and reading docs and p
 * Functional components do not use this keyword, do not have lifecycle methods, and cannot access refs
 * Functional components do not have state, they are presentational components which use only their props, and only render result in JSX syntax
 * Functional components that have inner functions (like event handler callback functions) can cause performance issues, so it is better to use class components if event handlers are needed
-* Class components extent React.Component, have a ```render()``` function which returns rendered result in JSX syntax, if null is returned, no HTML is generated
+* Class components extend ```React.Component```, have a ```render()``` function which returns rendered result in JSX syntax, if null is returned, no HTML is generated
 * Class components can have a ```constructor(props)```, should first call ```super(props)```, and later can initialize component's   state, like 
   ```jsx
   this.state = {someState: ..., someOtherState: ...}
@@ -86,7 +86,7 @@ These are some notes I've taken while following tutorials and reading docs and p
   ```jsx
   this.setState({someOtherState: ...})
   ```
-* JSX is transpiled to js by Babel, like 
+* JSX is transpiled to js by ```Babel```, like 
   ```jsx
   React.createElement(...)
   ```
@@ -98,7 +98,7 @@ These are some notes I've taken while following tutorials and reading docs and p
   ```jsx
   onClick={(e) => this.props.someParentFunction(e)}
   ```
-* There are other alternative ways to bind callback functions, see the Binding section
+* There are other alternative ways to bind callback functions, see the ```Binding this``` section
 * UI container components such as panel or dialog components, can render whatever is passed inside the opening and closing tags, using   ```this.props.children```, like 
   ```jsx
   <Dialog>
@@ -125,7 +125,7 @@ These are some notes I've taken while following tutorials and reading docs and p
   ```jsx
   import './myComponent.css'
   ```
-* Bootstrap.css file can be imported like 
+* ```Bootstrap.css``` file can be imported like 
   ```jsx
   import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
   ```
@@ -133,7 +133,7 @@ These are some notes I've taken while following tutorials and reading docs and p
   ```jsx
   <link rel="stylesheet" href="stylesheets/site.css">
   ```
-* Image files used inside a component can be imported like 
+* Image files used inside a component can also be imported and bound dynamically, like 
   ```jsx
   import myImage './myImage.png'
   ``` 
@@ -161,8 +161,8 @@ These are some notes I've taken while following tutorials and reading docs and p
 ## Lifecycle methods:
 * Class components can have lifecycle methods like ```componentDidMount()```, ```shouldComponentUpdate()```, ```componentDidUpdate()```, ```componentWillUnmount()```, ```componentDidUnmount()```, etc.
 * Order of execution is: ```constructor()```, ```getDerivedStateFromProps()```, ```componentWillMount()```, ```render()```,   ```componentDidMount()```, ```shouldComponentUpdate()```, ```componentWillUpdate()```, ```componentDidUpdate()```, ```componentWillUnmount()```, ```componentDidUnmount()```
-* Ajax requests to get initial data should be done inside componentDidMount()
-* To use async/await pattern to call an async api (async api meaning the api returns a Promise instead of data result), use ```asycn```   before ```componentDidMount()``` and use ```await``` before the api call, like 
+* Ajax requests to get initial data should be done inside ```componentDidMount()```
+* To use async/await pattern to call an async api (async api meaning the api returns a ```Promise``` instead of data result), use ```asycn```   before ```componentDidMount()``` and use ```await``` before the api call, like 
   ```jsx
   async componentDidMount() { 
     let data = await api.fetchData(); 
@@ -175,7 +175,7 @@ These are some notes I've taken while following tutorials and reading docs and p
   ``` 
   to fetch new data inside ```componentDidMount()```
 * Cleanup actions like ```clearInterval(this.timer)``` should be done inside ```componentWillUnmount()```
-* ```shouldComponentUpdate()``` can sometimes be used to increase rendering performance, normally React components re-render when props   or state have changed
+* ```shouldComponentUpdate()``` can sometimes be used to increase rendering performance, normally components re-render when props or state have changed
 * To catch errors inside the components and log them, use 
   ```jsx
   componentDidCatch(error, info) {
@@ -230,7 +230,7 @@ These are some notes I've taken while following tutorials and reading docs and p
   ``` 
 
 ## Type-checking on props:
-* To check for missing or mis-typed props passed at development runtime, add a propTypes member on the component class or function, with prop fields and their types, like
+* To check for missing or mis-typed props passed at development runtime, add a ```propTypes``` member on the component class or function, with prop fields and their types, like
    ```jsx
    const MyComponent = (props) => {
      return (...props.name...props.age...)
@@ -245,8 +245,8 @@ These are some notes I've taken while following tutorials and reading docs and p
 
 ## Dynamic routing:
 * Router is needed for the browser back/forward buttons to work properly without reloading the ```index.html``` from the server and losing all state
-* Routes are either declared at the startup of the app before rendering starts (similar to how routes are declared in ```express js``` before the server starts listening to the port), or declared dynamically during rendering of each component (dynamic routing requires ```react-router-dom``` ver.4)
-* With ```react-router-dom``` ver.4, dynamic routing is the preferred way
+* Routes are either declared at the startup of the app before rendering starts (similar to how routes are declared in ```express js``` before the server starts listening to the port), or declared dynamically during rendering of each component
+* Dynamic routing requires ```react-router-dom``` ver.4, and with ```react-router-dom``` ver.4, dynamic routing is the preferred way
 * Either the ```App``` component's JSX should be surrounded by ```<BrowserRouter>``` inside the ```render()``` method, like 
     ```jsx
      render() {
@@ -267,7 +267,7 @@ These are some notes I've taken while following tutorials and reading docs and p
     ```jsx
     <Link to='/search'>Search</Link>
     ```
-* Routes inside a component's ```render()``` method are declared and associated to a compnent, like 
+* Routes inside a component's ```render()``` method are declared and associated to a component, like 
   ```jsx
   <Route exact path='/' component={Home} />
   ```
@@ -275,7 +275,7 @@ These are some notes I've taken while following tutorials and reading docs and p
   ```jsx
   <Route path='/search' component={Search} />
   ```
-* Route component renders the associated component if the path matches the url, else renders null (renders nothing), ```<Redirect>```     component declares a client side route redirection, like
+* Route component renders the associated component if the path matches the url, else renders ```null``` (renders no output), and ```<Redirect>``` component declares a client side route redirection, like
    ```jsx
    const App = () => (
     <div>
@@ -293,7 +293,7 @@ These are some notes I've taken while following tutorials and reading docs and p
     </div>
    );
    ```
-* Multiple <Route> components can be surrounded by ```<Switch>``` so that first match route is rendered, without the need of exaxt keyword, like
+* Multiple <Route> components can be surrounded by ```<Switch>``` so that first match route is rendered, without the need of ```exact``` keyword, like
   ```jsx
    <Switch>
      <Route path='/' component={Home} />
