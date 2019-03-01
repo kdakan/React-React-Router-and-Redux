@@ -29,26 +29,41 @@ These are some notes I've taken while following tutorials and reading docs and p
 * Props and state changes trigger the ```render()``` method of components
 * Functional components have a props argument and return rendered result in JSX syntax, like 
   ```jsx
-  const MyComponent = (props) => {return (...some JSX...)};
+  const MyComponent = (props) => {
+    return (
+      ...some JSX...
+    );
+  };
   ``` 
   or with an evetn handler like 
   ```jsx
-  const MyComponent = (props) => { const handleClick = (e) => {...}; return (...some JSX...);}
+  const MyComponent = (props) => {
+    const handleClick = (e) => {
+      ...
+    };
+    return (
+      ...some JSX...
+    );
+  };
   ```
 * Functional components do not use this keyword, do not have lifecycle methods, and cannot access refs
 * Functional components do not have state, they are presentational components which use only their props, and only render result in JSX syntax
 * Functional components that have inner functions (like event handler callback functions) can cause performance issues, so it is better to use class components if event handlers are needed
 * Class components extent React.Component, have a ```render()``` function which returns rendered result in JSX syntax, if null is returned, no HTML is generated
-* Class components can have a ```constructor(props)```, should first call ```super(props)```, and later can initialize component's state, like ```this.state = {someState: ..., someOtherState: ...}```
+* Class components can have a ```constructor(props)```, should first call ```super(props)```, and later can initialize component's   state, like 
+  ```jsx
+  this.state = {someState: ..., someOtherState: ...}
+  ```
 * Class components can initialize their state even without a constructor, in shorter class field syntax, omitting this, like 
   ```jsx
   state = {someState: ..., someOtherState: ...}
   ```
 * Class components which hold state without much JSX markup are also called container components and can render other container components or presentational components
-* React uses virtual DOM, so ```render()``` method does not update all the HTML for the component, but only updates the changed parts
-* React components can use functions that return partial rendered result in JSX syntax, can also store this JSX in a variable, and use them to compose into a larger rendered JSX result, if null is returned, no HTML is generated
-* React components cannot not change their props, props are immutable
-* React components use 
+* React uses virtual DOM, so ```render()``` method does not update all the HTML for the component, but only updates the changed parts (it diff'es the current props and state with the next props and state and if there is a chang
+* Even when using virtual DOM, unnecessary render calls cost some performance because of the diff'ing of the current virtual DOM and next virtual DOM, therefore it is more performant to check inside ```shouldComponentUpdate()```if the current props and state are different than next props and state and return false if not (extending component from ```React.PureComponent``` instead of ```React.Component``` will do this by shallow comparison of props and state)
+* Components can use functions that return partial rendered result in JSX syntax, can also store this JSX in a variable, and use them to compose into a larger rendered JSX result, if null is returned, no HTML is generated
+* Components cannot not change their props, props are immutable
+* Components use 
   ```jsx
   this.setState({someState: ...})
   ```
@@ -76,7 +91,7 @@ These are some notes I've taken while following tutorials and reading docs and p
   ```
 * Items in an array are rendered by using ```Array.map()``` function and mapped to JSX elements, elements rendered this way should each have unique key property, do not use array index as key because as items are inserted or deleted in the middle of the array, index of existing items change and this confuses React and causes issues
 * State is private to each component, to update state of a parent component, the child component should use the callback function passed to it via props
-* React components can change their state or their parent components' state by calling callback functions via props, on events like button click, link click, form submit, timer tick, ajax requests, etc.
+* Components can change their state or their parent components' state by calling callback functions via props, on events like button click, link click, form submit, timer tick, ajax requests, etc.
 * Css class attribute is used as ```className``` in JSX and HTML label attribute for is used as ```htmlFor```, because JSX is compiled to js, and class and for are reserved words in js
 * Binding syntax is placing simple js statements inside {}, props object is references by ```{this.props.someProp}```, state objects   referenced by ```{this.state.someState}```, callback function prop can be referenced by 
   ```jsx
