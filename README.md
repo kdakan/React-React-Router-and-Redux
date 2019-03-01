@@ -89,7 +89,7 @@ These are some notes I've taken while following tutorials and reading docs and p
   ```jsx
   React.createElement(...)
   ```
-* Items in an array are rendered by using ```Array.map()``` function and mapped to JSX elements, elements rendered this way should each have unique key property, do not use array index as key because as items are inserted or deleted in the middle of the array, index of existing items change and this confuses React and causes issues
+* Items in an array are rendered by using ```Array.map()``` function and mapped to JSX elements, elements rendered this way should each have unique key property, do not use array index as key because as items are inserted or deleted in the middle of the array, index of existing items change and this confuses React and causes rendering issues
 * State is private to each component, to update state of a parent component, the child component should use the callback function passed to it via props
 * Components can change their state or their parent components' state by calling callback functions via props, on events like button click, link click, form submit, timer tick, ajax requests, etc.
 * Css class attribute is used as ```className``` in JSX and HTML label attribute for is used as ```htmlFor```, because JSX is compiled to js, and class and for are reserved words in js
@@ -247,7 +247,11 @@ These are some notes I've taken while following tutorials and reading docs and p
 * JSX inside the render() method of the root App component should be surrounded by <BrowserRouter> component like ```<BrowserRouter>...</BrowserRouter>```
 * Anchor links can be like 
   ```jsx
-  <Link to='/'>Home</Link>``` or ```<Link to='/search'>Search</Link>
+  <Link to='/'>Home</Link>
+  ```
+  or
+  ```jsx
+  <Link to='/search'>Search</Link>
   ```
 * Routes can be assigned to components by placing <Route> components inside a <Switch> component so that these components are rendered in place of <Switch>, like
    ```jsx
