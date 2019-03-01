@@ -1,4 +1,4 @@
-# React Notes (ver.16.x):
+# React Notes (react ver.16, react-router-dom ver.4):
 -------------------------
 These are some notes I've taken while following tutorials and reading docs and posts on React.
 
@@ -8,6 +8,7 @@ These are some notes I've taken while following tutorials and reading docs and p
 * ```npx create-react-app MyReactApp``` (npx installs create-react-app if missing, you can ```npm install -g create-react-app``` and ```create-react-app MyReactApp``` instead)
 * ```cd MyReactApp```
 * ```npm install --save bootstrap``` (necessary if using bootstrap.css for styling)
+* (Note that with npm ver. 5, there is no need to give the --save option, npm install somePackage works the same way as npm install --save somePackage, so that it adds somePackage to the dependencies section in packages.json file)
 * ```npm install --save prop-types``` (necessary if using PropTypes for type cecking on props)
 * ```npm install --save react-router-dom``` (necessary if using the router)
 * ```npm start``` (starts the app in development mode, with hot reload)
@@ -184,7 +185,7 @@ These are some notes I've taken while following tutorials and reading docs and p
   in the root component
 * Refer to https://blog.bitsrc.io/react-16-lifecycle-methods-how-and-when-to-use-them-f4ad31fb2282 for more lifecycle methods and details
  
-## Working with form inputs:
+## Working with forms and inputs:
 * React DOM events are synthetic events, which wrap DOM events in a cross-browser way
 * DOM event handlers need to call ```e.preventDefault()``` or ```e.stopPropogating()```, to prevent normal event actions and bubbling, like in submitting a form or navigating to a link (unlike returning false in jquery which calls both ```e.preventDefault()``` and ```e.stopPropogating()``` in effect)
 * Form inputs can be bound to a state property, like 
@@ -242,62 +243,86 @@ These are some notes I've taken while following tutorials and reading docs and p
    ```
 * PropTypes can be ```string```, ```number```, ```bool```, ```array```, ```object```, ```func```, ```symbol```, ```node```, ```element```, ```instanceOf(someJSClass)```, ```oneOf(someArrayOfVales)```, ```oneOfType(someArrayOfPropTypes)```, ```shape({ name: PropTypes.string.isRequired, age: PropTypes.number })```, etc.
 
-## Routing:
-* Router is needed for the browser back/forward buttons to work properly without reloading the index.html from the server and losing all state
-* JSX inside the render() method of the root App component should be surrounded by <BrowserRouter> component like ```<BrowserRouter>...</BrowserRouter>```
-* Anchor links can be like 
+## Dynamic routing:
+* Router is needed for the browser back/forward buttons to work properly without reloading the ```index.html``` from the server and losing all state
+* Routes are either declared at the startup of the app before rendering starts (similar to how routes are declared in ```express js``` before the server starts listening to the port), or declared dynamically during rendering of each component (dynamic routing requires ```react-router-dom``` ver.4)
+* With ```react-router-dom``` ver.4, dynamic routing is the preferred way
+* Either the ```App``` component's JSX should be surrounded by ```<BrowserRouter>``` inside the ```render()``` method, like 
+    ```jsx
+     render() {
+       return (
+         <BrowserRouter>...some JSX...</BrowserRouter>
+       )
+     }
+     ```
+   or the App component should be surrounded by ```<BrowserRouter>``` inside the main ```ReactDOM.render()``` call, like
+     ```jsx
+     ReactDOM.render(<BrowserRouter><App/></BrowserRouter>, document.getElementById("app"));
+     ```
+* Anchor links inside a component's ```render()``` method are like 
+    ```jsx
+    <Link to='/'>Home</Link>
+    ``` 
+  or 
+    ```jsx
+    <Link to='/search'>Search</Link>
+    ```
+* Routes inside a component's ```render()``` method are declared and associated to a compnent, like 
   ```jsx
-  <Link to='/'>Home</Link>
+  <Route exact path='/' component={Home} />
   ```
-  or
+  or 
   ```jsx
-  <Link to='/search'>Search</Link>
+  <Route path='/search' component={Search} />
   ```
-* Routes can be assigned to components by placing <Route> components inside a <Switch> component so that these components are rendered in place of <Switch>, like
+* Route component renders the associated component if the path matches the url, else renders null (renders nothing), ```<Redirect>```     component declares a client side route redirection, like
    ```jsx
-    <Switch>
-     <Route exact path='/' component={Home} />
-     <Route path='/list' component={List} />
+   const App = () => (
+    <div>
+      <nav>
+	    <Link to="/" activeClassName="active">Home</Link>{" | "}
+	    <Link to="/list" activeClassName="active">List</Link>{" | "}
+	    <Link to="/search" activeClassName="active">Search</Link>
+      </nav>
+      <div>
+        <Route exact path='/' component={Home} />
+        <Route path='/list' component={List} />
+        <Route path='/search' component={Search} />
+        <Redirect from="/home" to="/" />
+      </div>
+    </div>
+   );
+   ```
+* Multiple <Route> components can be surrounded by ```<Switch>``` so that first match route is rendered, without the need of exaxt keyword, like
+  ```jsx
+   <Switch>
+     <Route path='/' component={Home} />
+	 <Route path='/list' component={List} />
      <Route path='/search' component={Search} />
    </Switch>
   ```
-* Routes can also be nested so that these nested components will be rendered inside (as children of) the App component, like ```App``` component ```render()``` method 
+   Here, normally all three routes would match the path ```/```, but ```<Switch>``` will find the first match, which is ```<Route path='/' component={Home} />```
+* Routes can be nested, like
   ```jsx
-  render() {
-    return (
-      <MyNav/>
-      <div className="container-fluid">{this.props.children}</div>
-    )
-  }
-  ```
-   and routes defined in a module file called ```routes.js``` like
-   ```jsx
-   const routes = (
-   <Route path='/' component={App} >
-     <IndexRoute component={Home} />
-     <Route path='/list' component={List} />
-     <Route path='/search' component={Search} />
-   </Route>);
-   export default routes;
+   const App = () => (
+     <BrowserRouter>
+       {/* here's a div */}
+       <div>
+         {/* here's a Route */}
+         <Route path="/tacos" component={Tacos} />
+       </div>
+     </BrowserRouter>
+   );
+
+   // when the url matches `/tacos` this component renders
+   const Tacos = ({ match }) => (
+     // here's a nested div
+     <div>
+       {/* here's a nested Route, match.url helps us make a relative path */}
+       <Route path={match.url + "/carnitas"} component={Carnitas} />
+     </div>
+   );
    ```
-   and ```MyNav``` component render method like 
-   ```jsx
-   render() {
-     return (
-       <nav>
-	 <IndexLink to="/" activeClassName="active">Home</IndexLink>{" | "}
-	 <Link to="/list" activeClassName="active">List</Link>{" | "}
-	 <Link to="/search" activeClassName="active">Search</Link>
-       </nav>
-     )
-   }
-   ```
-   and the root component declared as Router instead of App, like 
-   ```jsx
-   ReactDOM.render(<Router history={browserHistory} routes={routes} />, document.getElementById("app"));
-  ``` 
-  (```browserHistory``` means use HTML5 push state instead of # addresses)
-   
 ## Context api:
 * Global state (language, user info, theme, etc.) is usually stored in the root component state properties
 * Normally, to pass data from a top level component to a bottom level component, should be passed through props of all the components in between
