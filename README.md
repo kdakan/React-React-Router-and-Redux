@@ -1,5 +1,5 @@
 # React Notes (react ver.16, react-router-dom ver.4):
--------------------------
+-----------------------------------------------------
 These are some notes I've taken while following through tutorials and reading docs and posts on React and React Router, hope it helps others starting with React, most of the concepts are at beginner to intermediate level, very few of them are at advanced level, I do not mention Redux. You need to apply these concepts at a hands-on project to get competent on React programming, and forget what you know about the way things are done in Angular (there is no controllers, services, or DI on React, only components with props and state).
 
 ## Installation, creating, and running an app:
@@ -248,7 +248,7 @@ These are some notes I've taken while following through tutorials and reading do
 * Router is needed for the browser back/forward buttons to work properly without reloading the ```index.html``` from the server and losing all state
 * Routes are either declared at the startup of the app before rendering starts (similar to how routes are declared in ```express js``` before the server starts listening to the port), or declared dynamically during rendering of each component
 * Dynamic routing requires ```react-router-dom``` ver.4, and with ```react-router-dom``` ver.4, dynamic routing is the preferred way
-* Either the ```App``` component's JSX should be surrounded by ```<BrowserRouter>``` inside the ```render()``` method, like 
+* Either the ```App``` component's JSX should be surrounded by ```<BrowserRouter>``` or ```<HashRouter>``` inside the ```render()``` method (```BrowserRouter``` for modern browsers with pushstate and ```HashRouter``` for IE9 and below using # addresses), like 
     ```jsx
      render() {
        return (
@@ -260,7 +260,7 @@ These are some notes I've taken while following through tutorials and reading do
      ```jsx
      ReactDOM.render(<BrowserRouter><App/></BrowserRouter>, document.getElementById("app"));
      ```
-* Anchor links inside a component's ```render()``` method are like 
+* Anchor links inside a component's ```render()``` method use ```<Link>``` component, like 
     ```jsx
     <Link to='/'>Home</Link>
     ``` 
@@ -268,6 +268,7 @@ These are some notes I've taken while following through tutorials and reading do
     ```jsx
     <Link to='/search'>Search</Link>
     ```
+* ```<Route>``` components apply for the component and its descendants, so ```<Link>``` components inside any of these components'   ```render()``` methods use those routes inside the ancestor components
 * Routes inside a component's ```render()``` method are declared and associated to a component, like 
   ```jsx
   <Route exact path='/' component={Home} />
