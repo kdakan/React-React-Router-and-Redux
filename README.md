@@ -261,9 +261,10 @@ These are some notes I've taken while following through tutorials and reading do
 * PropTypes can be ```string```, ```number```, ```bool```, ```array```, ```object```, ```func```, ```symbol```, ```node```, ```element```, ```instanceOf(someJSClass)```, ```oneOf(someArrayOfVales)```, ```oneOfType(someArrayOfPropTypes)```, ```shape({ name: PropTypes.string.isRequired, age: PropTypes.number })```, etc.
 
 ## Dynamic routing:
-* Router is needed for the browser back/forward buttons to work properly without reloading the ```index.html``` from the server and losing all state
-* Routes are either declared at the startup of the app before rendering starts (similar to how routes are declared in ```express js``` before the server starts listening to the port), or declared dynamically during rendering of each component
-* Dynamic routing requires ```react-router-dom``` ver.4, and with ```react-router-dom``` ver.4, dynamic routing is the preferred way
+* Routing is needed for the browser back/forward buttons to work properly and also allow deep linking via urls, without reloading the ```index.html``` from the server and losing all state
+* Routes are either declared statically at the startup of the app, before rendering starts (similar to how routes are declared in ```express js``` before the server starts listening to the port), or declared dynamically during rendering of each component
+* Nesting of routes (and thus components associated with those routes) are done differently in static vs. dynamic routing
+* ```react-router-dom``` ver.3 only allows static routing, dynamic routing requires ```react-router-dom``` ver.4, and dynamic routing is the preferred way, the examples below are for dynamic routing
 * Either the ```App``` component's JSX should be surrounded by ```<BrowserRouter>``` or ```<HashRouter>``` inside the ```render()``` method (```BrowserRouter``` for modern browsers with pushstate and ```HashRouter``` for IE9 and below using # addresses), like 
     ```jsx
      render() {
