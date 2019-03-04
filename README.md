@@ -144,19 +144,35 @@ These are some notes I've taken while following through tutorials and reading do
   ```
  
 ## Binding this to event handlers (callback functions):
-* React components can bind arrow functions to DOM events, like 
+* DOM event handler callback functions need to be binded to ```this``` in order to access component members such as ```this.props``` or ```this.state```
+* The official recommended and most performant way is to bind this explicitly inside the constructor, like
   ```jsx
-  onClick={e => this.handleClick(e)}
+  constructor(props) {
+  ...
+  this.handleClick.bind(this);
+  ...
+  }
   ```
-  else have to either bind this to function explicitly like 
+  and use it inside ```render()```, like
+  ```jsx
+  onClick={this.handleClick}
+  ```
+* Another way is to to bind this explicitly inside ```render()```, like 
   ```jsx
   onClick={this.handleClick.bind(this)}
   ``` 
+* Another common way is to wrap it inside an arrow function inside ```render()```, like 
+  ```jsx
+  onClick={e => this.handleClick(e)}
+  ```
   or define the handler as an arrow function like 
   ```jsx
   handleClick = () {...}
-  ``` 
-  for the component fields be accessible via this keyword inside the function
+  ```
+  and use it inside ```render()```, like
+  ```jsx
+  onClick={this.handleClick}
+  ```
 * There are at least 5 different ways to bind this to event handler functions, some may cause performance issues, so refer to https://medium.freecodecamp.org/react-binding-patterns-5-approaches-for-handling-this-92c651b5af56 for details
 
 ## Lifecycle methods:
