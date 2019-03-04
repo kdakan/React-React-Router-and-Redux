@@ -107,7 +107,7 @@ These are some notes I've taken while following through tutorials and reading do
     <button>OK</button>
   </Dialog>
   ``` 
-  and Dialog component's render method 
+  and ```Dialog``` component's render method 
   ```jsx
   render() {
     return (
@@ -277,7 +277,7 @@ These are some notes I've taken while following through tutorials and reading do
      ```jsx
      ReactDOM.render(<BrowserRouter><App/></BrowserRouter>, document.getElementById("app"));
      ```
-* Anchor links inside a component's ```render()``` method use ```<Link>``` component, like 
+* Anchor links inside a component's ```render()``` method use ```Link``` component, like 
     ```jsx
     <Link to='/'>Home</Link>
     ``` 
@@ -285,7 +285,7 @@ These are some notes I've taken while following through tutorials and reading do
     ```jsx
     <Link to='/search'>Search</Link>
     ```
-* ```<Route>``` components apply for the component and its descendants, so ```<Link>``` components inside any of these components'   ```render()``` methods use those routes inside the ancestor components
+* ```Route``` components apply for the component and its descendants, so ```Link``` components inside any of these components'   ```render()``` methods use those routes inside the ancestor components
 * Routes inside a component's ```render()``` method are declared and associated to a component, like 
   ```jsx
   <Route exact path='/' component={Home} />
@@ -294,7 +294,7 @@ These are some notes I've taken while following through tutorials and reading do
   ```jsx
   <Route path='/search' component={Search} />
   ```
-* Route component renders the associated component if the path matches the url, else renders ```null``` (renders no output), and ```<Redirect>``` component declares a client side route redirection, like
+* ```Route``` component renders the associated component if the path matches the url, else renders ```null``` (renders no output), and ```Redirect``` component declares a client side redirection, so ```Roue``` and ```Redirect``` are simply placeholders for their associated components, like
    ```jsx
    const App = () => (
     <div>
@@ -312,12 +312,12 @@ These are some notes I've taken while following through tutorials and reading do
     </div>
    );
    ```
-* Multiple <Route> components can match a url path, like routes with both ```/``` and ```/list``` paths will match the url www.mysite.com/list, but we can force a single exact match by using ```exact``` keyword in the ```<Route>```
-* We can also surround <Route> components by ```<Switch>``` so that first match route is rendered, without the need of ```exact``` keyword, like
+* Multiple ```Route``` components can match a url path, like routes with both ```/``` and ```/list``` paths will match the url www.mysite.com/list, but we can force a single exact match by using ```exact``` keyword in the ```Route``` component
+* We can also surround ```Route``` components by ```<Switch>``` so that first match route is rendered, without the need of ```exact``` keyword, like
   ```jsx
    <Switch>
      <Route path='/' component={Home} />
-	 <Route path='/list' component={List} />
+     <Route path='/list' component={List} />
      <Route path='/search' component={Search} />
    </Switch>
   ```
