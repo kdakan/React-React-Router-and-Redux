@@ -350,6 +350,30 @@ These are some notes I've taken while following through tutorials and reading do
      </div>
    );
    ```
+* ```Prompt``` component comes to effect when changing a route, before navigation happens, and displays a js ```confirm("...")``` box, so that it can be used to check if a form is complete before leaving the form, like
+  ```jsx
+  render() {
+    <Prompt when={!this.state.isSubmitted} message="Are you sure you want to leave this form before submitting?"
+    <form>
+      <label htmlFor:"name">Name:</label>
+      <input id="name" value={this.state.name} onChange={this.handleNameChange} />
+      <button disabled={this.state.name.length === 0} onSubmit={this.handleSubmit}>Submit Form</button>
+    </form>
+  ```
+  and 
+  ```jsx
+  handleNameChange = (e) => {
+    e.preventDefault();
+    setState({name: e.target.value});
+  }
+  
+  handleSubmit = (e) => {
+    e.preventDefault();
+    let newName = this.state.name;
+    ...
+    setState({isSubmitted: true});
+  }
+  ```
 ## Context api:
 * Global state (language, user info, theme, etc.) is usually stored in the root component state properties
 * Normally, to pass data from a top level component to a bottom level component, should be passed through props of all the components in between
