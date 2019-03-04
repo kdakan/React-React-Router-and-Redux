@@ -260,8 +260,15 @@ These are some notes I've taken while following through tutorials and reading do
    ```
 * PropTypes can be ```string```, ```number```, ```bool```, ```array```, ```object```, ```func```, ```symbol```, ```node```, ```element```, ```instanceOf(someJSClass)```, ```oneOf(someArrayOfVales)```, ```oneOfType(someArrayOfPropTypes)```, ```shape({ name: PropTypes.string.isRequired, age: PropTypes.number })```, etc.
 
-## Routing (Static and dynamic):
+## Routing (server and client, static vs. dynamic):
 * Routing is needed for the browser back/forward buttons to work properly and also allow deep linking via urls, without reloading the ```index.html``` from the server and losing all state
+* Sites need server side routing/rendering to serve public pages for better SEO, and need client routing/renderin to serve authorized content for better user experience (faster transitions without loading the full page)
+* The server needs at least one route to serve the ```index.html``` and its js and css files (the React app), like
+  ```javascript
+  app.all('*', express.static('public/index.html'));
+  ```
+* On this node.js express server app, the first request for any url in the site domain will first load the React app via ```index.html```,  and later requests will be handled by ```react-router-dom``` and React components
+* On a site which does not serve public pages via server side routing/rendering, the first page served will be the login/signup page, which can either be rendered on the server or the client, authorized content can also be routed to a different subdomain like app.mysite.com
 * Routes are either declared statically at the startup of the app, before rendering starts (similar to how routes are declared in ```express js``` before the server starts listening to the port), or declared dynamically during rendering of each component
 * Nesting of routes (and thus components associated with those routes) are done differently in static vs. dynamic routing
 * ```react-router-dom``` ver.3 only allows static routing, dynamic routing requires ```react-router-dom``` ver.4, and dynamic routing is the preferred way, the examples below are for dynamic routing
