@@ -301,7 +301,7 @@ These are some notes I've taken while following through tutorials and reading do
   ```jsx
   <Route path='/search' component={Search} />
   ```
-* ```Route``` component renders the associated component if the path matches the url, else renders ```null``` (renders no output), and ```Redirect``` component declares a client side redirection, so ```Roue``` and ```Redirect``` are simply placeholders for their associated components, like
+* ```Route``` component renders the associated component if the path matches the url, else renders ```null``` (renders no output), and ```Redirect``` component declares a client side redirection, so ```Route``` and ```Redirect``` are simply placeholders for their associated components, like
    ```jsx
    const App = () => (
     <div>
@@ -319,6 +319,10 @@ These are some notes I've taken while following through tutorials and reading do
     </div>
    );
    ```
+* Route without a path will trigger if none of the routes matches the url, like
+  ```jsx
+  <Route path='/search' component={PageNotFound404} />
+  ```
 * Multiple ```Route``` components can match a url path, like routes with both ```/``` and ```/list``` paths will match the url www.mysite.com/list, but we can force a single exact match by using ```exact``` keyword in the ```Route``` component
 * We can also surround ```Route``` components by ```<Switch>``` so that first match route is rendered, without the need of ```exact``` keyword, like
   ```jsx
@@ -329,6 +333,19 @@ These are some notes I've taken while following through tutorials and reading do
    </Switch>
   ```
    Here, normally all three routes would match the path ```/```, but ```<Switch>``` will find the first match, which is ```<Route path='/' component={Home} />```
+* Components triggered (renderd) by a ```Route``` component receive extra objects in their ```props```, which are ```match```, ```location``` and ```history```
+
+* ```props.match``` has these fields:
+
+  ```params```: (object) Key/value pairs parsed from the URL corresponding to the dynamic segments of the path
+  
+  ```isExact```: (boolean) true if the entire URL was matched (no trailing characters)
+  
+  ```path```: (string) The path pattern used to match. Useful for building nested ```<Route>```s
+	
+  ```url```: (string) The matched portion of the URL. Useful for building nested ```<Link>```s
+  
+* ```props.location``` has these fields: ```hash```, ```key```, ```pathname```, ```search```
 * Routes can be nested, like
   ```jsx
    const App = () => (
@@ -374,6 +391,8 @@ These are some notes I've taken while following through tutorials and reading do
     setState({isSubmitted: true});
   }
   ```
+* ```NavLink``` component is similar to ```Link``` component, but with the additional ```activeClassName``` prop, which overrides the ```className``` prop value when this link is clicked
+
 ## Context api:
 * Global state (language, user info, theme, etc.) is usually stored in the root component state properties
 * Normally, to pass data from a top level component to a bottom level component, should be passed through props of all the components in between
