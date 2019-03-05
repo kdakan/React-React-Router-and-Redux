@@ -333,9 +333,13 @@ These are some notes I've taken while following through tutorials and reading do
    </Switch>
   ```
    Here, normally all three routes would match the path ```/```, but ```<Switch>``` will find the first match, which is ```<Route path='/' component={Home} />```
-* Components triggered (renderd) by a ```Route``` component receive extra objects in their ```props```, which are ```match```, ```location``` and ```history```
+* Components with props can only be triggered (rendered) by a ```Route``` component by using the ```render``` property of ```Route```, like
+  ```jsx
+   <Route path='/list' render={()=>{return <List items={myList}/>}} />
+  ```
+* Components triggered (rendered) by a ```Route``` component receive extra ```props```, which are ```match```, ```location``` and ```history```
 
-* ```props.match``` has these fields:
+* ```props.match``` fields:
 
   ```params```: (object) Key/value pairs parsed from the URL corresponding to the dynamic segments of the path
   
@@ -345,7 +349,8 @@ These are some notes I've taken while following through tutorials and reading do
 	
   ```url```: (string) The matched portion of the URL. Useful for building nested ```<Link>```s
   
-* ```props.location``` has these fields: ```hash```, ```key```, ```pathname```, ```search```
+* ```props.location``` fields: ```hash```, ```key```, ```pathname```, ```search```
+* ```props.history``` is the ```window.history```, it also has a ```location``` field but because it is mutable, ```props.location``` should be used instead
 * Routes can be nested, like
   ```jsx
    const App = () => (
