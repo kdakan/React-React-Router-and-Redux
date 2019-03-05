@@ -682,4 +682,49 @@ These are some notes I've taken while following through tutorials and reading do
   console.log(emp.title + " " + emp.firstname + " " + emp.lastname); //logs to the console "Manager John Doe"
   ```
 * Arrow functions, like
-
+  ```js
+  //add() and add2() do the same thing
+  let add = (x, y) => x + y;
+  let add2 = (x, y) => {
+    return x + y;
+  }
+  let sum = add(1, 2); //sum is 3
+  let sum2 = add(1, 2); //sum2 is 3
+  //single parameter
+  let square = x => x * x;
+  let sqr = square(2); //sqr is 4
+  //parameterless
+  let three = () => 3;
+  let x = three(); //x is 3
+  
+  let arr = [1, 2, 3];
+  let total = 0;
+  arr.forEach(x => total += x); //total is 6
+  let doubles = arr.map(x => x * 2); //doubles is [2, 4, 6]
+  let odds = arr.filter(x => x % 2 === 1); //odds is [1, 3]
+  ```
+* Arrow functions use lexical scoping, thus when used as a callback function, ```this``` from the outside is visible inside the arrow function, unlike the normal callback functions declared with ```function``` keyword, like
+  ```js
+  class MyClass {
+    total = 0;
+    
+    sumWithArrowFunction = function() {
+      this.total = 0;
+      [1, 2, 3].forEach(x => this.total += x);
+    }
+    
+    sumWithoutArrowFunction = function() {
+      this.total = 0;
+      let self = this;
+      [1, 2, 3].forEach(function(x) {
+        return self.total += x; //this.total does not work here, we need to first set it outside to a variable like self and use self inside
+      });
+    }
+  }
+  
+  let m = new MyClass();
+  m.sumWithArrowFunction();
+  console.log(m.total); //m.total is 6
+  m.sumWithoutArrowFunction();
+  console.log(m.total); //m.total is 6
+  ```
