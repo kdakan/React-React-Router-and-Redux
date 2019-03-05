@@ -366,6 +366,16 @@ These are some notes I've taken while following through tutorials and reading do
   const Person = (props) => {... props.match.params.firstname ... props.match.params.lastname ...}
   ```
 * ```props.location``` fields: ```hash```, ```key```, ```pathname```, ```search```
+* Query string such as ```?name=Joe&age=23``` from a link like
+  ```jsx
+  <Link to="/detail?name=Joe&age=23">Detail</Link>
+  ```
+  can be parsed from ```props.location.search```, like
+  ```jsx
+  const query = URLSearchParams(props.location.search);
+  const name = query.get('name');
+  const age = query.get('age');
+  ```
 * ```props.history``` is the ```window.history```, it also has a ```location``` field but because it is mutable, ```props.location``` should be used instead
 * Routes can be nested, like
   ```jsx
