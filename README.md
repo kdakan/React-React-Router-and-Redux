@@ -625,8 +625,8 @@ These are some notes I've taken while following through tutorials and reading do
   
   var emp = new Employee("Joe");
   emp.work(8); //logs to the console "Joe is working for 8 hours."
-  ---
-  is similar to the ---es5--- version
+  ```
+  is similar to the ```es5``` version
   ```js
   function Employee(name) {
     this.name = name;
@@ -640,4 +640,4 @@ These are some notes I've taken while following through tutorials and reading do
   
   var emp = new Employee("Joe");
   emp.work(8); //logs to the console "Joe is working for 8 hours."
-  ---
+  ```
