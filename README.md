@@ -628,6 +628,7 @@ These are some notes I've taken while following through tutorials and reading do
     }
     
     set fullname(fullname) {
+      //this is a property setter
       var names = fullname.split(" ");
       this.firstname = names[0];
       this.lastname = names[1];
@@ -661,3 +662,24 @@ These are some notes I've taken while following through tutorials and reading do
   var emp = new Employee("John", "Doe");
   emp.work(8); //logs to the console "John Doe is working for 8 hours."
   ```
+* A class can ```extend``` (inherit from) a super class, like
+  ```js
+  class Person {
+    constructor(firstname, lastname) {
+      this.firstname = firstname;
+      this.lastname = lastname;
+    }
+  }
+  
+  class Employee extends Person {
+    constructor(title, firstname, lastname) {
+      super(firstname, lastname);
+      this.title = title;
+    }
+  }
+  
+  var emp = new Employee("Manager", "John", "Doe");
+  console.log(emp.title + " " + emp.firstname + " " + emp.lastname); //logs to the console "Manager John Doe"
+  ```
+* Arrow functions, like
+
