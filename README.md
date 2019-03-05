@@ -604,6 +604,40 @@ These are some notes I've taken while following through tutorials and reading do
   f(...[3, 5, 7]); //call f() with parameters x=3, y=5, z=7
   
   let a = [3, 5, 7];
-  let a = [20, 40, ...a, 60, 80]; // a is [20, 40, 3, 5, 7, 60, 80]
+  let a = [20, 40, ...a, 60, 80]; //a is [20, 40, 3, 5, 7, 60, 80]
   ```
-* class
+* Template literals, like
+  ```js
+  let id = 123;
+  let domain = "abc.com";
+  let url = `https://${domain}/item/${id}`; // url is "https://abc.com/item/123"
+  ```
+* Classes can be defined and used, like
+  ```js
+  class Employee {
+    constructor(name) {
+      this.name = name;
+    }
+    work(hours) {
+      console.log(this.name + " is working for " + hours + " hours.");
+    }
+  }
+  
+  var emp = new Employee("Joe");
+  emp.work(8); //logs to the console "Joe is working for 8 hours."
+  ---
+  is similar to the ---es5--- version
+  ```js
+  function Employee(name) {
+    this.name = name;
+  }
+  
+  Employee.prototype = {
+    work: function(hours) {
+      console.log(this.name + " is working for " + hours + " hours.");
+    }
+  };
+  
+  var emp = new Employee("Joe");
+  emp.work(8); //logs to the console "Joe is working for 8 hours."
+  ---
