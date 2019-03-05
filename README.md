@@ -370,11 +370,17 @@ These are some notes I've taken while following through tutorials and reading do
   ```jsx
   <Link to="/detail?name=Joe&age=23">Detail</Link>
   ```
-  can be parsed from ```props.location.search```, like
+  can be parsed inside the associated component using ```URLSearchParams```, like
   ```jsx
-  const query = URLSearchParams(props.location.search);
-  const name = query.get('name');
-  const age = query.get('age');
+  const values = URLSearchParams(props.location.search);
+  const name = values.get('name');
+  const age = values.get('age');
+  ```
+  or using ```query-string``` library for backward browser compabality, like
+  ```jsx
+  const values = querystring.parse(props.location.search);
+  const name = values.name;
+  const age = values.age;
   ```
 * ```props.history``` is the ```window.history```, it also has a ```location``` field but because it is mutable, ```props.location``` should be used instead
 * Routes can be nested, like
@@ -536,3 +542,68 @@ These are some notes I've taken while following through tutorials and reading do
 ## React-Bootstrap components
 * Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without need for jQuery, refer to https://react-bootstrap.github.io for details and https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121 for a quick tutorial (also shows usage of ```reactstrap```, another alternative library for using ```bootstrap``` with React
 
+## ES6 additions to javascript:
+* ```let n = 1;``` defines a block scoped variable, where a block is enclosed by ```{``` and ```}```, it is only visible inside the block, and it cannot be declared again inside the same block.
+  ```let``` can be used like
+  ```js
+  if (someCondition) {
+    let n = 1;
+  }
+  ```
+  where n is only visible inside the if block but not outside
+* In ```es5```, ```var n = 1;``` defines a function scoped variable which is hoisted (its declaration is moved to top of the function declaring it, or becomes global if not declared inside a function), and var can define the same variable multiple times inside the same function but the last declaration will be effective, which can cause problems and it is not recommended to use var anymore
+* ```const n = 1;``` defines a block scoped variable, and its reference cannot be changes, meaning it cannot be reassigned. However, if it is an object, so it is not immutable so that its members can be reassigned,  like
+  ```js
+  {
+    const o = {n: 1, s: "abc"};
+    o.n = 2;
+    o.s = "xyz";
+  }
+  ```
+  ```Object.freeze()``` can be used to turn it into an immutable object, or ```immutable.js``` library can be used with more handy features
+* Destructuring uses ```[``` and ```]``` to assign multiple variables at once from an array, and ```{``` and ```}``` to assign multiple variables at once from object fields , like
+  ```js
+  let [x, y] = [3, 5]; //x is 3, y is 5
+  [x, y] = [y, x,]; //x value becomes y, y value becomes x
+  let [, a, b, c] = [1, 3, 5]; //a is 3, b is 5, c is undefined, skips first element in the right-side array
+  
+  let {p, r, s} = {p: 3, r: 5, s: "abc"}; //p is 3, r is 5, s is "abc"
+  let {p:k, s:l} = {p: 3, r: 5, s: "abc"}; //k is 3, r is "abc", and beware that it is not k:p, but rather p:k
+  let {m, n} = {m: 3, n: "abc"}; //m is 3, n is "abc", shorthand syntax when the variables and object fields have the same name
+  let f = function(x, {y, z}, n) {
+    //do something with x, y, z, n parameters
+  }
+  f(1, {y: 2, z: "abc"}); //call function f() with x=1, y=2, z="abc", n=undefined parameter values
+  ```
+* Default parameters, like
+  ```js
+  let f = function(x = 1) {
+    //no need to use let y = x || 1; to give a default value of 1 if x is missing
+  }
+  f(); //missing parameter x will be assigned default value of 1, same as f(undefined);
+  f(null); //parameter x will be assigned null, because it is not missing
+  f(""); //parameter x will be assigned "", because it is not missing
+  
+  let g = function(x = 1, {y = 2, z = 3}) {
+    //do something with x, y, z parameters
+  }
+  g(7, {z: 9}); //missing parameter y will be assigned default value of 2
+  ```
+* Rest parameters, which is an array, replace the need for ```arguments``` (```arguments``` can also be used, but it is an object, not an array). Rest parameters use ```...someVariables``` syntax, like
+  ```js
+  let sum = function(x, y, ...rest) {
+    //here you can use rest parameter as an array
+  }
+  let total = sum("a", "b", 5, 7, 4, 67, 38); //rest parameter will be [5, 7, 4, 67, 38]
+  ```
+* Spread operator ```...someArray```, turns an array into a comma separated expression, like
+  ```js
+  let f = function(x, y, z) {
+    //do something with x, y, z parameters
+  }
+  f(...[3, 5, 7]); //call f() with parameters x=3, y=5, z=7
+  
+  let a = [3, 5, 7];
+  let a = [20, 40, ...a, 60, 80]; // a is [20, 40, 3, 5, 7, 60, 80]
+  ```
+* class
