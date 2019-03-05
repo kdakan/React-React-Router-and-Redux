@@ -337,6 +337,12 @@ These are some notes I've taken while following through tutorials and reading do
   ```jsx
    <Route path='/list' render={()=>{return <List items={myList}/>}} />
   ```
+  and the rendered ```List``` component has to be wrapped by ```withRouter``` function to receive ```match```, ```location``` and ```history``` props from router, like
+  ```jsx
+   const List = (props) => {...}
+   
+   export default withRouter(List);
+  ```
 * Components triggered (rendered) by a ```Route``` component receive extra ```props```, which are ```match```, ```location``` and ```history```
 
 * ```props.match``` fields:
@@ -348,7 +354,17 @@ These are some notes I've taken while following through tutorials and reading do
   ```path```: (string) The path pattern used to match. Useful for building nested ```<Route>```s
 	
   ```url```: (string) The matched portion of the URL. Useful for building nested ```<Link>```s
+* Route ```params``` can be anywhere in the path and can be multiple, and defined like
+  ```jsx
+    <Route path='/item/:id' component={Item} />
+    <Route path='/person/:firstname/:lastname/details' component={Person} />
+  ```
+  and acccessed inside ```Item``` and ```Person``` components as ```props.match.params.firstname```, ```props.match.params.lastname```, and ```props.match.params.id```like 
+  ```jsx
+  const Item = (props) => {... props.match.params.id ...}
   
+  const Person = (props) => {... props.match.params.firstname ... props.match.params.lastname ...}
+  ```
 * ```props.location``` fields: ```hash```, ```key```, ```pathname```, ```search```
 * ```props.history``` is the ```window.history```, it also has a ```location``` field but because it is mutable, ```props.location``` should be used instead
 * Routes can be nested, like
