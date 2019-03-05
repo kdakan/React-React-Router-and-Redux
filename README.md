@@ -728,3 +728,17 @@ These are some notes I've taken while following through tutorials and reading do
   m.sumWithoutArrowFunction();
   console.log(m.total); //m.total is 6
   ```
+* Generator functions create iterators, and iterables can be lazily iterated using for..of syntax, like
+  ```js
+  let numbers = function*(max) {
+    for (let i=0; i<max; i++) {
+      console.log("yield " + i);
+      yield i;
+    }
+  }
+  
+  for (let n of numbers(3))
+    console.log("got " + n);
+  ```
+  Here the ```for..of``` loop logs to the console yield 0, got 0, yield 1, got 1, yield 2, got 2, so the numbers are iterated lazily. This can be valuable when the iterator is doing expensive work like an expensive calculation, going to the database, or using network operations
+* There are new objects, like ```Number```, ```Array```, ```Set``` (hashset), ```Map``` (hashmap/dictionary), ```WeakSet```, ```WeakMap```. ```WeakSet``` and ```WeakMap``` do not hold strong pointers to their items, so that the item can be garbage collected, and they cannot be iterated. Using ```WeakMap``` and ```WeakSet``` instead of ```Map``` and ```Set``` can prevent memory leaks.
