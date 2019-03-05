@@ -612,32 +612,52 @@ These are some notes I've taken while following through tutorials and reading do
   let domain = "abc.com";
   let url = `https://${domain}/item/${id}`; // url is "https://abc.com/item/123"
   ```
-* Classes can be defined and used, like
+* Classes support constructor, methods, and property getters and setters, like
   ```js
   class Employee {
-    constructor(name) {
-      this.name = name;
+    constructor(firstname, lastname) {
+      this.firstname = firstname;
+      this.lastname = lastname;
     }
     work(hours) {
-      console.log(this.name + " is working for " + hours + " hours.");
+      console.log(this.fullname + " is working for " + hours + " hours.");
+    }
+    get fullname() {
+      //this is a property getter
+      return this.firstname + " " + this.lastname;
+    }
+    
+    set fullname(fullname) {
+      var names = fullname.split(" ");
+      this.firstname = names[0];
+      this.lastname = names[1];
     }
   }
   
-  var emp = new Employee("Joe");
-  emp.work(8); //logs to the console "Joe is working for 8 hours."
+  var emp = new Employee("John", "Doe");
+  emp.work(8); //logs to the console "John Doe is working for 8 hours."
   ```
   is similar to the ```es5``` version
   ```js
-  function Employee(name) {
-    this.name = name;
+  function Employee(firstname, lastname) {
+    this.firstname = firstname;
+    this.lastname = lastname;
   }
   
   Employee.prototype = {
     work: function(hours) {
-      console.log(this.name + " is working for " + hours + " hours.");
+      console.log(this.getfullname() + " is working for " + hours + " hours.");
+    },
+    getfullname() {
+      return this.firstname + " " + this.lastname;
+    },
+    setfullname(fullname) {
+      var names = fullname.split(" ");
+      this.firstname = names[0];
+      this.lastname = names[1];
     }
   };
   
-  var emp = new Employee("Joe");
-  emp.work(8); //logs to the console "Joe is working for 8 hours."
+  var emp = new Employee("John", "Doe");
+  emp.work(8); //logs to the console "John Doe is working for 8 hours."
   ```
