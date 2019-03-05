@@ -380,7 +380,7 @@ These are some notes I've taken while following through tutorials and reading do
 * ```Prompt``` component comes to effect when changing a route, before navigation happens, and displays a js ```confirm("...")``` box, so that it can be used to check if a form is complete before leaving the form, like
   ```jsx
   render() {
-    <Prompt when={this.state.name.length !== 0 && !this.state.isSubmitted} message="There are unsaved changes! Are you sure you want to leave this form without saving?"
+    <Prompt when={this.unsavedChanges} message="There are unsaved changes! Are you sure you want to leave this form?"
     <form>
       <label htmlFor:"name">Name:</label>
       <input id="name" value={this.state.name} onChange={this.handleNameChange} />
@@ -389,6 +389,10 @@ These are some notes I've taken while following through tutorials and reading do
   ```
   and 
   ```jsx
+  unsavedChanges() {
+    return this.state.name.length !== 0 && !this.state.isSubmitted;
+  }
+  
   handleNameChange = (e) => {
     e.preventDefault();
     setState({name: e.target.value});
@@ -399,6 +403,7 @@ These are some notes I've taken while following through tutorials and reading do
     let newName = this.state.name;
     ...
     setState({isSubmitted: true});
+    setState({name: ""});
   }
   ```
 * ```NavLink``` component is similar to ```Link``` component, but with the additional ```activeClassName``` prop, which overrides the ```className``` prop value when this link is clicked/followed
