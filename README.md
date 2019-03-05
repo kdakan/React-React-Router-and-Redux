@@ -354,12 +354,12 @@ These are some notes I've taken while following through tutorials and reading do
   ```path```: (string) The path pattern used to match. Useful for building nested ```<Route>```s
 	
   ```url```: (string) The matched portion of the URL. Useful for building nested ```<Link>```s
-* Route ```params``` can be anywhere in the path and can be multiple, and defined like
+* Route ```params``` can be anywhere in the path and can be multiple, and defined, like
   ```jsx
     <Route path='/item/:id' component={Item} />
-    <Route path='/person/:firstname/:lastname/details' component={Person} />
+    <Route path='/person/:firstname/:lastname/bio' component={Person} />
   ```
-  and acccessed inside ```Item``` and ```Person``` components as ```props.match.params.firstname```, ```props.match.params.lastname```, and ```props.match.params.id```like 
+  and acccessed inside ```Item``` and ```Person``` components as ```props.match.params.firstname```, ```props.match.params.lastname```, and ```props.match.params.id```, like 
   ```jsx
   const Item = (props) => {... props.match.params.id ...}
   
@@ -522,4 +522,7 @@ These are some notes I've taken while following through tutorials and reading do
  .then(response => response.json())
  .then(data => console.log(data))
  .catch(error => console.error(error))
- 
+ ```
+## React-Bootstrap components
+* Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without need for jQuery, refer to https://react-bootstrap.github.io for details and https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121 for a quick tutorial (also shows usage of ```reactstrap```, another alternative library for using ```bootstrap``` with React
+
