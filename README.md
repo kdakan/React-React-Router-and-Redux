@@ -355,31 +355,36 @@ These are some notes I've taken while following through tutorials and reading do
   ```jsx
    const App = () => (
      <BrowserRouter>
-       {/* here's a div */}
        <div>
-         {/* here's a Route */}
-         <Route path="/tacos" component={Tacos} />
+         <Route path="/master" component={Master} />
        </div>
      </BrowserRouter>
    );
 
-   // when the url matches `/tacos` this component renders
-   const Tacos = ({ match }) => (
-     // here's a nested div
+   const Master = ({ match }) => (
      <div>
-       {/* here's a nested Route, match.url helps us make a relative path */}
-       <Route path={match.url + "/carnitas"} component={Carnitas} />
+       <Route path={match.url + "/detail"} component={Detail} />
+     </div>
+   );
+   ```
+   Here, ```/master``` matches ```Master``` component, and ```/master/detail``` matches ```Detail``` component
+   
+   ```const Master = ({ match }) => (...)``` means use the ```match``` field inside the ```props``` parameter, so it could also be coded like below
+   ```jsx
+   const Master = (props) => (
+     <div>
+       <Route path={props.match.url + "/detail"} component={Detail} />
      </div>
    );
    ```
 * ```Prompt``` component comes to effect when changing a route, before navigation happens, and displays a js ```confirm("...")``` box, so that it can be used to check if a form is complete before leaving the form, like
   ```jsx
   render() {
-    <Prompt when={!this.state.isSubmitted} message="Are you sure you want to leave this form before submitting?"
+    <Prompt when={this.state.name.length !== 0 && !this.state.isSubmitted} message="There are unsaved changes! Are you sure you want to leave this form without saving?"
     <form>
       <label htmlFor:"name">Name:</label>
       <input id="name" value={this.state.name} onChange={this.handleNameChange} />
-      <button disabled={this.state.name.length === 0} onSubmit={this.handleSubmit}>Submit Form</button>
+      <button disabled={this.state.name.length === 0} onSubmit={this.handleSubmit}>Save Form</button>
     </form>
   ```
   and 
@@ -396,7 +401,7 @@ These are some notes I've taken while following through tutorials and reading do
     setState({isSubmitted: true});
   }
   ```
-* ```NavLink``` component is similar to ```Link``` component, but with the additional ```activeClassName``` prop, which overrides the ```className``` prop value when this link is clicked
+* ```NavLink``` component is similar to ```Link``` component, but with the additional ```activeClassName``` prop, which overrides the ```className``` prop value when this link is clicked/followed
 
 ## Context api:
 * Global state (language, user info, theme, etc.) is usually stored in the root component state properties
