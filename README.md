@@ -742,3 +742,82 @@ These are some notes I've taken while following through tutorials and reading do
   ```
   Here the ```for..of``` loop logs to the console yield 0, got 0, yield 1, got 1, yield 2, got 2, so the numbers are iterated lazily. This can be valuable when the iterator is doing expensive work like an expensive calculation, going to the database, or using network operations
 * There are new objects, like ```Number```, ```Array```, ```Set``` (hashset), ```Map``` (hashmap/dictionary), ```WeakSet```, ```WeakMap```. ```WeakSet``` and ```WeakMap``` do not hold strong pointers to their items, so that the item can be garbage collected, and they cannot be iterated. Using ```WeakMap``` and ```WeakSet``` instead of ```Map``` and ```Set``` can prevent memory leaks.
+* An ```asyn``` functions does not return is result immediately, but instead returns a ```Promise``` object. A ```Promise``` object can be in 3 states, it starts in ```pending``` state, and when/if it ```resolve```s it switches to ```fulfilled``` state, and when/if an error occurs, it switches to ```rejected``` state. Promises can be chained, like 
+  ```js
+  function getOrder(orderId) {
+    //returns a Promise, starts a time taking operation and resolves with the result when the operation succeeds
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve({id: 123, name: "Apple Macbook", userId: 456}), 1000);
+    });
+  }
+  function getUser(userId) {
+    //returns a Promise, starts a time taking operation and resolves with the result when the operation succeeds
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve({id: 456, name: "John Doe", companyId: 789}), 1000);
+    });
+  }
+  function getCompany(companyId) {
+    //returns a Promise, starts a time taking operation and resolves with the result when the operation succeeds
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve({id: 789, name: "MyCompany"}), 1000);
+    });
+  }
+
+  getOrder(123)
+  .then(order => getUser(order.userId))
+  .then(user => getCompany(user.companyId))
+  .then(company => console.log(company.name))
+  .catch(error => console.log(error.message));
+  ```
+  This code above will log to the console "MyCompany" after 3 seconds (```getOrder()```, ```getUser()```, and ```getCompany()``` each takes 1 second to complete). If we change ```getUser()``` to the following code,
+  ```js
+  function getUser(userId) {
+    //returns a Promise, starts a time taking operation and rejects with an Error result when the operation fails
+    return new Promise((resolve, reject) => {
+      setTimeout(() => reject(new Error("An error occured while fetching user with id: " + userId)), 1000);
+    });
+  }
+  ```
+  Then the same ```getOrder(123).then(...).then(...).then(...).catch(...)``` chain call will log to the console "An error occured while fetching user with id: 456" after 2 seconds
+* ```Promise.all()``` resolves multiple promises, and ```Promise.race()``` resolves the fastest completing promise, like
+  ```js
+  function getCompany(companyId) {
+    let companies = {
+      1: {id:1, name: "Apple"},
+      2: {id:2, name: "Google"},
+      3: {id:3, name: "Facebook"},
+      4: {id:4, name: "Amazon"},
+      5: {id:5, name: "Microsoft"}
+    }
+    
+    //Promise.resolve could be used if we wanted to resolve immediately
+    //return Promise.resolve(companies[companyId]);
+    
+    //returns a Promise, starts a time taking operation and resolves with the result when the operation succeeds
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve(companies[companyId]), 1000);
+    });
+  }
+  
+  let promises = [getCompany(1), getCompany(2), getCompany(3), getCompany(4), getCompany(5)];
+  Promise.all(promises)
+  .then(companies => companies.forEach(company => console.log(company.name)))
+  .catch(error => console.log(error.message));
+  ```
+  This code above will log to the console all 5 company names after 1 second (each call to getCompany() takes 1 second, but calls are done in parallel). If we change ```getCompany()``` to the following code,
+  ```js
+  function getCompany(companyId) {
+    //returns a Promise, starts a time taking operation and rejects with an Error result when the operation fails
+    return new Promise((resolve, reject) => {
+      setTimeout(() => reject(new Error("An error occured while fetching company with id: " + companyId)), 1000);
+    });
+  }
+  ```
+  Then the same ```Promise.all(promises).then(...).catch(...)``` chain call will log to the console "An error occured while fetching company with id: 1" after 1 second. The code below will log to the console "Apple" after 1 second, like
+  ```js
+  let promises = [getCompany(1), getCompany(2), getCompany(3), getCompany(4), getCompany(5)];
+  Promise.race(promises)
+  .then(company => console.log(company.name))
+  .catch(error => console.log(error.message));
+  ```
+  
