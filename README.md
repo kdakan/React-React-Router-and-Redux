@@ -820,4 +820,108 @@ These are some notes I've taken while following through tutorials and reading do
   .then(company => console.log(company.name))
   .catch(error => console.log(error.message));
   ```
+* ```Object.assign(o1, o2)``` merges members of o2 onto o1 (o2 is also called mixin), ```Object.assign()``` can have more than 2 parameters, and will merge all into the first parameter object
+* Object literal shortcut syntax, like
+  ```js
+  let model = "Porche";
+  let year = 2018;
+  //both create an object with members model="Porche", year=2018 and run()
+  let car = { model: model, year: year, run: function() {console.log("running");} }
+  let car2 = { model, year, run() {console.log("running");} }
+  
+  let fieldname = "model";
+  let fieldvalue = "Ferrari";
+  //both create an object with member model="Ferrari"
+  let car3 = {};
+  car3[fieldname] = fieldvalue;
+  let car4 = { [fieldname] : fieldvalue }
+  
+  ```
+* A module can be declared by using ```export``` inside the file ```Customer.js``` in the ```crm```` folder, like
+  ```js
+  chargeCreditCard(cardNumber, amount) {
+    //chargeCreditCard() is inaccessible from outside this module
+  }
+  
+  class Customer {
+    constructor(id) {
+      ...
+    }
+    buy(item) {
+      ...
+      chargeCreditCard(this.cardNumber, item.price);
+      ...
+    }
+  }
+  
+  export Customer;
+  ```
+  and accessed from outside the module by using ```import```, like
+  ```js
+  import {Customer} from './crm/Customer';
+  
+  let customer = new Customer(123);
+  let item = {productId: 456, productName: "Watch", price: 100};
+  customer.buy(item);
+  ```
+  This is similar to the ```iife``` (immediately invoked function expression) module definition and usage in ```es5```, like
+  ```js
+  (function(target) {
+  
+  chargeCreditCard(cardNumber, amount) {
+    //chargeCreditCard() is inaccessible from outside this module
+  }
+  
+  function Customer(id) {
+    ...
+  }
+  
+  Customer.prototype = {
+    buy: function(item) {
+      ...
+      chargeCreditCard(this.cardNumber, item.price);
+      ...
+    }
+  }
+  
+  }(window))
+  
+  var customer = new Customer(123);
+  var item = {productId: 456, productName: "Watch", price: 100};
+  customer.buy(item);
+  ```
+* A module may export multiple classes, functions or variables, like
+  ```js
+  function f() {...}
+  class C {...}
+  const pi = 3.14159;
+  
+  export f, C, pi;
+  ```
+  or like
+  ```js
+  export function f() {...}
+  export class Customer {...}
+  export const pi = 3.14159;
+  ```
+  and ```import``` and use whatever we need, like
+  ```js
+  import {Customer, pi} from './crm/Customer';
+  
+  let customer = new Customer();
+  let circumference = 2 * pi * 10;
+  ```
+  We can also use ```export default```, like
+  ```js
+  class VIPCustomer {...}
+  
+  export default VIPCustomer;
+  ```
+  and import and use it with any name we want, like
+  ```js
+  import Customer from './crm/VIPCustomer';
+  
+  let customer = new Customer();
+  ```
+  
   
