@@ -1,5 +1,4 @@
 # React v.16 and React Router v.4 Tutorial:
--------------------------------------------
 This is an extensive tutorial on React v.16 and React Router v.4. It is mostly for beginners but has enough depth at some intermediate level. I do not mention Redux, but add a section on Mobx, an easy to use state management library. You need to apply these concepts at a hands-on project to get competent on React programming, and forget about the way things are done in Angular. There is no controller, service, or dependency injection in React, only components with props, state, and a global state manager like Mobx to share state across components.
 
 ## Installation, creating, and running an app:
