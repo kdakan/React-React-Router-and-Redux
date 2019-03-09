@@ -1,5 +1,7 @@
-# React v.16 and React Router v.4 Tutorial:
+# React v.16 and React Router v.4 Tutorial
 This is an extensive tutorial on React v.16 and React Router v.4. It is mostly for beginners but has enough depth at some intermediate level. I do not mention Redux, but add a section on Mobx, an easy to use state management library. You need to apply these concepts at a hands-on project to get competent on React programming, and forget about the way things are done in Angular. There is no controller, service, or dependency injection in React. React only handles the view part of the MVC architecture, programmers mainly utilize components with props and state. However, most apps do not use the state that comes with React components at all, and use a global state manager like Redux or Mobx to simplify handling and sharing state across components.
+
+TODO: I will soon be adding to this repo the full source code for the example snippets.
 
 ## Installation, creating, and running an app:
 * Easiest way to start developing in React without getting lost in ```webpack``` and ```babel``` tool configuration, is using the official CLI ```create-react-app```
@@ -447,8 +449,16 @@ This is an extensive tutorial on React v.16 and React Router v.4. It is mostly f
 * Then, it is imported in any component that provides its value or consumes its value, refer to https://reactjs.org/docs/context.html for examples
 * Context can hold any js object, not only primitives
 
-## React-Bootstrap components
+## React-bootstrap components
 * Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without need for jQuery, refer to https://react-bootstrap.github.io for details and https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121 for a quick tutorial (also shows usage of ```reactstrap```, another alternative library for using ```bootstrap``` with React
 
-  
-  
+## State management without Redux or MobX
+* Handling state with setState() inside a component is simple, however when there is a component that depends on another component's state, things get complicated. Without using a state management library like Redux or Mobx, a common way to share state between components is to lift the state up to a common ancestor component, put the state changing code on this ancestor component and share the code (callback function) and shared state down the tree to the other components, and inside the child components, bind to this shared state passed on props, and call the callback function passed on props to change this state and trigger other components which depend on this state. As the app grows larger, this way of sharing state leads to unmaintainable complex code and it is hard to find dependent components inside the codebase. 
+
+## State management with MobX
+* Mobx library offers a simple logical way to manage state, if offers observables, observers, and optional actions.
+* With Mobx, we do not initialize the component's state property, instead, we mark the state variable with the @observable annotation.
+And inside an event handler, we do not use setState() to change state, instead, we change it like changing a regular javascript primitive value, object or array. We also mark the component or components which uses/depends on this state variable with the @observer annotation.
+* We don't have to place the state variables inside a component, we can put it inside a store object and we can structure the code any way we want.
+* We can also use computed functions which change depending on an observable state variable (like fullname depending on firstname and lastname variables), and mark it with the @computed annotation.
+* Refer to https://mobx.js.org/getting-started.html for a quick tutorial on MobX
