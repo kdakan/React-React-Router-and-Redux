@@ -466,3 +466,4 @@ And inside an event handler, we do not use ```setState()``` to change state, ins
 * We don't have to place the state variables inside a component, we can put it inside a store object and we can structure the code any way we want.
 * We can also use computed functions which change depending on an observable state variable (like fullname depending on firstname and lastname variables), and mark it with the ```@computed``` annotation.
 * Refer to https://mobx.js.org/getting-started.html for a quick tutorial on ```MobX```
+* Refer to https://mobx.js.org/best/store.html for structuring stores (like a single ui store and multiple domain stores)
