@@ -333,7 +333,7 @@ TODO: I will soon be adding to this repo the full source code for the example sn
      <Route path='/search' component={Search} />
    </Switch>
   ```
-   Here, normally all three routes would match the path ```/```, but ```<Switch>``` will find the first match, which is ```<Route path='/' component={Home} />```
+   Here, normally all three routes would match the path ```/```, but ```<Switch>``` will find the first match, which is ```<Route path='/' component={Home} />``` (this is similar to ```switch/case``` statement with ```break```, where the first matching ```case``` statement is executed)
 * Components with props can only be triggered (rendered) by a ```Route``` component by using the ```render``` property of ```Route```, like
   ```jsx
    <Route path='/list' render={()=>{return <List items={myList}/>}} />
