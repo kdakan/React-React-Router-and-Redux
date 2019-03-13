@@ -1,5 +1,5 @@
-# React v.16 and React Router v.4 Tutorial
-This is an extensive tutorial on React v.16 and React Router v.4, which can also serve as a reference. It is mostly for beginners but has enough depth at intermediate to advanced level. I do not mention Redux, but have a section on Mobx, an easy to use state management library. You need to apply these concepts at a hands-on project to get competent on React programming, and forget about the way things are done in Angular. There is no controller, service, or dependency injection in React. React only handles the view part of the MVC architecture, programmers mainly utilize components with props and state. However, most apps do not use the state that comes with React components at all, and use a global state manager like ```Redux``` or ```Mobx``` to simplify handling and sharing state across components.
+# React v.16 with, React Router v.4, Redux and Mobx Tutorial
+This is an extensive tutorial on React v.16 with React Router v.4, Redux and MobX. This can also serve as a reference. This tutorial takes tou from the beginner level to intermediate/advanced level and has enought breadt and depth to get you going with most of your projects. You need to apply these concepts on a hands-on project to get competent. First you need to forget about the way things are done in Angular. There is no controller, service, or dependency injection in React, it only handles the view part of the MVC architecture, programmers mainly utilize components with props and state. However, most apps do not use the state that comes with React components at all, and use a global state manager like ```Redux``` or ```Mobx``` to simplify handling and sharing state across components.
 
 TODO: I will soon be adding to this repo the full source code for the example snippets.
 
@@ -458,13 +458,101 @@ TODO: I will soon be adding to this repo the full source code for the example sn
 * If we are using a state management library (meaning that if our app is not very small), then we need to place this state into a store or multiple stores and pass the store to the component via its props, and fire actions on DOM events without using setState()
 
 ## State management with ```MobX```
-* ```MobX``` library offers a simple logical way to manage state, if offers observables, observers, and optional actions.
+* ```MobX``` library offers a simple object oriented way to manage state, using observables, observers, and optional actions.
 * With ```MobX```, we do not initialize the component's state property, instead, we mark the state variable with the ```@observable``` annotation.
-And inside an event handler, we do not use ```setState()``` to change state, instead, we change it like changing a regular javascript primitive value, object or array. The observable variables should be inside an object, like a component or store object, because thet are implemented internally with property getters ans setters. We also mark the component or components which uses/depends on this state variable with the ```@observer``` annotation.
+* Inside an event handler, we do not use ```setState()``` to change state, instead, we change it like changing a regular javascript primitive value, object or array. The observable variables should be inside an object, like a component or store object, because they are implemented auto-magically internally with property getters ans setters. We also mark the component or components which uses/depends on this state variable with the ```@observer``` annotation.
 * We don't have to place the state variables inside a component, we can put it inside a store object and we can structure the code any way we want.
 * We can also use computed functions which change depending on an observable state variable (like fullname depending on firstname and lastname variables), and mark it with the ```@computed``` annotation.
 * Refer to https://mobx.js.org/getting-started.html for a quick tutorial on ```MobX```
 * Refer to https://mobx.js.org/best/store.html for best practices on structuring stores (like a single ui store and multiple domain stores)
+
+## State management with ```Redux```
+* ```Redux``` library offers an advanced functional way to predictively manage state, using reducers and actions.
+* With ```Redux```, we need to write more verbose code than we were doing with ```MobX```, because there is less magic but more trackable interactions
+* State of an app is managed in a central store
+* A reducer is a function which gives part of this central app state to any component which is interested in this part of state, like
+  ```js
+  --inside booksReducer.js
+  export default function() {
+    return [
+       { id: 1, title: "some title" },
+       { id: 2, title: "another title" },
+       { id: 3, title: "some other title" }
+    ]
+  }
+  ```
+  Note that the reducer function above returns static data, reducer functions are triggered by actions and normally return specific data based on the action type, refer to actions below for more details
+* Components which are interested in any part of the central app state are called containers (or smart components), components which only bind to their props without communicating with the central app state are simply called components (or dumb components)
+* At the start of the app, all reducers are combined into a single app state store (root reducer) by using ```combineReducer()```, like
+  ```js
+  const rootReducer = combineReducers(
+   {
+     books: booksReducer,
+     ...
+   }
+  );
+  
+  export default rootReducer;
+  ```
+* Inside the container, the props of the container are bound to a reducer (part of the central app state) by declaring a ```mapStateToProps()``` function, and calling ```connect()``` function, like
+  ```js
+    class BookList extends React.Component {
+      render() {
+        const items = this.props.bookCollection.map(item => <li key={item.id}>{item.title}</li>);
+        return (
+	  <ul>{items}</ul>
+	);
+      }
+    }
+    
+    //binds the BooksList component props to the books part of the central app state
+    //whenever the books change, BooksList will be rerendered with new values on its books props
+    mapStateToProps(state) {
+      return {
+        bookCollection: state.books
+      };
+    }
+    
+    //turns the dumb component into a smart component (container)
+    export default connect(mapStateToProps)(BookList);
+  ```
+* Any event which needs to change part of the app state creates an action which is an object with an action type and various data members, like
+  ```js
+  //inside selectBook.js
+  export function selectBook(book) {
+   return { type: "SELECT_BOOK", book: book };
+  }
+  ```
+* Each action can be processed by (dispatched to) all the reducers in the app, and a reducer may respond (return specific date) if it is interested in the action, this way changing parts of the central app state. So a reducer is typically a switch statement with cases for each action type it is interested in to respond with a state change.
+
+* Inside the container, to ensure the dispatching of an action to all reducers, we declare a ```mapDispatchToCreators()``` function, and calling ```connect()``` function, like
+  ```js
+    class BookList extends React.Component {
+      render() {
+        const items = this.props.bookCollection.map(item => <li key={item.id}>{item.title}</li>);
+        return (
+	  <ul>{items}</ul>
+	);
+      }
+    }
+    
+    //binds the BooksList component props to the books part of the central app state
+    //whenever the books change, BooksList will be rerendered with new values on its books props
+    mapStateToProps(state) {
+      return {
+        bookCollection: state.books
+      };
+    }
+    
+    //allows dispatching of selectBook action to all reducer, and also adds selectBook on the BooksList component props
+    //so that we can call it like this.props.selectBook(...) to create a "SELECT_BOOK" action
+    mapDispatchToCreators(state) {
+      return bindActionCreators({selectBook: selectBook}, dispatch);
+    }
+    
+    //turns the dumb component into a smart component (container)
+    export default connect(mapStateToProps, mapDispatchToCreators)(BookList);
+  ```
 
 ## React-bootstrap components
 * Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without need for jQuery, refer to https://react-bootstrap.github.io for details and https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121 for a quick tutorial (also shows usage of ```reactstrap```, an alternative library for using ```bootstrap``` with React)
