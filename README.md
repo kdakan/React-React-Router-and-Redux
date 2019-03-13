@@ -1,4 +1,4 @@
-# React v.16 with, React Router v.4, Redux and Mobx Tutorial
+# React v.16 with, React Router v.4, Redux and MobX Tutorial
 This is an extensive tutorial on React v.16 with React Router v.4, Redux and MobX. This can also serve as a reference. This tutorial takes tou from the beginner level to intermediate/advanced level and has enought breadt and depth to get you going with most of your projects. You need to apply these concepts on a hands-on project to get competent. First you need to forget about the way things are done in Angular. There is no controller, service, or dependency injection in React, it only handles the view part of the MVC architecture, programmers mainly utilize components with props and state. However, most apps do not use the state that comes with React components at all, and use a global state manager like ```Redux``` or ```Mobx``` to simplify handling and sharing state across components.
 
 TODO: I will soon be adding to this repo the full source code for the example snippets.
@@ -469,7 +469,7 @@ TODO: I will soon be adding to this repo the full source code for the example sn
 ## State management with ```Redux```
 * ```Redux``` library offers an advanced functional way to predictively manage state, using reducers and actions.
 * With ```Redux```, we need to write more verbose code than we were doing with ```MobX```, because there is less magic but more trackable interactions
-* State of an app is managed in a central store
+* State of an app is managed in a central store, caled the root reducer, which is a combination of all the reducers in the app. Components can bind to parts of this app state by connecting to reducers responsible for that part of the app state, and can change parts of this app state by creating actions, which are caught up by reducers again which return the changed state
 * A reducer is a function which gives part of this central app state to any component which is interested in this part of state, like
   ```js
   //inside booksReducer.js
@@ -488,6 +488,7 @@ TODO: I will soon be adding to this repo the full source code for the example sn
   const rootReducer = combineReducers(
    {
      books: booksReducer,
+     selectedBook: selectedBookReducer,
      ...
    }
   );
@@ -499,23 +500,19 @@ TODO: I will soon be adding to this repo the full source code for the example sn
     class BookList extends React.Component {
       render() {
         const items = this.props.bookCollection.map(item => <li key={item.id}>{item.title}</li>);
-        return (
-          <ul>{items}</ul>
-        );
+        return <ul>{items}</ul>;
       }
     }
     
-    //binds the BooksList component props to the books part of the central app state
-    //whenever the books change, BooksList will be rerendered with new values on its books props
     mapStateToProps(state) {
       return {
         bookCollection: state.books
       };
     }
     
-    //turns the dumb component into a smart component (container)
     export default connect(mapStateToProps)(BookList);
   ```
+  Here, ```mapStateToProps()``` binds the ```BooksList``` component ```props``` to the ```books``` part of the central app state. Whenever the ```books``` changes, ```BooksList``` will be rerendered with new values on its ```props.bookCollection```. We can have multiple ```props``` to state members mappings inside the returned object. The call to ```connect()``` function turns the dumb ```BooksList``` component into a smart component (container).
 * Any event which needs to change part of the app state creates an action which is an object with an action type and various data members, like
   ```js
   //inside selectBook.js
@@ -529,30 +526,75 @@ TODO: I will soon be adding to this repo the full source code for the example sn
   ```js
     class BookList extends React.Component {
       render() {
-        const items = this.props.bookCollection.map(item => <li key={item.id}>{item.title}</li>);
-        return (
-          <ul>{items}</ul>
-        );
+        const items = this.props.bookCollection.map(item => 
+	  <li key={item.id} onClick={(e) => this.props.selectBook(item)}>{item.title}</li>
+	);
+        return <ul>{items}</ul>;
       }
     }
-    
-    //binds the BooksList component props to the books part of the central app state
-    //whenever the books change, BooksList will be rerendered with new values on its books props
+
     mapStateToProps(state) {
       return {
         bookCollection: state.books
       };
     }
-    
-    //allows dispatching of selectBook action to all reducer, and also adds selectBook on the BooksList component props
-    //so that we can call it like this.props.selectBook(...) to create a "SELECT_BOOK" action
+
     mapDispatchToCreators(state) {
       return bindActionCreators({selectBook: selectBook}, dispatch);
     }
     
-    //turns the dumb component into a smart component (container)
     export default connect(mapStateToProps, mapDispatchToCreators)(BookList);
   ```
+  Here, ```mapStateToProps()``` allows dispatching of selectBook action to all reducers, and also adds ```selectBook``` on the ```BooksList``` component ```props```, so that we can call it like ```this.props.selectBook(...)``` to create a ```"SELECT_BOOK"``` action. We can have multiple ```props``` to ```action``` mappings inside the first parameter to ```bindActionCreators()``` call. We also add ```mapStateToPropscall``` parameter to the ```connect()``` function call.
+* We can define the reducer which responds to this "SELECT_BOOK" action, like
+  ```js
+  //inside selectedBookReducer.js
+  export default function(state = null, action) {
+    switch(action.type) {
+      case "SELECT_BOOK":
+        return action.book;
+    }
+    
+    return state;
+  }
+  ```
+  Here, the ```state``` parameter is not the whole central app state, instead it is the ```selectedBook``` part inside ```rootReducer```, which this reducer is responsible for, and it is the value that was previously returned by this reducer. Also, the initial parameter value ```state = null``` applies only to the initial first call where there is no previously set state and it comes as undefined. We can define the initial state value for ```selectedBook``` part this way.
+* In ```Redux```, the parts of the app state returned by reducers should be immutable, so a reducer should not return a mutated version of the state, it should return create a fresh new one and return that.
+* We can define the reducer which responds to this "SELECT_BOOK" action, like
+  ```js
+  //inside selectedBookReducer.js
+  export default function(state = null, action) {
+    switch(action.type) {
+      case "SELECT_BOOK":
+        return action.book;
+    }
+    
+    return state;
+  }
+  ```
+* We can bind a simple ```BookDetails``` component to the ```selectedBook``` part of the app state, like
+```js
+    class BookDetails extends React.Component {
+      render() {
+        if (!this.props.book)
+	  return <div>No book selected..</div>;
+	  
+        return <div>{this.props.book}</div>;
+      }
+    }
+    
+    //binds the BookDetails component props to the selectedBook part of the central app state
+    //whenever the selectedBook change, BookDetails will be rerendered with new values on its book props
+    mapStateToProps(state) {
+      return {
+        book: state.selectedBook
+      };
+    }
+    
+    //turns the dumb component into a smart component (container)
+    export default connect(mapStateToProps)(BookDetails);
+  ```
+* Asynchronous actions need additional middleware
 
 ## React-bootstrap components
 * Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without need for jQuery, refer to https://react-bootstrap.github.io for details and https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121 for a quick tutorial (also shows usage of ```reactstrap```, an alternative library for using ```bootstrap``` with React)
