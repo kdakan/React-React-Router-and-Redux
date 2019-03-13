@@ -149,9 +149,9 @@ TODO: I will soon be adding to this repo the full source code for the example sn
 * The official recommended and most performant way is to bind this explicitly inside the constructor, like
   ```jsx
   constructor(props) {
-  ...
-  this.handleClick.bind(this);
-  ...
+    ...
+    this.handleClick = this.handleClick.bind(this);
+    ...
   }
   ```
   and use it inside ```render()```, like
@@ -226,6 +226,8 @@ TODO: I will soon be adding to this repo the full source code for the example sn
   ```jsx
   let newName = this.nameInput.value;
   ```
+* We can also use ```jQuery``` plugins, or the ```GoogleMaps``` plugin, using the DOM element ref of am empty ```<div>```, and mount these plugins inside the ```componentDidMount()``` method and unmount/destroy it inside the ```componentWillUnmount()``` method of our React component
+* Using a ```<form>``` with a submit button (```<button type="submit">```) is recommended when we have inputs and a button to take action on the inputs, because this way enter button acts like submit button by default. However we also need to have an ```onSubmit``` DOM event handler which calls ```e.preventDefault()``` to prevent server-side posting/reloading of the page
 * Form validation such as required field, can be done like 
   ```jsx
   <form>
@@ -486,14 +488,20 @@ TODO: I will soon be adding to this repo the full source code for the example sn
 * At the start of the app, all reducers are combined into a single app state store (root reducer) by using ```combineReducer()```, like
   ```js
   const rootReducer = combineReducers(
-   {
-     books: booksReducer,
-     selectedBook: selectedBookReducer,
-     ...
-   }
+    {
+      books: booksReducer,
+      selectedBook: selectedBookReducer,
+      ...
+    }
   );
   
   export default rootReducer;
+  ```
+  And we wrap the ```<App>``` component with a ```<Provider>```, like
+  ```js
+  <Provider store={createStore(rootReducer)}>
+    <App/>
+  </Provider>
   ```
 * Inside the container, the props of the container are bound to a reducer (part of the central app state) by declaring a ```mapStateToProps()``` function, and calling ```connect()``` function, like
   ```js
@@ -517,7 +525,7 @@ TODO: I will soon be adding to this repo the full source code for the example sn
   ```js
   //inside selectBook.js
   export function selectBook(book) {
-   return { type: "SELECT_BOOK", book: book };
+    return { type: "SELECT_BOOK", book: book };
   }
   ```
 * Each action can be processed by (dispatched to) all the reducers in the app, and a reducer may respond (return specific date) if it is interested in the action, this way changing parts of the central app state. So a reducer is typically a switch statement with cases for each action type it is interested in to respond with a state change.
@@ -594,7 +602,27 @@ TODO: I will soon be adding to this repo the full source code for the example sn
     //turns the dumb component into a smart component (container)
     export default connect(mapStateToProps)(BookDetails);
   ```
-* Asynchronous actions need additional middleware
+* Asynchronous actions need the ```redux-promise``` middleware. A middleware is a function that sits between actions and reducers, and can modify an action or even cancel it before it reaches the reducers.
+* We send the promise returned from the async api, such as ```axios.get(someURL)```, as the payload data in the action. ```redux-promise``` will just wait until the promise resolves and change the promise payload on the action and turn it into the result data coming from the promise, so that the reducers only see the result data, not the promise payload on their action parameter. We can code the action creator, like
+  ```js
+  //inside fetchWeather.js
+  export function fetchWeather(city) {
+    return { type: "FETCH_WEATHER", weather: axios.get(...someURL...) };
+  }
+  ```
+  and the reducer, like
+  ```js
+  //inside fetchedWeatherReducer.js
+  export default function(state = null, action) {
+    switch(action.type) {
+      case "FETCH_WEATHER":
+        return action.weather;
+    }
+    
+    return state;
+  }
+  ```
+* To chain actions which return promises, or to chain async calls inside an action, or to catch errors from an async api call in an action, we need to use the ```redux-thunk``` library
 
 ## React-bootstrap components
 * Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without need for jQuery, refer to https://react-bootstrap.github.io for details and https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121 for a quick tutorial (also shows usage of ```reactstrap```, an alternative library for using ```bootstrap``` with React)
