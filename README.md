@@ -500,8 +500,8 @@ TODO: I will soon be adding to this repo the full source code for the example sn
       render() {
         const items = this.props.bookCollection.map(item => <li key={item.id}>{item.title}</li>);
         return (
-	  <ul>{items}</ul>
-	);
+          <ul>{items}</ul>
+        );
       }
     }
     
@@ -531,8 +531,8 @@ TODO: I will soon be adding to this repo the full source code for the example sn
       render() {
         const items = this.props.bookCollection.map(item => <li key={item.id}>{item.title}</li>);
         return (
-	  <ul>{items}</ul>
-	);
+          <ul>{items}</ul>
+        );
       }
     }
     
