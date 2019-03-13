@@ -472,7 +472,7 @@ TODO: I will soon be adding to this repo the full source code for the example sn
 * State of an app is managed in a central store
 * A reducer is a function which gives part of this central app state to any component which is interested in this part of state, like
   ```js
-  --inside booksReducer.js
+  //inside booksReducer.js
   export default function() {
     return [
        { id: 1, title: "some title" },
