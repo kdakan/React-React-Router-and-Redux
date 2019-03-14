@@ -511,6 +511,7 @@ TODO: I will soon be adding to this repo, the full source code for the example s
     <App/>
   </Provider>
   ```
+* If we want to load some persisted state at the startup (from a database, ```localStorage```, api, etc.), we can load initial data into a variable like ```persistedState```, and call ```createStore()``` like ```createStore(rootReducer, persistedState)```, so  that parts of state coming from ```persistedState``` will override the state coming from ```rootReducer```
 * The ```Redux``` store has ```getState()``` (gets the store state), ```subscribe()``` (subscribes to state changes), and ```dispatch()``` (dispatches an action to all reducers) methods which implement a pub/sub pattern and action dispatching. The root ```<App>``` component subscribes to the store to re-render when any part of the state in the store changes (the store calls ```ReactDOM.render()``` each time state changes inside the store). However, wo don't use these methods inside other components, instead we use functions which come with ```react-redux``` to bind component properties to store state and to dispatch actions using action creators. We typically place all reducers inside a ```reducers``` folder, and all actions into an ```actions``` folder in the project structure.
 * Inside the container, the props of the container are bound to a reducer (part of the central app state) by declaring a ```mapStateToProps()``` function, and calling ```connect()``` function, like
   ```jsx
@@ -610,6 +611,39 @@ TODO: I will soon be adding to this repo, the full source code for the example s
     //turns the dumb component into a smart component (container)
     export default connect(mapStateToProps)(BookDetails);
   ```
+* We can define operations to put state into and get state out of ```localStorage```, like
+  ```jsx
+  //inside localStorage.js
+  export function getStateFromLocalStorage() {
+    try {
+      const str = localStorage.getItem("state");
+      if (str === undefined)
+        return undefined;
+      
+      return JSON.parse(str);
+    }
+    catch(err) {
+      return undefined;
+    }
+  }
+  
+  export function setStateToLocalStorage(state) {
+    try {
+      const str = JSON.stringify(jsonState);
+      localStorage.setItem("state", str);
+    }
+    catch(err) {
+      //log the error
+    }
+  }
+  ```
+  then load initial state from ```localStorage``` and update ```localStorage``` any time the store state changes, like
+  ```jsx
+  const persistedState = getStateFromLocalStorage();
+  const store = createStore(rootReducer, persistedState)
+  store.subscribe(() => setStateToLocalStorage(store.getState()));
+  ```
+  This way we don't lose state even when the user refreshes the page.
 * Asynchronous actions need the ```redux-promise``` middleware. A middleware is a function that sits between actions and reducers, and can modify an action or even cancel it before it reaches the reducers.
 * We send the promise returned from the async api, such as ```axios.get(someURL)```, as the payload data in the action. ```redux-promise``` will just wait until the promise resolves and change the promise payload on the action and turn it into the result data coming from the promise, so that the reducers only see the result data, not the promise payload on their action parameter. We can code the action creator, like
   ```jsx
