@@ -1,5 +1,5 @@
 # React v.16 with, React Router v.4, Redux and MobX Tutorial
-This is an extensive tutorial on React v.16 with React Router v.4, Redux and MobX. This can also serve as a reference. This tutorial takes tou from the beginner level to intermediate/advanced level and has enought breadt and depth to get you going with most of your projects. You need to apply these concepts on a hands-on project to get competent. First you need to forget about the way things are done in Angular. There is no controller, service, or dependency injection in React, it only handles the view part of the MVC architecture, programmers mainly utilize components with props and state. However, most apps do not use the state that comes with React components at all, and use a global state manager like ```Redux``` or ```Mobx``` to simplify handling and sharing state across components.
+This is an extensive tutorial on React v.16 with React Router v.4, Redux and MobX. This can also serve as a reference. This tutorial takes tou from the beginner level to intermediate/advanced level and has enought breadt and depth to get you going with most of your projects. You need to apply these concepts on a hands-on project to get competent. First you need to forget about the way things are done in Angular. There is no controller, service, or dependency injection in React, it only handles the view part of the MVC architecture, programmers mainly utilize components with props and state. However, most apps do not use the state that comes with React components at all, and use a global state manager like ```Redux``` or ```Mobx``` to simplify handling and sharing state across components. Before beginning this tutorial, make sure you have some knowledge of the ES6 features added to javascript. I have a tutorial on this link: https://github.com/kdakan/ES6-Tutorial in case you want to brush up on ES6.
 
 TODO: I will soon be adding to this repo the full source code for the example snippets.
 
@@ -49,6 +49,7 @@ TODO: I will soon be adding to this repo the full source code for the example sn
     );
   };
   ```
+  Beware that a ```return``` statement returning multiple lines of ```JSX``` code, should wrap those lines inside ```(``` and ```)```. Because in javascript ```return``` with no expression on the same line returns immediately (will return ```undefined``` instead of the ```JSX``` code underneath). There is no need to wrap single line ```JSX``` code inside parenthesis.
 * Functional components do not use this keyword, do not have lifecycle methods, and cannot access refs
 * Functional components do not have state, they are presentational components which use only their props, and only render result in JSX syntax
 * Functional components that have inner functions (like event handler callback functions) can cause performance issues, so it is better to use class components if event handlers are needed
@@ -79,7 +80,8 @@ TODO: I will soon be adding to this repo the full source code for the example sn
   ```jsx
   this.setState({someArrayState: this.state.someArrayState.concat([item])})
   ```
-  to clone an array, ```someArray.slice()```, ```[].concat(someArray)```, or spread operator ```[...someArray]``` can be used
+* To clone an array, ```someArray.slice()```, ```[].concat(someArray)```, or spread operator ```[...someArray]``` can be used. To clone an array and add an item, we can use ```someArray.concat([item])``` or ```[...someArray, item]```. To remove an item from an array, we would normally use ```someArray.splice(index, 1)```, but to clone and remove an item we use ```someArray.slice(0, index).concat(someArray.slice(index + 1))```, which clones elements up to index and clones elements from index + 1 up to end and concatenates them. This is the same as ```[...someArray.slice(0, index), ...someArray.slice(index + 1)]```. To increment an item in an array without mutating it, we can similarly use ```someArray.slice(0, index).concat(someArray[index] + 1).concat(someArray.slice(index + 1))```, or ```[...someArray.slice(0, index), someArray[index] + 1, ...someArray.slice(index + 1)]```. To do more complicated manipulations on a cloned array, we can use ```someArray.map(item => ...code that returns a cloned and modified element...)```
+* To clone an object (shallow copy, meaning that members are copied but not cloned), we can use ```Object.assign({}, someObject)``` or ```{...someObject}```. To clone an object and change a field, we can use ```Object.assign({}, someObject, { someField: someValue })``` or ```{...someObject, someField: someValue}```
 * State can be set in multiple steps, so that all state object members do not have to be given, like 
   ```jsx
   this.setState({someState: ...})
@@ -470,9 +472,10 @@ TODO: I will soon be adding to this repo the full source code for the example sn
 
 ## State management with ```Redux```
 * ```Redux``` library offers an advanced functional way to predictively manage state, using reducers and actions.
-* With ```Redux```, we need to write more verbose code than we were doing with ```MobX```, because there is less magic but more trackable interactions
-* State of an app is managed in a central store, caled the root reducer, which is a combination of all the reducers in the app. Components can bind to parts of this app state by connecting to reducers responsible for that part of the app state, and can change parts of this app state by creating actions, which are caught up by reducers again which return the changed state
-* A reducer is a function which gives part of this central app state to any component which is interested in this part of state, like
+* With ```Redux```, we need to write more verbose code than we were doing with ```MobX```, because there is less magic but more trackable interactions with state
+* With ```Redux```, the app state is a single immutable tree of keys and state parts corresponding to these keys. State is not manipulated directly inside the components, but indirectly via actions created in the component DOM or lifecycle events and reducers which catch and process these actions and then create new version of the corresponding state part, which then replace that part of the app state.
+* State of an app is managed in a central store, called the root reducer, which is a combination of all the reducers in the app. Components can bind to parts of this app state by connecting to reducers responsible for that part of the app state, and can change parts of this app state by creating actions, which are dispatched to (caught up by) reducers which again return the changed state
+* A reducer is a function which gives part of this central app state to any component which is interested in this part of state. We can write a reducer which returns some static data, like
   ```js
   //inside booksReducer.js
   export default function() {
@@ -483,7 +486,7 @@ TODO: I will soon be adding to this repo the full source code for the example sn
     ]
   }
   ```
-  Note that the reducer function above returns static data, reducer functions are triggered by actions and normally return specific data based on the action type, refer to actions below for more details
+  Note that reducer functions are triggered by actions and normally return specific data based on the action type, refer to actions below for more details
 * Components which are interested in any part of the central app state are called containers (or smart components), components which only bind to their props without communicating with the central app state are simply called components (or dumb components)
 * At the start of the app, all reducers are combined into a single app state store (root reducer) by using ```combineReducer()```, like
   ```js
@@ -503,6 +506,7 @@ TODO: I will soon be adding to this repo the full source code for the example sn
     <App/>
   </Provider>
   ```
+* The ```Redux``` store has ```getState()``` (gets the store state), ```subscribe()``` (subscribes to state changes), and ```dispatch()``` (dispatches an action to all reducers) methods which implement a pub/sub pattern and action dispatching. The root ```<App>``` component subscribes to the store to rerender when any part of the state in the store changes (the store calls ```ReactDOM.render()``` each time state changes inside the store). However, wo don't use these methods inside other components, instead we use functions which come with ```react-redux``` to bind component properties to store state and to dispatch actions using action creators. We typically place all reducers inside a ```reducers``` folder, and all actions into an ```actions``` folder in the project structure.
 * Inside the container, the props of the container are bound to a reducer (part of the central app state) by declaring a ```mapStateToProps()``` function, and calling ```connect()``` function, like
   ```js
     class BookList extends React.Component {
@@ -567,7 +571,7 @@ TODO: I will soon be adding to this repo the full source code for the example sn
   }
   ```
   Here, the ```state``` parameter is not the whole central app state, instead it is the ```selectedBook``` part inside ```rootReducer```, which this reducer is responsible for, and it is the value that was previously returned by this reducer. Also, the initial parameter value ```state = null``` applies only to the initial first call where there is no previously set state and it comes as undefined. We can define the initial state value for ```selectedBook``` part this way.
-* In ```Redux```, the parts of the app state returned by reducers should be immutable, so a reducer should not return a mutated version of the state, it should return create a fresh new one and return that.
+* In ```Redux```, the parts of the app state returned by reducers should be immutable, so a reducer should not return a mutated version of the state, it should return create a fresh new one and return that. Reducers should be pure functions, meaning that their output only depends on their inputs (function parameters), and they should not mutate their input parameters either. They should not have side-effects, like making a database or network api call, or print something to the screen.
 * We can define the reducer which responds to this "SELECT_BOOK" action, like
   ```js
   //inside selectedBookReducer.js
@@ -623,6 +627,16 @@ TODO: I will soon be adding to this repo the full source code for the example sn
   }
   ```
 * To chain actions which return promises, or to chain async calls inside an action, or to catch errors from an async api call in an action, we need to use the ```redux-thunk``` library
+* With ```redux-thunk```, inside our action creator, we can return a fuction which takes ```dispatch``` as parameter and returns an action. ```dispatch``` is the function which actually dispatches an action to all reducers. We can create the same action as in the previous example, but this time returning a function rather than a promise, like
+  ```js
+  //inside fetchWeather.js
+  export function fetchWeather(city) {
+    const promise = axios.get(...someURL...);
+    return (dispatch) => {
+      promise.then(data => dispatch({ type: "FETCH_WEATHER", weather: data }));
+    }
+  }
+  ```
 
 ## React-bootstrap components
 * Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without need for jQuery, refer to https://react-bootstrap.github.io for details and https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121 for a quick tutorial (also shows usage of ```reactstrap```, an alternative library for using ```bootstrap``` with React)
