@@ -10,7 +10,7 @@ TODO: I will soon be adding to this repo, the full source code for the example s
 
 # Table of contents
 * [Installation](#install)
-* [Creating and running a React app](#create)
+* [Creating and running a React app](#creating)
 * [Component](#component)
 * [Import files](#import)
 * [Binding this to event handlers](#bindthis)
