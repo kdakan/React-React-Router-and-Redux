@@ -13,10 +13,11 @@ TODO: I will soon be adding to this repo, the full source code for the example s
 * ```cd c:\repos```
 * ```npx create-react-app MyReactApp``` (npx installs create-react-app if missing, you can ```npm install -g create-react-app``` and ```create-react-app MyReactApp``` instead)
 * ```cd MyReactApp```
-* ```npm install --save bootstrap``` (necessary if using bootstrap.css for styling)
+* ```npm install --save bootstrap``` (if using bootstrap.css for styling)
 * Note that with npm ver. 5, there is no need to give the ```--save``` option, ```npm install somePackage``` works the same way as ```npm install --save somePackage```, so that it adds ```somePackage``` to the ```dependencies``` section in the ```packages.json``` file.
 * ```npm install --save prop-types``` (if using ```PropTypes``` for type cecking on props)
 * ```npm install --save react-router-dom``` (if using the router)
+* ```npm install --save redux redux-thunk``` (if using ```redux``` for state management)
 * ```npm start``` (starts the app in development mode, with hot reload, so that you can see the changes without restarting the app)
 * ```npm test``` (runs ```jest``` tests in the app)
 * ```npm build``` (builds the app for xcopy deployment to production)
@@ -515,11 +516,10 @@ TODO: I will soon be adding to this repo, the full source code for the example s
 * The ```Redux``` store has ```getState()``` (gets the store state), ```subscribe()``` (subscribes to state changes), and ```dispatch()``` (dispatches an action to all reducers) methods which implement a pub/sub pattern and action dispatching. The root ```<App>``` component subscribes to the store to re-render when any part of the state in the store changes (the store calls ```ReactDOM.render()``` each time state changes inside the store). However, wo don't use these methods inside other components, instead we use functions which come with ```react-redux``` to bind component properties to store state and to dispatch actions using action creators. We typically place all reducers inside a ```reducers``` folder, and all actions into an ```actions``` folder in the project structure.
 * Inside the container, the props of the container are bound to a reducer (part of the central app state) by declaring a ```mapStateToProps()``` function, and calling ```connect()``` function, like
   ```jsx
-    class BookList extends React.Component {
-      render() {
-        const items = this.props.bookCollection.map(item => <li key={item.id}>{item.title}</li>);
-        return <ul>{items}</ul>;
-      }
+  class BookList extends React.Component {
+    render() {
+      const items = this.props.bookCollection.map(item => <li key={item.id}>{item.title}</li>);
+      return <ul>{items}</ul>;
     }
     
     mapStateToProps(state) {
@@ -527,8 +527,9 @@ TODO: I will soon be adding to this repo, the full source code for the example s
         bookCollection: state.books
       };
     }
-    
-    export default connect(mapStateToProps)(BookList);
+  }
+  
+  export default connect(mapStateToProps)(BookList);
   ```
   Here, ```mapStateToProps()``` binds the ```BooksList``` component ```props``` to the ```books``` part of the central app state. Whenever the ```books``` changes, ```BooksList``` will be re-rendered with new values on its ```props.bookCollection```. We can have multiple ```props``` to state members mappings inside the returned object. The call to ```connect()``` function turns the dumb ```BooksList``` component into a smart component (container).
 * Any event which needs to change part of the app state creates an action which is an object with an action type and various data members, like
@@ -541,13 +542,12 @@ TODO: I will soon be adding to this repo, the full source code for the example s
 * Each action can be processed by (dispatched to) all the reducers in the app, and a reducer may respond (return specific date) if it is interested in the action, this way changing parts of the central app state. So a reducer is typically a switch statement with cases for each action type it is interested in to respond with a state change.
 * Inside the container, to ensure the dispatching of an action to all reducers, we declare a ```mapDispatchToCreators()``` function, and calling ```connect()``` function, like
   ```jsx
-    class BookList extends React.Component {
-      render() {
-        const items = this.props.bookCollection.map(item => 
-	  <li key={item.id} onClick={(e) => this.props.selectBook(item)}>{item.title}</li>
-	);
-        return <ul>{items}</ul>;
-      }
+  class BookList extends React.Component {
+    render() {
+      const items = this.props.bookCollection.map(item => 
+	<li key={item.id} onClick={(e) => this.props.selectBook(item)}>{item.title}</li>
+      );
+      return <ul>{items}</ul>;
     }
 
     mapStateToProps(state) {
@@ -559,8 +559,9 @@ TODO: I will soon be adding to this repo, the full source code for the example s
     mapDispatchToCreators(state) {
       return bindActionCreators({selectBook: selectBook}, dispatch);
     }
-    
-    export default connect(mapStateToProps, mapDispatchToCreators)(BookList);
+  }
+   
+  export default connect(mapStateToProps, mapDispatchToCreators)(BookList);
   ```
   Here, ```mapStateToProps()``` allows dispatching of selectBook action to all reducers, and also adds ```selectBook``` on the ```BooksList``` component ```props```, so that we can call it like ```this.props.selectBook(...)``` to create a ```"SELECT_BOOK"``` action. We can have multiple ```props``` to ```action``` mappings inside the first parameter to ```bindActionCreators()``` call. We also add ```mapStateToPropscall``` parameter to the ```connect()``` function call.
 * We can define the reducer which responds to this "SELECT_BOOK" action, like
@@ -591,13 +592,12 @@ TODO: I will soon be adding to this repo, the full source code for the example s
   ```
 * We can bind a simple ```BookDetails``` component to the ```selectedBook``` part of the app state, like
 ```jsx
-    class BookDetails extends React.Component {
-      render() {
-        if (!this.props.book)
-	  return <div>No book selected..</div>;
+  class BookDetails extends React.Component {
+    render() 
+      if (!this.props.book)
+        return <div>No book selected..</div>;
 	  
-        return <div>{this.props.book}</div>;
-      }
+      return <div>{this.props.book}</div>;
     }
     
     //binds the BookDetails component props to the selectedBook part of the central app state
@@ -607,9 +607,10 @@ TODO: I will soon be adding to this repo, the full source code for the example s
         book: state.selectedBook
       };
     }
+  }
     
-    //turns the dumb component into a smart component (container)
-    export default connect(mapStateToProps)(BookDetails);
+  //turns the dumb component into a smart component (container)
+  export default connect(mapStateToProps)(BookDetails);
   ```
 * We can define operations to put state into and get state out of ```localStorage```, like
   ```jsx
@@ -665,7 +666,7 @@ TODO: I will soon be adding to this repo, the full source code for the example s
   }
   ```
 * To chain actions which return promises, or to chain async calls inside an action, or to catch errors from an async api call in an action, we need to use the ```redux-thunk``` library.
-* With ```redux-thunk```, inside our action creator, we can return a fuction which takes ```dispatch``` as parameter and returns an action. ```dispatch``` is the function which actually dispatches an action to all reducers. We can create the same action as in the previous example, but this time returning a function rather than a promise, like
+* With ```redux-thunk```, inside our action creator, we can return a fuction which takes ```dispatch``` and ```getState``` as parameters and returns an action. ```dispatch``` is the function which actually dispatches an action to all reducers. We can create the same action as in the previous example, but this time returning a function rather than a promise, like
   ```jsx
   //inside fetchWeather.js
   export function fetchWeather(city) {
@@ -675,6 +676,68 @@ TODO: I will soon be adding to this repo, the full source code for the example s
     }
   }
   ```
+* To display a busy indicator and to display errors from an api call inside a component, we can make multiple dispatches, first with a "FETCH_WEATHER_BUSY", then on success a "FETCH_WEATHER_SUCCESS", and in case of errors a "FETCH_WEATHER_ERROR", and we can even cache fetched data, like
+  ```jsx
+  //inside fetchWeather.js
+  export function fetchWeather(city) {
+    const promise = axios.get(...someURL...);
+    return function(dispatch, getState) {
+      const { weather } = getState();
+      //no action necessary if there is cached data
+      if (weather[city])
+        return;
 
+      dispatch({ type: "FETCH_WEATHER_BUSY", city: city });
+
+      promise.then(data => dispatch({ type: "FETCH_WEATHER_SUCCESS", weather: data }),
+                   error => dispatch({ type: "FETCH_WEATHER_ERROR", error: error, city: city }));
+    }
+  }
+  ```
+  and inside the ```WeatherInfo``` component, like
+  ```jsx
+  import { Component } from 'react'
+  import { connect } from 'react-redux'
+  import { fetchWeather } from './actions'
+
+  class WeatherInfo extends Component {
+    componentDidMount() {
+      this.props.dispatch(fetchWeather(this.props.city));
+    }
+
+    componentDidUpdate(prevProps) {
+      if (prevProps.city !== this.props.city) {
+        this.props.dispatch(fetchWeather(this.props.city));
+      }
+    }
+
+    render() {
+      if (this.props.isBusy)
+        return <p>Loading...</p>;
+	
+      if (this.props.error)
+        return (
+          <p>Error!</p>
+          <p>{this.props.error</p>
+        );
+      
+      return (
+        <p>{this.props.weather.city</p>
+        <p>{this.props.weather.temperature</p>
+      );
+    }
+
+    mapStateToProps(state) {
+      return {
+        weather: state.weather,
+        isBusy: state.isBusy,
+        error: state.error
+      };
+    }
+  }
+  
+  export default connect(mapStateToProps)(WeatherInfo);
+  ```
+  
 ## React-bootstrap components
 * Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without need for jQuery, refer to https://react-bootstrap.github.io for details and https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121 for a quick tutorial (also shows usage of ```reactstrap```, an alternative library for using ```bootstrap``` with React)
