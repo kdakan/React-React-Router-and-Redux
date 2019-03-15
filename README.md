@@ -698,7 +698,7 @@ TODO: I will soon be adding to this repo, the full source code for the example s
   ```jsx
   import { Component } from 'react'
   import { connect } from 'react-redux'
-  import { fetchWeather } from './actions'
+  import fetchWeather from './actions/fetchWeather'
 
   class WeatherInfo extends Component {
     componentDidMount() {
