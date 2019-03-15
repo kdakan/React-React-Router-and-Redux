@@ -8,7 +8,7 @@ Before beginning this tutorial, make sure you have some knowledge of the ES6 fea
 TODO: I will soon be adding to this repo, the full source code for the example snippets.
 
 
-# Table of contents
+## Table of contents
 * [Installation](#installation)
 * [Creating and running an app](#creating-and-running-an-app)
 * [Components](#components)
