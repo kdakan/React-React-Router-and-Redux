@@ -481,6 +481,7 @@ TODO: I will soon be adding to this repo, the full source code for the example s
 * With ```Redux```, we need to write more verbose code than we were doing with ```MobX```, because there is less magic but more trackable interactions with state.
 * With ```Redux```, the app state is a single immutable tree of keys and state parts corresponding to these keys. State is not manipulated directly inside the components, but indirectly via actions created in the component DOM or lifecycle events and reducers which catch and process these actions and then create new version of the corresponding state part, which then replace that part of the app state.
 * State of an app is managed in a central store, called the root reducer, which is a combination of all the reducers in the app. Components can bind to parts of this app state by connecting to reducers responsible for that part of the app state, and can change parts of this app state by creating actions, which are dispatched to (caught up by) reducers which again return the changed state.
+* ```Redux``` name comes from the combination of ```Reducer``` and ```Flux```, and it is an implementation of the ```Flux``` architecture with reducers.
 * A reducer is a function which gives part of this central app state to any component which is interested in this part of state. We can write a reducer which returns some static data, like
   ```jsx
   //inside booksReducer.js
@@ -492,7 +493,8 @@ TODO: I will soon be adding to this repo, the full source code for the example s
     ]
   }
   ```
-  Note that reducer functions are triggered by actions and normally return specific data based on the action type, refer to actions below for more details.
+  Here, the ```booksReducer``` does not need any parameter, but reducers in general can take ```state``` and ```action``` as a parameter.
+* Reducer functions are triggered by actions and normally return specific part of state data based on the action type, refer to actions below for more details.
 * Components which are interested in any part of the central app state are called containers (or smart components), components which only bind to their props without communicating with the central app state are simply called components (or dumb components).
 * At the start of the app, all reducers are combined into a single app state store (root reducer) by using ```combineReducer()```, like
   ```jsx
@@ -611,6 +613,30 @@ TODO: I will soon be adding to this repo, the full source code for the example s
     
   //turns the dumb component into a smart component (container)
   export default connect(mapStateToProps)(BookDetails);
+  ```
+* When using ```Redux```, we don't have to keep all state in the store, we can use route parameters and query strings that comes from react router, or component state to keep temporary state. For example, we can use an ```:id``` route parameter inside the ```BookDetails``` container which is associated with a ```<Route>```, like
+  ```jsx
+  <Route path="/books/:id" component={BookDetails} />
+  ```
+  and assuming ```state.allBooks``` is an object with an ```id``` field which maps to the book with that id,
+  ```jsx
+  class BookDetails extends React.Component {
+    render() 
+      if (!this.props.bookId)
+        return <div>No book selected..</div>;
+	  
+      return <div>{this.props.books[this.props.bookId].name}</div>;
+    }
+    
+    mapStateToProps(state, ownProps) {
+      return {
+        books: state.allBooks,
+	bookId: ownProps.params.id
+      };
+    }
+  }
+    
+  export default withRouter(connect(mapStateToProps)(BookDetails));
   ```
 * We can define operations to put state into and get state out of ```localStorage```, like
   ```jsx
@@ -738,28 +764,6 @@ TODO: I will soon be adding to this repo, the full source code for the example s
   
   export default connect(mapStateToProps)(WeatherInfo);
   ```
-* When using ```redux```, we don't have to keep all state in the store, we can use route parameters and query strings that comes from react router, or component state to keep temporary state. For example, we can use an ```:id``` route parameter inside a container, like
-if we have a <Linkn :id route parameter associated with a component
-  ```jsx
-  class BookDetails extends React.Component {
-    render() 
-      if (!this.props.book)
-        return <div>No book selected..</div>;
-	  
-      return <div>{this.props.book}</div>;
-    }
-    
-    //binds the BookDetails component props to the selectedBook part of the central app state
-    //whenever the selectedBook change, BookDetails will be re-rendered with new values on its book props
-    mapStateToProps(state) {
-      return {
-        book: state.selectedBook
-      };
-    }
-  }
-    
-  //turns the dumb component into a smart component (container)
-  export default connect(mapStateToProps)(BookDetails);
-  ```
+
 ## React-bootstrap components
 * Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without need for jQuery, refer to https://react-bootstrap.github.io for details and https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121 for a quick tutorial (also shows usage of ```reactstrap```, an alternative library for using ```bootstrap``` with React)
