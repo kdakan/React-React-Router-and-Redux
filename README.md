@@ -591,7 +591,7 @@ TODO: I will soon be adding to this repo, the full source code for the example s
   }
   ```
 * We can bind a simple ```BookDetails``` component to the ```selectedBook``` part of the app state, like
-```jsx
+  ```jsx
   class BookDetails extends React.Component {
     render() 
       if (!this.props.book)
@@ -738,6 +738,28 @@ TODO: I will soon be adding to this repo, the full source code for the example s
   
   export default connect(mapStateToProps)(WeatherInfo);
   ```
-  
+* When using ```redux```, we don't have to keep all state in the store, we can use route parameters and query strings that comes from react router, or component state to keep temporary state. For example, we can use an ```:id``` route parameter inside a container, like
+if we have a <Linkn :id route parameter associated with a component
+  ```jsx
+  class BookDetails extends React.Component {
+    render() 
+      if (!this.props.book)
+        return <div>No book selected..</div>;
+	  
+      return <div>{this.props.book}</div>;
+    }
+    
+    //binds the BookDetails component props to the selectedBook part of the central app state
+    //whenever the selectedBook change, BookDetails will be re-rendered with new values on its book props
+    mapStateToProps(state) {
+      return {
+        book: state.selectedBook
+      };
+    }
+  }
+    
+  //turns the dumb component into a smart component (container)
+  export default connect(mapStateToProps)(BookDetails);
+  ```
 ## React-bootstrap components
 * Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without need for jQuery, refer to https://react-bootstrap.github.io for details and https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121 for a quick tutorial (also shows usage of ```reactstrap```, an alternative library for using ```bootstrap``` with React)
