@@ -8,51 +8,24 @@ Before beginning this tutorial, make sure you have some knowledge of the ES6 fea
 TODO: I will soon be adding to this repo, the full source code for the example snippets.
 
 
-Table of contents
-=================
+# Table of contents
+* [Installation](#install)
+* [Creating and running a React app](#create)
+* [Component](#component)
+* [Import files](#import)
+* [Binding this to event handlers](#bindthis)
+* [Lifecycle methods](#lifecycle)
+* [Working with forms and inputs](#inputs)
+* [Type-checking on props](#proptypes)
+* [Routing](#routing)
+* [Context api](#contextapi)
+* [State management](#managestate)
+* [State management with ```MobX```](#mobx)
+* [State management with ```Redux```](#redux)
+* [Chaining async calls with ```Redux Thunk```](#reduxthunk)
+* [React-bootstrap components](#bootstrapcomponents)
 
-<!--ts-->
-   * [gh-md-toc](#gh-md-toc)
-   * [Table of contents](#table-of-contents)
-   * [Installation](#installation)
-   * [Usage](#usage)
-      * [STDIN](#stdin)
-      * [Local files](#local-files)
-      * [Remote files](#remote-files)
-      * [Multiple files](#multiple-files)
-      * [Combo](#combo)
-      * [Auto insert and update TOC](#auto-insert-and-update-toc)
-      * [Github token](#github-token)
-   * [Tests](#tests)
-   * [Dependency](#dependency)
-<!--te-->
-
-
-Installation
-============
-
-Linux
-```bash
-$ wget https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/gh-md-toc
-$ chmod a+x gh-md-toc
-```
-
-OSX
-```bash
-$ curl https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/gh-md-toc -o gh-md-toc
-$ chmod a+x gh-md-toc
-```
-
-Usage
-=====
-
-
-STDIN
-
-
-[Installation, creating, and running an app:](#installation)
-
-## Installation, creating, and running an app:
+## Installation:
 * We can use the official CLI ```create-react-app``` to start developing in React, without getting lost in ```webpack``` and ```babel``` tool configuration.
 * ```npm install -g npm@latest```
 * ```cd c:\repos```
@@ -63,14 +36,16 @@ STDIN
 * ```npm install --save prop-types``` (if using ```PropTypes``` for type cecking on props)
 * ```npm install --save react-router-dom``` (if using the router)
 * ```npm install --save redux redux-thunk``` (if using ```redux``` for state management)
+* In ```VSCode``` editor, install ```Debugger for Chrome``` extension, and change the port to 3000 inside launch.json file, to debug inside the editor. Without this extension, you can still debug inside the ```Chrome``` browser.
+* In ```Chrome```, install ```React Developer Tools``` extension, to see React component hierarchy, props and state inside Chrome F12 React tab.
+ 
+## Creating and running a React app:
 * ```npm start``` (starts the app in development mode, with hot reload, so that you can see the changes without restarting the app)
 * ```npm test``` (runs ```jest``` tests in the app)
 * ```npm build``` (builds the app for xcopy deployment to production)
 * ```npm eject``` (ejects the app source from ```create-react-app```, use this if you need to change ```webpack``` config, after ejecting, you cannot use create-react-app again for the same app source)
-* In ```VSCode``` editor, install ```Debugger for Chrome``` extension, and change the port to 3000 inside launch.json file, to debug inside the editor. Without this extension, you can still debug inside the ```Chrome``` browser.
-* In ```Chrome```, install ```React Developer Tools``` extension, to see React component hierarchy, props and state inside Chrome F12 React tab.
- 
-## Component, props, state, JSX, array rendering, etc.:
+
+## Component:
 * A React app is a tree of components, which communicate with each other via their props, which can be of any type, including primitives, objects, arrays, sets, and callback functions.
 * There is a root ```App``` component, which hosts all other components, and is rendered on a ```div``` with ```id=app``` inside   ```index.html```, using 
   ```jsx 
@@ -171,7 +146,7 @@ STDIN
 * When structuring an app into components, it is easier to start with components without state, DOM events, and callback functions, and visualize a static page, and later add state, DOM events, and callback functions later one by one.
 * It is better to place functions that do not use props or state or this, outside the component function or class.
  
-## Importing various file types:
+## Import files:
 * We can import eact components, like 
   ```jsx import MyComponent from './components/myComponent'``` 
   This code loads either from the ```./components/myComponent.js``` file or from the ```index.js``` file inside the ```./components/myComponent``` folder.
@@ -196,7 +171,7 @@ STDIN
   <img src={myImage} />
   ```
  
-## Binding this to event handlers (callback functions):
+## Binding this to event handlers:
 * We need to bind ```this``` to DOM event handler callback functions, in order to access component members such as ```this.props``` or ```this.state```
 * The official recommended and most performant way is to bind ```this``` explicitly inside the constructor, like
   ```jsx
@@ -316,7 +291,7 @@ STDIN
   ```
 * PropTypes can be ```string```, ```number```, ```bool```, ```array```, ```object```, ```func```, ```symbol```, ```node```, ```element```, ```instanceOf(someJSClass)```, ```oneOf(someArrayOfVales)```, ```oneOfType(someArrayOfPropTypes)```, ```shape({ name: PropTypes.string.isRequired, age: PropTypes.number })```, etc.
 
-## Routing (server and client, static vs. dynamic):
+## Routing:
 * We need routing for the browser back/forward buttons to work properly and also allow deep linking via urls, without reloading the ```index.html``` from the server and losing all the state.
 * We need server side routing/rendering to serve public pages for better SEO, and we need client routing/rendering to serve authorized content for better user experience (for faster transitions without loading the full page).
 * We need at least one route on the server, to serve the ```index.html``` and its js and css files (the React app), like
@@ -505,14 +480,14 @@ STDIN
 * Context can hold any javascript object, not only primitives.
 * It is advisable to use a state management library like ```Redux``` or ```MobX``` instead of the lower level Context api.
 
-## State management (building an app without and with a state management library)
+## State management:
 * When starting a new app or a new component tree, it is easier to start without thinking about any state and interaction, and just breaking down the target HTML output we want, into dumb visual components with no state or DOM events. The root component of the app or the component tree can be fed through its props with static data for prototyping the visuals.
 * Next, we should identify the changing parts of the data and turn these parts into state. How we implement state is different depending on whether we are using a state management library or not. In any case, we do not put derived values into their own state, instead we use functions, getters, or in case of ```MobX```, ```@computed``` functions to compute derived state from true state.
 * If we are not using a state management library (meaning that if our app is very small), then we need to find the components which will host this state.
 * If we are using a state management library (meaning that if our app is not very small), then we need to place this state into a store or multiple stores and pass the store to the component via its props, and fire actions on DOM events without using setState()
 * Handling state with ```setState()``` inside an individual component is simple, however when there is a component that depends on another component's state, things get complicated. Without using a state management library like ```Redux``` or ```MobX```, a common way to share state between components is called lifting the state up to a common ancestor component. Here we put the state changing code on the common ancestor component, and share the code (callback function) and shared state down the tree to the other components through their props. Inside the child components, we bind to this shared state passed on props, and call the callback function passed on props to change this state and trigger other components which depend on this state. As the app grows larger, this way of sharing state leads to complex and unmaintainable code and it is hard to find dependent components inside the codebase.
 
-## State management with ```MobX```
+## State management with ```MobX```:
 * ```MobX``` library offers a simple object oriented way to manage state, using observables, observers, and optional actions.
 * With ```MobX```, we do not initialize the component's state property, instead, we mark the state variable with the ```@observable``` annotation.
 * Inside an event handler, we do not use ```setState()``` to change state, instead, we change it like changing a regular javascript primitive value, object or array. The observable variables should be inside an object, like a component or store object, because they are implemented auto-magically internally with property getters ans setters. We also mark the component or components which uses/depends on this state variable with the ```@observer``` annotation.
@@ -521,7 +496,7 @@ STDIN
 * Refer to https://mobx.js.org/getting-started.html for a quick tutorial on ```MobX```
 * Refer to https://mobx.js.org/best/store.html for best practices on structuring stores (like a single ui store and multiple domain stores)
 
-## State management with ```Redux```
+## State management with ```Redux```:
 * ```Redux``` library offers an advanced functional way to predictively manage state, using reducers and actions.
 * With ```Redux```, we need to write more verbose code than we were doing with ```MobX```, because there is less magic but more trackable interactions with state.
 * With ```Redux```, the app state is a single immutable tree of keys and state parts corresponding to these keys. State is not manipulated directly inside the components, but indirectly via actions created in the component DOM or lifecycle events and reducers which catch and process these actions and then create new version of the corresponding state part, which then replace that part of the app state.
@@ -736,6 +711,8 @@ STDIN
     return state;
   }
   ```
+
+## Chaining async calls with ```Redux Thunk```
 * To chain actions which return promises, or to chain async calls inside an action, or to catch errors from an async api call in an action, we need to use the ```redux-thunk``` library.
 * With ```redux-thunk```, inside our action creator, we can return a fuction which takes ```dispatch``` and ```getState``` as parameters and returns an action. ```dispatch``` is the function which actually dispatches an action to all reducers. We can create the same action as in the previous example, but this time returning a function rather than a promise, like
   ```jsx
@@ -809,6 +786,6 @@ STDIN
   
   export default connect(mapStateToProps)(WeatherInfo);
   ```
-
-## React-bootstrap components
+  
+## React-bootstrap components:
 * Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without need for jQuery, refer to https://react-bootstrap.github.io for details and https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121 for a quick tutorial (also shows usage of ```reactstrap```, an alternative library for using ```bootstrap``` with React)
