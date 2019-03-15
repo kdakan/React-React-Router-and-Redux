@@ -718,12 +718,12 @@ TODO: I will soon be adding to this repo, the full source code for the example s
       if (this.props.error)
         return (
           <p>Error!</p>
-          <p>{this.props.error</p>
+          <p>{this.props.error}</p>
         );
       
       return (
-        <p>{this.props.weather.city</p>
-        <p>{this.props.weather.temperature</p>
+        <p>{this.props.weather.city}</p>
+        <p>{this.props.weather.temperature}</p>
       );
     }
 
