@@ -10,7 +10,7 @@ TODO: I will soon be adding to this repo, the full source code for the example s
 
 # Table of contents
 * [Installation](#install)
-* [Creating and running a React app](#creating)
+* [Creating and running a React app](#create)
 * [Component](#component)
 * [Import files](#import)
 * [Binding this to event handlers](#bindthis)
@@ -25,6 +25,7 @@ TODO: I will soon be adding to this repo, the full source code for the example s
 * [Chaining async calls with ```Redux Thunk```](#reduxthunk)
 * [React-bootstrap components](#bootstrapcomponents)
 
+<a name="install"/>
 ## Installation:
 * We can use the official CLI ```create-react-app``` to start developing in React, without getting lost in ```webpack``` and ```babel``` tool configuration.
 * ```npm install -g npm@latest```
@@ -38,13 +39,15 @@ TODO: I will soon be adding to this repo, the full source code for the example s
 * ```npm install --save redux redux-thunk``` (if using ```redux``` for state management)
 * In ```VSCode``` editor, install ```Debugger for Chrome``` extension, and change the port to 3000 inside launch.json file, to debug inside the editor. Without this extension, you can still debug inside the ```Chrome``` browser.
 * In ```Chrome```, install ```React Developer Tools``` extension, to see React component hierarchy, props and state inside Chrome F12 React tab.
- 
+
+<a name="create"/>
 ## Creating and running a React app:
 * ```npm start``` (starts the app in development mode, with hot reload, so that you can see the changes without restarting the app)
 * ```npm test``` (runs ```jest``` tests in the app)
 * ```npm build``` (builds the app for xcopy deployment to production)
 * ```npm eject``` (ejects the app source from ```create-react-app```, use this if you need to change ```webpack``` config, after ejecting, you cannot use create-react-app again for the same app source)
 
+<a name="component"/>
 ## Component:
 * A React app is a tree of components, which communicate with each other via their props, which can be of any type, including primitives, objects, arrays, sets, and callback functions.
 * There is a root ```App``` component, which hosts all other components, and is rendered on a ```div``` with ```id=app``` inside   ```index.html```, using 
@@ -145,7 +148,8 @@ TODO: I will soon be adding to this repo, the full source code for the example s
   ```
 * When structuring an app into components, it is easier to start with components without state, DOM events, and callback functions, and visualize a static page, and later add state, DOM events, and callback functions later one by one.
 * It is better to place functions that do not use props or state or this, outside the component function or class.
- 
+
+<a name="import"/>
 ## Import files:
 * We can import eact components, like 
   ```jsx import MyComponent from './components/myComponent'``` 
