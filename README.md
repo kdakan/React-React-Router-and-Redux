@@ -22,6 +22,7 @@ TODO: I will soon be adding to this repo, the full source code for the example s
 * [State management](#state-management)
 * [State management with ```MobX```](#state-management-with-mobx)
 * [State management with ```Redux```](#state-management-with-redux)
+* [Calling an async api with ```Redux```](#calling-an-async-api-with-redux)
 * [Chaining async calls with ```Redux Thunk```](#chaining-async-calls-with-redux-thunk)
 * [React-bootstrap components](#react-bootstrap-components)
 
@@ -691,7 +692,11 @@ TODO: I will soon be adding to this repo, the full source code for the example s
   store.subscribe(() => setStateToLocalStorage(store.getState()));
   ```
   This way we don't lose state even when the user refreshes the page.
-* Asynchronous actions need the ```redux-promise``` middleware. A middleware is a function that sits between actions and reducers, and can modify an action or even cancel it before it reaches the reducers.
+
+## Calling an async api with ```Redux```:
+* We can call an asynchronous api inside the component lifecycle methods and dispatch an action when the call finishes (the promise resolves and returns a result), but this is not the best way to do this.
+* Also, we should not call an api inside a reducer function, because reducer functions should be pure functions (the result should only depend on the function arguments, and there should be no side effects).
+* A better way of calling an asynchronous api is inside the actions, but then we cannot return the result, only the promise. For the reducers to work with an action that returns a promise, we need the ```redux-promise``` middleware. A middleware is a function that sits between actions and reducers, and can modify an action or even cancel it before it reaches the reducers.
 * We send the promise returned from the async api, such as ```axios.get(someURL)```, as the payload data in the action. ```redux-promise``` will just wait until the promise resolves and change the promise payload on the action and turn it into the result data coming from the promise, so that the reducers only see the result data, not the promise payload on their action parameter. We can code the action creator, like
   ```jsx
   //inside fetchWeather.js
