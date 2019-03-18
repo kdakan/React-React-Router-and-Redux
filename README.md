@@ -1,12 +1,9 @@
 # React with React Router 4, Redux and MobX Tutorial
-This is an extensive tutorial on React v.16 with React Router v.4, and using Redux or MobX for state management. This can also serve as a mini-reference. This tutorial takes you from beginner level to intermediate/advanced level and has enought breadth and depth to get you going with most of your projects. 
+This is an extensive tutorial on React v.16 with React Router v.4, and using Redux for state management. This can also serve as a mini-reference. This tutorial will take you from beginner level to intermediate/advanced level and covers enough breadth and depth to get you going with most of your projects.
 
-You need to apply these concepts on a hands-on project to get competent. First you need to forget about the way things are done in Angular. There is no controller, service, or dependency injection, React only handles the view part of the MV* architecture, programmers mainly utilize components with props and state. However, most apps do not use the state that comes with React components, and use a global state manager like ```Redux``` or ```Mobx``` to simplify handling and sharing state across components. 
+Before beginning, make sure you have some knowledge of ES6. I have a tutorial here at https://github.com/kdakan/ES6-Tutorial in case you want to brush up on ES6.
 
-Before beginning this tutorial, make sure you have some knowledge of the ES6 features added to javascript. I have a tutorial on this link: https://github.com/kdakan/ES6-Tutorial in case you want to brush up on ES6.
-
-TODO: I will soon be adding to this repo, the full source code for the example snippets.
-
+Unlike Angular, React only handles the view part of the MV* architecture. There is no controller, service, or dependency injection. Programmers mainly utilize components with props and state and use a global state manager like ```Redux``` or ```Mobx``` to simplify handling and sharing state between components across the app. 
 
 ## Table of contents
 * [Installation](#installation)
@@ -25,6 +22,7 @@ TODO: I will soon be adding to this repo, the full source code for the example s
 * [Calling an async api with ```Redux```](#calling-an-async-api-with-redux)
 * [Chaining async calls with ```Redux Thunk```](#chaining-async-calls-with-redux-thunk)
 * [React-bootstrap components](#react-bootstrap-components)
+* [Hands on project: ```pluralsight.com``` clone](#hands-on-project-pluralsightcom-clone)
 
 ## Installation:
 * We can use the official CLI ```create-react-app``` to start developing in React, without getting lost in ```webpack``` and ```babel``` tool configuration.
@@ -794,3 +792,6 @@ TODO: I will soon be adding to this repo, the full source code for the example s
   
 ## React-bootstrap components:
 * Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without need for jQuery, refer to https://react-bootstrap.github.io for details and https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121 for a quick tutorial (also shows usage of ```reactstrap```, an alternative library for using ```bootstrap``` with React)
+
+## Hands on project: ```pluralsight.com``` clone:
+* TODO
