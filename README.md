@@ -9,7 +9,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * [Installation](#installation)
 * [Creating and running an app](#creating-and-running-an-app)
 * [Components](#components)
-* [Importing files](#importing-files)
+* [Importing components, CSS, and images](#importing-components-css-and-images)
 * [Binding this to event handlers](#binding-this-to-event-handlers)
 * [Lifecycle methods](#lifecycle-methods)
 * [Working with forms and inputs](#working-with-forms-and-inputs)
