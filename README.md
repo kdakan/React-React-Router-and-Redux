@@ -147,17 +147,18 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * It is better to place functions that do not use props or state or this, outside the component function or class.
 
 ## Importing components, CSS, and images:
+* If you're not comfortable with the ES6 module syntax, refer to the "ES6 modules" section in my "ES6 Tutorial" here: https://github.com/kdakan/ES6-Tutorial#es6-modules
 * We can import React components, like 
   ```import MyComponent from './components/myComponent'``` 
-  This code loads the ```MyComponent``` which is ```export default``` either from the ```./components/myComponent.js``` file or from the ```index.js``` file inside the ```./components/myComponent``` folder. 
+  This code loads the ```MyComponent``` which is ```default export``` either from the ```./components/myComponent.js``` file or from the ```index.js``` file inside the ```./components/myComponent``` folder. 
 * It is common to use features as parent folder names or container names as parent folder names and to place other related components inside subfolders. For example ```./components/search``` folder can have ```./components/search/filter/search-filter.js```, ```./components/search/panel/search-panel.js```, ```./components/search/panel/search-container.js```, ```./components/search/list/search-list.js```, ```./components/search/list/search-list-item.js``` components. There can also be a ```./components/search/index.js``` where each of the components are re-exported for ease of importing from the single location ```./components/search```, like
   ```jsx
   //inside ./components/search/index.js
-  export from './filter/search-filter.js'
-  export from './panel/search-panel.js'
-  export from './panel/search-container.js'
-  export from './list/search-list.js'
-  export from './list/search-list-item.js'
+  export SearchFilter from './filter/search-filter.js'
+  export SearchPanel from './panel/search-panel.js'
+  export SearchContainer from './panel/search-container.js'
+  export { SearchList } from './list/search-list.js'
+  export { SearchListItem } from './list/search-list-item.js'
   ```
   and ```SearchFilter``` default export inside ```./filter/search-filter.js```, like
   ```jsx
@@ -166,16 +167,25 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
     ...
   }
   ```
-  and imported inside ```./components/app.js```, like
+  and similarly ```SearchPanel``` and ```SearchContainer``` default export inside their own .js files.
+  With ```SearchList``` named export inside ```./list/search-list.js```, like
+  ```jsx
+  //inside ./components/search/list/search-list.js
+  export class SearchList {
+    ...
+  }
+  ```
+  and similarly ```SearchList``` named export inside its own .js file.
+  We can then import ```SearchFilter``` and ```SearchList``` inside ```./components/app.js```, like
   ```jsx
   //inside ./components/app.js
-  import { SearchFilter, SearchContainer } from './search'
+  import { SearchFilter, SearchList } from './search'
   ```
   or like
   ```jsx
   //inside ./components/app.js
   import SearchFilter from './search/filter/search-filter.js'
-  import SearchContainer from './search/panel/search-container.js'
+  import { SearchList } from './search/list/search-list.js'
   ```
 * If we don't want to bundle CSS files, we can manually add a link to those CSS files inside the main site ```index.html```, like 
   ```jsx
