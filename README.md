@@ -354,21 +354,16 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * We use the ```Link``` component for anchor links, like 
   ```jsx
   <Link to='/'>Home</Link>
-  ``` 
-  or 
-  ```jsx
   <Link to='/search'>Search</Link>
   ```
-* ```Route``` components apply for the component and its descendants, so ```Link``` components inside any of these components'   ```render()``` methods use those routes from their ancestor components.
+* ```NavLink``` component is similar to the ```Link``` component, but with the additional ```activeClassName``` prop, which overrides the ```className``` prop value when a user follows this link.
 * We can declare a route and associate it with a component to render, like 
   ```jsx
   <Route exact path='/' component={Home} />
-  ```
-  or 
-  ```jsx
   <Route path='/search' component={Search} />
   ```
-* ```Route``` component renders the associated component if the path matches the url, else renders ```null``` (renders no output), and ```Redirect``` component declares a client side redirection, so ```Route``` and ```Redirect``` are simply placeholders for their associated components, like
+* ```Route``` component renders the associated component if the path matches the url, else renders ```null``` (renders no output).
+* ```Redirect``` component declares a client side redirection, so ```Route``` and ```Redirect``` are simply placeholders for their associated components, like
   ```jsx
   const App = () => (
     <div>
@@ -386,6 +381,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
     </div>
   );
   ```
+* A ```Route``` applies for the host component and its descendants, so ```Link``` components use those routes from their ancestor components.
 * Multiple ```Route``` components can match a url path, like routes with both ```/``` and ```/list``` paths will match the url www.mysite.com/list. But we can force a single exact match by using ```exact``` keyword in the ```Route``` component.
 * We can also wrap ```Route``` components with ```<Switch>``` so that first match route is rendered, without the need of ```exact``` keyword, like
   ```jsx
@@ -511,7 +507,6 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
     setState({name: ""});
   }
   ```
-* ```NavLink``` component is similar to ```Link``` component, but with the additional ```activeClassName``` prop, which overrides the ```className``` prop value when this link is clicked/followed.
 
 ## Context api:
 * Global state (language, user info, theme, etc.) is usually stored in the root component state properties.
