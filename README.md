@@ -148,7 +148,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 
 ## Importing files:
 * We can import React components, like 
-  ```jsx import MyComponent from './components/myComponent'``` 
+  ```import MyComponent from './components/myComponent'``` 
   This code loads the ```MyComponent``` which is ```export default``` either from the ```./components/myComponent.js``` file or from the ```index.js``` file inside the ```./components/myComponent``` folder. 
 * It is common to use features as parent folder names or container names as parent folder names and to place other related components inside subfolders. For example ```./components/search``` folder can have ```./components/search/filter/search-filter.js```, ```./components/search/panel/search-panel.js```, ```./components/search/panel/search-container.js```, ```./components/search/list/search-list.js```, ```./components/search/list/search-list-item.js``` components. There can also be a ```./components/search/index.js``` where each of the components are re-exported for ease of importing from the single location ```./components/search```, like
   ```jsx
