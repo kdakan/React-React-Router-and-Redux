@@ -356,7 +356,17 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   <Link to='/'>Home</Link>
   <Link to='/search'>Search</Link>
   ```
-* ```NavLink``` component is similar to the ```Link``` component, but with the additional ```activeClassName``` prop, which overrides the ```className``` prop value when a user follows this link.
+* ```NavLink``` component is similar to the ```Link``` component, but with the additional ```activeClassName``` and ```activeStyle``` props, which overrides the ```className``` and ```style``` props values when a user follows this link, like
+  ```jsx
+  <NavLink to='/' className="normalLink" activeClassName="activeLink">Home</NavLink>
+  ```
+  or
+  ```jsx
+  const normalLinkStyle = { fontWeight: "normal", color: "black" };
+  ...
+  <NavLink to='/search' style={normalLinkStyle} activeStyle={{ fontWeight: "bold", color: "red" }}>Search</NavLink>
+  ```
+  Here, both the ```style``` and ```activeStyle``` props accept an object as a value, that is why ```{{``` ```}}``` is needed. The outer ```{}``` is for props binding syntax, the inner ```{}``` is for object literal syntax.
 * We can declare a route and associate it with a component to render, like 
   ```jsx
   <Route exact path='/' component={Home} />
