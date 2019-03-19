@@ -1,4 +1,4 @@
-# React with React Router 4, Redux and MobX Tutorial
+# React with React Router 4 and Redux Tutorial
 This is an extensive tutorial on React v.16 with React Router v.4, and using Redux for state management. This can also serve as a mini-reference. This tutorial will take you from beginner level to intermediate/advanced level and covers enough breadth and depth to get you going with most of your projects.
 
 Before beginning, make sure you have some knowledge of ES6. I have a tutorial here at https://github.com/kdakan/ES6-Tutorial in case you want to brush up on ES6.
@@ -9,6 +9,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * [Installation](#installation)
 * [Creating and running an app](#creating-and-running-an-app)
 * [Components](#components)
+* [Immutable objects and arrays](#immutable-objects-and-arrays)
 * [Importing components, CSS, and images](#importing-components-css-and-images)
 * [Binding this to event handlers](#binding-this-to-event-handlers)
 * [Lifecycle methods](#lifecycle-methods)
@@ -105,8 +106,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   ```jsx
   this.setState({someArrayState: this.state.someArrayState.concat([item])})
   ```
-* To clone an array, ```someArray.slice()```, ```[].concat(someArray)```, or spread operator ```[...someArray]``` can be used. To clone an array and add an item, we can use ```someArray.concat([item])``` or ```[...someArray, item]```. To remove an item from an array, we would normally use ```someArray.splice(index, 1)```, but to clone and remove an item we use ```someArray.slice(0, index).concat(someArray.slice(index + 1))```, which clones elements up to index and clones elements from index + 1 up to end and concatenates them. This is the same as ```[...someArray.slice(0, index), ...someArray.slice(index + 1)]```. To increment an item in an array without mutating it, we can similarly use ```someArray.slice(0, index).concat(someArray[index] + 1).concat(someArray.slice(index + 1))```, or ```[...someArray.slice(0, index), someArray[index] + 1, ...someArray.slice(index + 1)]```. To do more complicated manipulations on a cloned array, we can use ```someArray.map(item => ...code that returns a cloned and modified element...)```.
-* To clone an object (shallow copy, meaning that members are copied but not cloned), we can use ```Object.assign({}, someObject)``` or ```{...someObject}```. To clone an object and change a field, we can use ```Object.assign({}, someObject, { someField: someValue })``` or ```{...someObject, someField: someValue}```.
+  Refer to the section "Immutable objects and arrays" for more details.
 * State can be set in multiple steps, so that all state object members do not have to be given, like 
   ```jsx
   this.setState({someState: ...})
@@ -145,6 +145,12 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   ```
 * When structuring an app into components, it is easier to start with components without state, DOM events, and callback functions, and visualize a static page, and later add state, DOM events, and callback functions later one by one.
 * It is better to place functions that do not use props or state or this, outside the component function or class.
+
+## Immutable objects and arrays:
+* In javascript, strings, booleans, numbers are immutable, but objects, arrays and functions are not. When you assign a new value to an item of an array, or assign a new value to a property on an object, the array's or the object's reference (memory location) does not change. This is why arrays and objects are not immutable. To change arrays and objects in an immutable way, we need to clone it first.
+* To clone an array, ```someArray.slice()```, ```[].concat(someArray)```, or spread operator ```[...someArray]``` can be used. To clone an array and add an item, we can use ```someArray.concat([item])``` or ```[...someArray, item]```. To remove an item from an array, we would normally use ```someArray.splice(index, 1)```, but to clone and remove an item we use ```someArray.slice(0, index).concat(someArray.slice(index + 1))```, which clones elements up to index and clones elements from index + 1 up to end and concatenates them. This is the same as ```[...someArray.slice(0, index), ...someArray.slice(index + 1)]```. To increment an item in an array without mutating it, we can similarly use ```someArray.slice(0, index).concat(someArray[index] + 1).concat(someArray.slice(index + 1))```, or ```[...someArray.slice(0, index), someArray[index] + 1, ...someArray.slice(index + 1)]```. To do more complicated manipulations on a cloned array, we can use ```someArray.map(item => ...code that returns a cloned and modified element...)```.
+* To clone an object (shallow copy, meaning that members are copied but not cloned), we can use ```Object.assign({}, someObject)``` or ```{...someObject}```. To clone an object and change a field, we can use ```Object.assign({}, someObject, { someField: someValue })``` or ```{...someObject, someField: someValue}```.
+* We can only do shallow copy using ```Object.assign()``` and spread operator ```...```, but if some part of the data is not changed, it does not have to go through deep copying.
 
 ## Importing components, CSS, and images:
 * If you're not comfortable with the ES6 module syntax, refer to the "ES6 modules" section in my "ES6 Tutorial" here: https://github.com/kdakan/ES6-Tutorial#es6-modules
@@ -545,7 +551,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * Handling state with ```setState()``` inside an individual component is simple, however when there is a component that depends on another component's state, things get complicated. Without using a state management library like ```Redux``` or ```MobX```, a common way to share state between components is called lifting the state up to a common ancestor component. Here we put the state changing code on the common ancestor component, and share the code (callback function) and shared state down the tree to the other components through their props. Inside the child components, we bind to this shared state passed on props, and call the callback function passed on props to change this state and trigger other components which depend on this state. As the app grows larger, this way of sharing state leads to complex and unmaintainable code and it is hard to find dependent components inside the codebase.
 
 ## State management with ```MobX```:
-* ```MobX``` library offers a simple object oriented way to manage state, using observables, observers, and optional actions.
+* ```MobX``` library offers a simple, object oriented way to manage state, using observables, observers, and optional actions.
 * With ```MobX```, we do not initialize the component's state property, instead, we mark the state variable with the ```@observable``` annotation.
 * Inside an event handler, we do not use ```setState()``` to change state, instead, we change it like changing a regular javascript primitive value, object or array. The observable variables should be inside an object, like a component or store object, because they are implemented auto-magically internally with property getters ans setters. We also mark the component or components which uses/depends on this state variable with the ```@observer``` annotation.
 * We don't have to place the state variables inside a component, we can put it inside a store object and we can structure the code any way we want.
@@ -554,11 +560,13 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * Refer to https://mobx.js.org/best/store.html for best practices on structuring stores (like a single ui store and multiple domain stores)
 
 ## State management with ```Redux```:
-* ```Redux``` library offers an advanced functional way to predictively manage state, using reducers and actions.
-* With ```Redux```, we need to write more verbose code than we were doing with ```MobX```, because there is less magic but more trackable interactions with state.
-* With ```Redux```, the app state is a single immutable tree of keys and state parts corresponding to these keys. State is not manipulated directly inside the components, but indirectly via actions created in the component DOM or lifecycle events and reducers which catch and process these actions and then create new version of the corresponding state part, which then replace that part of the app state.
-* State of an app is managed in a central store, called the root reducer, which is a combination of all the reducers in the app. Components can bind to parts of this app state by connecting to reducers responsible for that part of the app state, and can change parts of this app state by creating actions, which are dispatched to (caught up by) reducers which again return the changed state.
-* ```Redux``` name comes from the combination of ```Reducer``` and ```Flux```, and it is an implementation of the ```Flux``` architecture with reducers.
+* ```Redux``` library offers an advanced, functional way to predictively manage state, using reducers and actions. It is the most popular state management library among React developers.
+* With ```Redux```, we need to write more verbose code than we were doing with ```MobX```, because there is less magic but more trackable state interactions.
+* With ```Redux```, the app state is kept in a single store as a tree of keys and data parts corresponding to these keys. We do not directly manipulate app state inside the components.
+* Inside the component DOM events and lifecycle methods, we create (fire/dispatch) actions which describe what happened. An action is a serializable object with a string ```type``` field and zero or more data fields (data fields cannot be a ```function``` or ```Promise``` because it needs to be serializable). These action are then processed by reducer functions, which return the new version of the corresponding state part, which then replaces that part of the app state inside the store.
+* State of an app is managed in a central store, and is created from and fed by the combined root reducer, which is a combination of all the reducers in the app. Components can bind to parts of this app state by connecting to reducers responsible for that part of the app state, and can change parts of this app state by creating actions, which are dispatched to (caught up by) reducers which again return the changed state.
+* Normlly, actions are created by functions called action creators, which each returns an action. We call action creators to dispatch actions. The action creator function is conventionally named same as the action ```type```, in camel case.
+* The ```Redux``` name comes from the combination of ```Reducer``` and ```Flux```, and it is an implementation of the ```Flux``` architecture with reducers.
 * A reducer is a function which gives part of this central app state to any component which is interested in this part of state. We can write a reducer which returns some static data, like
   ```jsx
   //inside booksReducer.js
