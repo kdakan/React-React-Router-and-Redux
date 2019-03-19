@@ -721,20 +721,6 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   //turns the dumb component into a smart component (container)
   export default connect(mapStateToProps)(BookDetails);
   ```
-* To summarize, there are 8 steps when initially setting up ```Redux```:
-    1. Create action
-    2. Create reducer
-    3. Create root reducer
-    4. Configure store
-    5. Instantiate store
-    6. Connect component
-    7. Pass props via connect
-    8. Dispatch action
-  And when adding a feature, there are 4 steps:
-    1. Create action
-    2. Enhance reducer
-    3. Connect component
-    4. Dispatch action
 * When using ```Redux```, we don't have to keep all state in the store, we can use route parameters and query strings that comes from react router, or component state to keep temporary state. For example, we can use an ```:id``` route parameter inside the ```BookDetails``` container which is associated with a ```<Route>```, like
   ```jsx
   <Route path="/books/:id" component={BookDetails} />
@@ -792,7 +778,21 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   store.subscribe(() => setStateToLocalStorage(store.getState()));
   ```
   This way we don't lose state even when the user refreshes the page.
-
+* In summary, there are 8 steps when initially setting up ```Redux```:
+    1. Create action
+    2. Create reducer
+    3. Create root reducer
+    4. Configure store
+    5. Instantiate store
+    6. Connect component
+    7. Pass props via connect
+    8. Dispatch action
+* In summary, there are 4 steps when adding a feature:
+    1. Create action
+    2. Enhance reducer
+    3. Connect component
+    4. Dispatch action
+    
 ## Calling an async api with ```Redux```:
 * We can call an asynchronous api inside the component lifecycle methods and dispatch an action when the call finishes (the promise resolves and returns a result), but this is not the best way to do this.
 * Also, we should not call an api inside a reducer function, because reducer functions should be pure functions (the result should only depend on the function arguments, and there should be no side effects).
