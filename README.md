@@ -146,7 +146,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * When structuring an app into components, it is easier to start with components without state, DOM events, and callback functions, and visualize a static page, and later add state, DOM events, and callback functions later one by one.
 * It is better to place functions that do not use props or state or this, outside the component function or class.
 
-## Importing files:
+## Importing components, CSS, and images:
 * We can import React components, like 
   ```import MyComponent from './components/myComponent'``` 
   This code loads the ```MyComponent``` which is ```export default``` either from the ```./components/myComponent.js``` file or from the ```index.js``` file inside the ```./components/myComponent``` folder. 
@@ -154,10 +154,10 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   ```jsx
   //inside ./components/search/index.js
   export from './filter/search-filter.js'
-  export from '/panel/search-panel.js'
-  export from '/panel/search-container.js'
-  export from '/list/search-list.js'
-  export from '/list/search-list-item.js'
+  export from './panel/search-panel.js'
+  export from './panel/search-container.js'
+  export from './list/search-list.js'
+  export from './list/search-list-item.js'
   ```
   and ```SearchFilter``` default export inside ```./filter/search-filter.js```, like
   ```jsx
@@ -168,24 +168,35 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   ```
   and imported inside ```./components/app.js```, like
   ```jsx
-  //inside ./components/app.js file
+  //inside ./components/app.js
   import { SearchFilter, SearchContainer } from './search'
   ```
   or like
   ```jsx
-  //inside ./components/app.js file
+  //inside ./components/app.js
   import SearchFilter from './search/filter/search-filter.js'
   import SearchContainer from './search/panel/search-container.js'
   ```
-* We can import CSS files used inside a component, and ```Bootstrap.css```, like 
+* If we don't want to bundle CSS files, we can manually add a link to those CSS files inside the main site ```index.html```, like 
   ```jsx
-  import './myComponent.css'
-  import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
+  <link rel="stylesheet" href="site.css">
+  <link rel="stylesheet" href="bootstrap.min.css">
   ```
-  This way, ```webpack``` will bundle these CSS files and add a link to the bundled CSS inside main site ```index.html```
-* If we don't want to bundle CSS files, we can add a link them inside the main site ```index.html```, like 
+* If we want to bundle CSS files, we should import those CSS files so that ```webpack``` will bundle these CSS files and automatically add a link to the bundled CSS inside main site ```index.html```
+* We can import a component specific CSS file into the component, like
   ```jsx
-  <link rel="stylesheet" href="stylesheets/site.css">
+  //inside ./components/myComponent.js
+  import './myComponent.css'
+  
+  export default class MyComponent {
+    ...
+  }
+  ```
+* We can import site-wide used CSS files ```site.css``` and ```Bootstrap.css``` into the app startup ```index.js```, like 
+  ```jsx
+  //inside ./index.js
+  import './site.css'
+  import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
   ```
 * We can import an image file, like 
   ```jsx
