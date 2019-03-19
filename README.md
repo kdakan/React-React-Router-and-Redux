@@ -619,7 +619,8 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   export default connect(mapStateToProps)(BookList);
   ```
   Here, ```mapStateToProps()``` binds the ```BooksList``` component ```props``` to the ```books``` part of the central app state. Whenever the ```books``` changes, ```BooksList``` will be re-rendered with new values on its ```props.bookCollection```. We can have multiple ```props``` to state members mappings inside the returned object. The call to ```connect()``` function turns the dumb ```BooksList``` component into a smart component (container).
-* Any event which needs to change part of the app state creates an action which is an object with an action type and various data members, like
+* We can use computed functions inside ```mapStateToProps()``` to map computed state, like a filtered array, sorted array, array length, etc. This way, as long as the computed value doesn't change, our component does not re-render. We can use the ```Reselect``` library to define memoized computed functions (called selectors) that only re-compute when their parameters change, and bind props to these selectors ro increase performance and keep normalized state in the store. Refer to https://github.com/reduxjs/reselect for details.
+* Any event which needs to change part of the app state, creates an action which is an object with a string action type and various data members, like
   ```jsx
   //inside selectBook.js
   export function selectBook(book) {
@@ -627,7 +628,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   }
   ```
 * Each action can be processed by (dispatched to) all the reducers in the app, and a reducer may respond (return specific date) if it is interested in the action, this way changing parts of the central app state. So a reducer is typically a switch statement with cases for each action type it is interested in to respond with a state change.
-* Inside the container, to ensure the dispatching of an action to all reducers, we declare a ```mapDispatchToCreators()``` function, and calling ```connect()``` function, like
+* Inside the container, to ensure the dispatching of an action to all reducers, we declare a ```mapDispatchToProps()``` function, and calling ```connect()``` function, like
   ```jsx
   class BookList extends React.Component {
     render() {
@@ -643,14 +644,35 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
       };
     }
 
-    mapDispatchToCreators(state) {
+    mapDispatchToProps(dispatch) {
       return bindActionCreators({selectBook: selectBook}, dispatch);
     }
   }
    
-  export default connect(mapStateToProps, mapDispatchToCreators)(BookList);
+  export default connect(mapStateToProps, mapDispatchToProps)(BookList);
   ```
-  Here, ```mapStateToProps()``` allows dispatching of selectBook action to all reducers, and also adds ```selectBook``` on the ```BooksList``` component ```props```, so that we can call it like ```this.props.selectBook(...)``` to create a ```"SELECT_BOOK"``` action. We can have multiple ```props``` to ```action``` mappings inside the first parameter to ```bindActionCreators()``` call. We also add ```mapStateToPropscall``` parameter to the ```connect()``` function call.
+  Here, ```mapDispatchToProps()``` allows dispatching of selectBook action to all reducers, and also adds ```selectBook``` on the ```BooksList``` component ```props```, so that we can call it like ```this.props.selectBook(...)``` to create a ```"SELECT_BOOK"``` action. We can have multiple ```props``` to ```action``` mappings inside the first parameter to ```mapDispatchToProps()``` call. We also pass ```mapStateToProps``` and ```mapDispatchToProps``` as parameters to the ```connect()``` function call.
+* There are three different ways to use the ```mapDispatchToProps()``` function, first one is using ```bindActionCreators()``` as in the previous example given above. Second, we can use the long manual mapping, like
+  ```jsx
+    mapDispatchToProps(dispatch) {
+      return {
+        selectBook: (item) => { dispatch(selectBook(item)); },
+	addBook: (item) => { dispatch(addBook(item)); },
+	deleteBook: (item) => { dispatch(deleteBook(item)); }
+      };
+    }
+  ```
+  and third, the simplest way is return an object with the action creators as its fields, like
+  ```jsx
+      mapDispatchToProps(dispatch) {
+      return {
+        selectBook,
+	addBook,
+	deleteBook
+      };
+    }
+  ```
+* We can still dispatch an action even without using the ```mapDispatchToProps()``` function, like ```this.props.dispatch(this.props.selectBook(item))```, but this is not recommended.
 * We can define the reducer which responds to this "SELECT_BOOK" action, like
   ```jsx
   //inside selectedBookReducer.js
@@ -699,6 +721,20 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   //turns the dumb component into a smart component (container)
   export default connect(mapStateToProps)(BookDetails);
   ```
+* To summarize, there are 8 steps when initially setting up ```Redux```:
+    1. Create action
+    2. Create reducer
+    3. Create root reducer
+    4. Configure store
+    5. Instantiate store
+    6. Connect component
+    7. Pass props via connect
+    8. Dispatch action
+  And when adding a feature, there are 4 steps:
+    1. Create action
+    2. Enhance reducer
+    3. Connect component
+    4. Dispatch action
 * When using ```Redux```, we don't have to keep all state in the store, we can use route parameters and query strings that comes from react router, or component state to keep temporary state. For example, we can use an ```:id``` route parameter inside the ```BookDetails``` container which is associated with a ```<Route>```, like
   ```jsx
   <Route path="/books/:id" component={BookDetails} />
@@ -855,7 +891,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   
   export default connect(mapStateToProps)(WeatherInfo);
   ```
-  
+
 ## React-bootstrap components:
 * Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without need for jQuery, refer to https://react-bootstrap.github.io for details and https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121 for a quick tutorial (also shows usage of ```reactstrap```, an alternative library for using ```bootstrap``` with React)
 
