@@ -86,7 +86,8 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   ```jsx
   state = {someState: ..., someOtherState: ...}
   ```
-* Class components which hold state without much JSX markup are also called container components and can render other container components or presentational components.
+* Components which hold state and delegates rendering much of JSX markup to presentational components, are also called container components. Container components can render other container components and presentational components. Presentational components don't have state and just render JSX with props passed to them and call the callback functions (actions) again passed through their props. Container components are also called smart components, stateful components, or conroller views. Presentational components are also called dumb components, stateless components, or views. 
+* Container components are usually connected to a state management library like ```Redux```, but presentational components are not. A React app is composed of low number of containers and high number of presentational components. Because presentational components are decoupled from state, they are more reusable and also simpler to use and understand.
 * React uses virtual DOM, so ```render()``` method does not update all the HTML for the component, but only updates the changed parts. React diff'es the current props and state with the next props and state and renders if there is a change.
 * Even when using virtual DOM, unnecessary render calls cost some performance because of the diff'ing of the current virtual DOM and next virtual DOM. Therefore it is more performant to check inside ```shouldComponentUpdate()```if the current props and state are different than next props and state and return false if not. Extending component from ```React.PureComponent``` instead of ```React.Component``` will do this by shallow comparison of props and state.
 * Components can use functions that return partial rendered result in JSX syntax, can also store this JSX in a variable, and use them to compose into a larger rendered JSX result, if null is returned, no HTML is generated.
@@ -146,18 +147,43 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * It is better to place functions that do not use props or state or this, outside the component function or class.
 
 ## Importing files:
-* We can import eact components, like 
+* We can import React components, like 
   ```jsx import MyComponent from './components/myComponent'``` 
-  This code loads either from the ```./components/myComponent.js``` file or from the ```index.js``` file inside the ```./components/myComponent``` folder.
-* We can import CSS files used inside a component, like 
+  This code loads the ```MyComponent``` which is ```export default``` either from the ```./components/myComponent.js``` file or from the ```index.js``` file inside the ```./components/myComponent``` folder. 
+* It is common to use features as parent folder names or container names as parent folder names and to place other related components inside subfolders. For example ```./components/search``` folder can have ```./components/search/filter/search-filter.js```, ```./components/search/panel/search-panel.js```, ```./components/search/panel/search-container.js```, ```./components/search/list/search-list.js```, ```./components/search/list/search-list-item.js``` components. There can also be a ```./components/search/index.js``` where each of the components are re-exported for ease of importing from the single location ```./components/search```, like
+  ```jsx
+  //inside ./components/search/index.js
+  export from './filter/search-filter.js'
+  export from '/panel/search-panel.js'
+  export from '/panel/search-container.js'
+  export from '/list/search-list.js'
+  export from '/list/search-list-item.js'
+  ```
+  and ```SearchFilter``` default export inside ```./filter/search-filter.js```, like
+  ```jsx
+  //inside ./components/search/filter/search-filter.js
+  export default class SearchFilter {
+    ...
+  }
+  ```
+  and imported inside ```./components/app.js```, like
+  ```jsx
+  //inside ./components/app.js file
+  import { SearchFilter, SearchContainer } from './search'
+  ```
+  or like
+  ```jsx
+  //inside ./components/app.js file
+  import SearchFilter from './search/filter/search-filter.js'
+  import SearchContainer from './search/panel/search-container.js'
+  ```
+* We can import CSS files used inside a component, and ```Bootstrap.css```, like 
   ```jsx
   import './myComponent.css'
-  ```
-* We can import ```Bootstrap.css```, like 
-  ```jsx
   import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
   ```
-* We can add CSS files used everywhere in the site into the main site index.html as a regular CSS file, like 
+  This way, ```webpack``` will bundle these CSS files and add a link to the bundled CSS inside main site ```index.html```
+* If we don't want to bundle CSS files, we can add a link them inside the main site ```index.html```, like 
   ```jsx
   <link rel="stylesheet" href="stylesheets/site.css">
   ```
