@@ -386,10 +386,6 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
     </div>
   );
   ```
-* Route without a path will trigger if none of the routes matches the url, like
-  ```jsx
-  <Route path='/search' component={PageNotFound404} />
-  ```
 * Multiple ```Route``` components can match a url path, like routes with both ```/``` and ```/list``` paths will match the url www.mysite.com/list. But we can force a single exact match by using ```exact``` keyword in the ```Route``` component.
 * We can also wrap ```Route``` components with ```<Switch>``` so that first match route is rendered, without the need of ```exact``` keyword, like
   ```jsx
@@ -399,7 +395,17 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
     <Route path='/search' component={Search} />
   </Switch>
   ```
-   Here, normally all three routes would match the path ```/```, but ```<Switch>``` will find the first match, which is ```<Route path='/' component={Home} />```. Tthis is similar to a ```switch/case``` statement with ```break```, where the first matching ```case``` statement is executed.
+   Here, normally all three routes would match the path ```/```, but ```<Switch>``` will force the first match, which is ```<Route path='/' component={Home} />```. This is similar to a ```switch/case``` statement with ```break```, where the first matching ```case``` statement is executed. 
+   
+* A route without a path will always be triggered, so if we place it on the last spot inside a ```<Switch>```, it will effectively work as a ```404 Page not found``` route, like
+  ```jsx
+  <Switch>
+    <Route exact path='/' component={Home} />
+    <Route path='/list' component={List} />
+    <Route path='/search' component={Search} />
+    <Route component={PageNotFound404} />
+  </Switch>
+  ```
 * Components with props can only be triggered (rendered) by a ```Route``` component by using the ```render``` property of ```Route```, like
   ```jsx
    <Route path='/list' render={()=>{return <List items={myList}/>}} />
