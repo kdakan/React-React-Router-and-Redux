@@ -23,7 +23,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * [Calling an async api with ```Redux```](#calling-an-async-api-with-redux)
 * [Chaining async calls with ```Redux Thunk```](#chaining-async-calls-with-redux-thunk)
 * [React-bootstrap components](#react-bootstrap-components)
-* [Hands on project - CRUD forms on a node.js/mongodb backend](#hands-on-project---crud-forms-on-a-nodejsmongodb-backend)
+* [Hands on project - Search and CRUD forms](#hands-on-project---search-and-crud-forms)
 
 ## Installation:
 * We can use the official CLI ```create-react-app``` to start developing in React, without getting lost in ```webpack``` and ```babel``` tool configuration.
@@ -895,5 +895,5 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 ## React-bootstrap components:
 * Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without need for jQuery, refer to https://react-bootstrap.github.io for details and https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121 for a quick tutorial (also shows usage of ```reactstrap```, an alternative library for using ```bootstrap``` with React)
 
-## Hands on project - CRUD forms on a node.js/mongodb backend:
+## Hands on project - Search and CRUD forms:
 * TODO
