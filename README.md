@@ -256,9 +256,21 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * There are at least 5 different ways to bind this to event handler functions, some may cause performance issues, so refer to https://medium.freecodecamp.org/react-binding-patterns-5-approaches-for-handling-this-92c651b5af56 for details. You can always use the recommended explicit way (bind it inside the constructor) to play safe and keep performance high, without triggering unnecessary re-renders.
 
 ## Lifecycle methods:
-* Class components can have lifecycle methods like ```componentDidMount()```, ```shouldComponentUpdate()```, ```componentDidUpdate()```, ```componentWillUnmount()```, ```componentDidUnmount()```, etc.
-* Order of execution is: ```constructor()```, ```getDerivedStateFromProps()```, ```componentWillMount()```, ```render()```,   ```componentDidMount()```, ```shouldComponentUpdate()```, ```componentWillUpdate()```, ```componentDidUpdate()```, ```componentWillUnmount()```, ```componentDidUnmount()```.
-* We can make Ajax requests to get initial data inside ```componentWillMount()``` or ```componentDidMount()```.
+* Components are mounted when they are first time inserted into the DOM. Later they are updated when their props or state changes. Finally they are unmounted when they are removed from the DOM.
+* In each of these phases, class components invoke specific methods in a specific order, these are called the lifecycle methods.
+* When mounting, the following methods are inoked in this order:
+  1. ```constructor(props)```: Here we can initialize state and bind callback functions.
+  2. ```static getDerivedStateFromProps(props, state)```: This is rarely used, for transitions.
+  3. ```render()```: Here we render the JSX markup, we should not set state here.
+  4. ```componentDidMount()```: Here we can make AJAX requests and set state, and also mount a jQuery plugin.
+* When updating, the following methods are invoked in this order: 
+  1. ```static getDerivedStateFromProps(props, state)```: Usage is not recommended. We can return an object as the new state, or return null if we don't want to change state here. Derived data should normally be computed from a pure function inside ```render()```, not here.
+  2. ```shouldComponentUpdate(nextProps, nextState)```: This is rarely used, for performance optimization, and later may become obsolete. We can return false to prevent updating of component.
+  3. ```render()```: Here we render the JSX markup, we should not set state here.
+  4. ```getSnapshotBeforeUpdate(prevProps, prevState)```: This is rarely used, for example to set the scroll position.
+  5. ```componentDidUpdate(prevProps, prevState, snapshot)```: Here we can make AJAX requests and set state, but we should compare ```this.props``` fields to ```prevProps``` fields and set state only if they are different, else there will be an infinite loop.
+* When unmounting, ```componentWillUnmount()``` is invoked. Here we can unmount/destroy a jQuery plugin,  we should not set state here.
+* OBSOLETE!!! Note that ```componentWillMount()``` and ```componentWillReceieProps()``` methods are obsolete/unsafe and should not be used anymore.
 * To use async/await pattern to call an async api (async api meaning the api returns a ```Promise``` instead of data result), we can use ```asycn```   before ```componentDidMount()``` and use ```await``` before the api call, like 
   ```jsx
   async componentDidMount() { 
@@ -266,23 +278,45 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
     this.setState({data: data});
   }
   ```
-* We can mount a jQuery plugin inside ```componentDidMount()``` and destroy it inside ```componentWillUnmount()```.
-* If we need to manipulate the DOM, or poll periodically for new data, we can use ```componentDidMount()```, like
+* If we need to manipulate the DOM, or set a timer to poll periodically for new data, we can use ```componentDidMount()```, like
   ```jsx
-  this.timer = setInterval(...)
-  ``` 
-  to fetch new data inside ```componentDidMount()```.
-* We should do cleanup actions like ```clearInterval(this.timer)``` inside ```componentWillUnmount()```.
-* We can use ```shouldComponentUpdate()``` to increase rendering performance. Normally components re-render when props or state have changed.
-* To catch errors inside the components and log them, we can use 
-  ```jsx
-  componentDidCatch(error, info) {
-    console.log(error, info);
+  componentDidMount(){
+    let intervalId = setInterval(this.fetchData(...), 1000)
+    this.setState({ intervalId: intervalId })
   }
   ```
-  in the root ```App``` component.
-* Refer to https://blog.bitsrc.io/react-16-lifecycle-methods-how-and-when-to-use-them-f4ad31fb2282 for more lifecycle methods and details.
- 
+  And later we should do cleanup, like
+  ```jsx
+  componentWillUnmount(){
+    clearInterval(this.state.intervalId)
+  }
+  ```
+* To catch all kind of errors inside the app, then display and log them using an api, we can wrap the root ```App``` component with another component (conventionally named ```ErrorBoundary```), we can use its ```componentDidCatch(error, info)``` and ```getDerivedStateFromError(error)``` lifecycle methods, like
+  ```jsx
+  class ErrorBoundary extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = { hasError: false };
+    }
+
+    static getDerivedStateFromError(error) {
+      return { hasError: true };
+    }
+
+    componentDidCatch(error, info) {
+      logComponentStackToMyService(info.componentStack);
+    }
+
+    render() {
+      if (this.state.hasError) {
+        return <h1>Something went wrong!</h1>;
+      }
+
+      return this.props.children; 
+    }
+  }
+  ```
+
 ## Working with forms and inputs:
 * React DOM events are synthetic events, which wrap DOM events in a cross-browser way.
 * We need to explicitly call ```e.preventDefault()``` or ```e.stopPropogating()``` inside a DOM event handler like submitting a form or navigating to a link, to prevent normal event actions and bubbling. This is unlike the case where jquery implicitly calls both ```e.preventDefault()``` and ```e.stopPropogating()``` if you return in an event handler.
