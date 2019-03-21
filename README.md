@@ -229,35 +229,37 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   ```jsx
   constructor(props) {
     ...
-    this.handleClick = this.handleClick.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     ...
   }
+  
+  handleChange(e) {...}
   ```
-  or define the handler as a member arrow function, like 
+  or define the handler as a class property arrow function, like 
   ```jsx
-  handleClick = (e) {...}
+  handleChange = (e) {...}
   ```
   In either case, we can use it inside ```render()```, like
   ```jsx
   render() {
     return (
-      <button onClick={this.handleClick}>Save</button>
+      <input onChange={this.handleChange} />
     );
   }
   ```
-* Note that there are two other ways to bind ```this```, but they create a new function on each render, and cause memory leaks. Do not use the following two forms:
+* Note that the following examples create a new function on each render, and cause memory leaks! Do not use them:
   ```jsx
   //BAD!!! CAUSES MEMORY LEAKS!!!
   render() {
     return (
-      <button onClick={this.handleClick.bind(this)}>Save</button>
+      <input onChange={this.handleChange.bind(this)} />
     );
   }
   
   //BAD!!! CAUSES MEMORY LEAKS!!!
   render() {
     return (
-      <button onClick={e => this.handleClick(e)}>Save</button>
+      <input onChange={e => this.handleChange(e)} />
     );
   }
   ``` 
