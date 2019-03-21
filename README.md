@@ -938,5 +938,5 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 ## React-bootstrap components:
 * Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without need for jQuery, refer to https://react-bootstrap.github.io for details and https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121 for a quick tutorial (also shows usage of ```reactstrap```, an alternative library for using ```bootstrap``` with React)
 
-## Hands on project - Search and CRUD forms:
-* TODO
+## Hands on project - Register, Login, Search and CRUD forms:
+* I have created an app which demonstrates most of the concepts. This app allows the user to register, login, search, list, add, edit, delete authors and courses. It has a small backend running on node and express.js. You can find the source code inside this repo.
