@@ -3,7 +3,7 @@ This is an extensive tutorial on React v.16 with React Router v.4, and using Red
 
 Before beginning, make sure you have some knowledge of ES6. I have a tutorial here at https://github.com/kdakan/ES6-Tutorial in case you want to brush up on ES6.
 
-Unlike Angular, React only handles the view part of the MV* architecture. There is no controller, service, or dependency injection. Programmers mainly utilize components with props and state and use a global state manager like ```Redux``` or ```Mobx``` to simplify handling and sharing state between components across the app. 
+Unlike Angular, React only handles the view part of the MV* architecture. There is no controller, service, or dependency injection. Programmers mainly utilize components with props and optional local (temporary) state, and use a global state manager like ```Redux``` or ```Mobx``` to simplify sharing persistent state between components across the app. 
 
 ## Table of contents
 * [Installation](#installation)
@@ -224,8 +224,8 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   ```
  
 ## Binding this to event handlers:
-* We need to bind ```this``` to DOM event handler callback functions, in order to access component members such as ```this.props``` or ```this.state```
-* The official recommended and most performant way is to bind ```this``` explicitly inside the constructor, like
+* When using a class component, we need to bind ```this``` to DOM event handler callback functions, in order to access component members such as ```this.props``` or ```this.state```.
+* For performance reasons, and to prevent memory leaks, we should either bind ```this``` explicitly inside the constructor, like
   ```jsx
   constructor(props) {
     ...
@@ -233,27 +233,34 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
     ...
   }
   ```
-  and use it inside ```render()```, like
+  or define the handler as a member arrow function, like 
   ```jsx
-  onClick={this.handleClick}
+  handleClick = (e) {...}
   ```
-* Another way is to to bind this explicitly inside ```render()```, like 
+  In either case, we can use it inside ```render()```, like
   ```jsx
-  onClick={this.handleClick.bind(this)}
+  render() {
+    return (
+      <button onClick={this.handleClick}>Save</button>
+    );
+  }
+  ```
+* Note that there are two other ways to bind ```this```, but they create a new function on each render, and cause memory leaks. Do not use the following two forms:
+  ```jsx
+  //BAD!!! CAUSES MEMORY LEAKS!!!
+  render() {
+    return (
+      <button onClick={this.handleClick.bind(this)}>Save</button>
+    );
+  }
+  
+  //BAD!!! CAUSES MEMORY LEAKS!!!
+  render() {
+    return (
+      <button onClick={e => this.handleClick(e)}>Save</button>
+    );
+  }
   ``` 
-* Another common way is to wrap it inside an arrow function inside ```render()```, like 
-  ```jsx
-  onClick={e => this.handleClick(e)}
-  ```
-  or define the handler as an arrow function like 
-  ```jsx
-  handleClick = () {...}
-  ```
-  and use it inside ```render()```, like
-  ```jsx
-  onClick={this.handleClick}
-  ``` 
-* There are at least 5 different ways to bind this to event handler functions, some may cause performance issues, so refer to https://medium.freecodecamp.org/react-binding-patterns-5-approaches-for-handling-this-92c651b5af56 for details. You can always use the recommended explicit way (bind it inside the constructor) to play safe and keep performance high, without triggering unnecessary re-renders.
 
 ## Lifecycle methods:
 * Components are mounted when they are first time inserted into the DOM. Later they are updated when their props or state changes. Finally they are unmounted when they are removed from the DOM.
