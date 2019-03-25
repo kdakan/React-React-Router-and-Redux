@@ -13,7 +13,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * [Importing components, CSS, and images](#importing-components-css-and-images)
 * [Binding this to event handlers](#binding-this-to-event-handlers)
 * [Lifecycle methods](#lifecycle-methods)
-* [Working with forms and inputs](#working-with-forms-and-inputs)
+* [Working with forms, inputs, and refs](#working-with-forms-inputs-and-refs)
 * [Type-checking on props](#type-checking-on-props)
 * [Routing](#routing)
 * [Context api](#context-api)
@@ -329,7 +329,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 ## Working with forms, inputs, and refs:
 * React DOM events are synthetic events, which wrap DOM events in a cross-browser way.
 * We need to explicitly call ```e.preventDefault()``` or ```e.stopPropogating()``` inside a DOM event handler like submitting a form or navigating to a link, to prevent normal event actions and bubbling. This is unlike the case where jquery implicitly calls both ```e.preventDefault()``` and ```e.stopPropogating()``` if you return in an event handler.
-* We can bind form inputs to a state property, like 
+* When we bind a form input's value to a state property, this is called a controlled component, like 
   ```jsx
   <input id="name" value={this.state.name} onChange={this.handleNameChange}
   ```
@@ -340,7 +340,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
     setState({name: e.target.value});
   }
   ```
-* Instead of binding an input to a state property, we can also use the input value creating a ref field, assigning this ref field to the input and use the input value through the ref.
+* Instead of binding an input's value to a state property, we can also use the input value through its ref, by creating a ref field, assigning this ref field to the input and use the input value through this ref field.
 * To use a rendered DOM element inside an event handler function, we can create a ref in the constructor, like
   ```jsx
   this.nameInput = React.createRef();
@@ -349,15 +349,20 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   ```jsx
   <input ref={this.nameInput} />
   ```
-  or, instead of creating the ref in the constructor, we can create and assign a ref property to the element inside ```render()```, like 
+  and use it inside a form submit handler function, like 
+  ```jsx
+  let newName = this.nameInput.current.value;
+  ```
+ * Another way of using a ref is, instead of creating the ref in the constructor, we can create and assign a ref property to the element inside ```render()```, like 
   ```jsx
   <input ref={element => this.nameInput = element} />
   ```
   and use it inside a form submit handler function, like 
   ```jsx
-  let newName = this.nameInput.value;
+  let newName = this.nameInput.current.value;
   ```
 * We can also use a ```jQuery```, ```GoogleMaps``` or similar plugin, using the DOM element ref of an empty ```<div>```, and mount it inside the ```componentDidMount()``` method and unmount/destroy it inside the ```componentWillUnmount()``` method of our React component.
+* It is recommended to use controlled inputs instead of refs. Refs should be used mostly to manage non-React plugins, or manage focus and text selection.
 * It is recommended to use a ```<form>``` with a submit button (```<button type="submit">```), when we have inputs and a button to take action on the inputs. Because this way enter key acts as clicking the submit button by default. However we also need to have an ```onSubmit``` DOM event handler which calls ```e.preventDefault()``` to prevent server-side posting/reloading of the page.
 * We can do form validation such as a required field, like 
   ```jsx
