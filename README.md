@@ -326,7 +326,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   }
   ```
 
-## Working with forms and inputs:
+## Working with forms, inputs, and refs:
 * React DOM events are synthetic events, which wrap DOM events in a cross-browser way.
 * We need to explicitly call ```e.preventDefault()``` or ```e.stopPropogating()``` inside a DOM event handler like submitting a form or navigating to a link, to prevent normal event actions and bubbling. This is unlike the case where jquery implicitly calls both ```e.preventDefault()``` and ```e.stopPropogating()``` if you return in an event handler.
 * We can bind form inputs to a state property, like 
@@ -340,10 +340,18 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
     setState({name: e.target.value});
   }
   ```
-* Instead of binding an input to a state property, we can also use the input value using by assigning a ref property to the input and use the input value through the ref.
-* To use a rendered DOM element inside an event handler function, we can assign a ref property to the element, like 
+* Instead of binding an input to a state property, we can also use the input value creating a ref field, assigning this ref field to the input and use the input value through the ref.
+* To use a rendered DOM element inside an event handler function, we can create a ref in the constructor, like
   ```jsx
-  <input ref={element => this.nameInput = element}
+  this.nameInput = React.createRef();
+  ```
+  and then assign it to the input, like
+  ```jsx
+  <input ref={this.nameInput} />
+  ```
+  or, instead of creating the ref in the constructor, we can create and assign a ref property to the element inside ```render()```, like 
+  ```jsx
+  <input ref={element => this.nameInput = element} />
   ```
   and use it inside a form submit handler function, like 
   ```jsx
