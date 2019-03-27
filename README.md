@@ -1,4 +1,4 @@
-# React with React Router 4 and Redux Tutorial
+# Tutorial on React, React Router, and Redux
 This is an extensive tutorial on React v.16 with React Router v.4, and using Redux for state management. This can also serve as a mini-reference. This tutorial will take you from beginner level to intermediate/advanced level and covers enough breadth and depth to get you going with most of your projects.
 
 Before beginning, make sure you have some knowledge of ES6. I have a tutorial here at https://github.com/kdakan/ES6-Tutorial in case you want to brush up on ES6.
