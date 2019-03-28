@@ -1,5 +1,5 @@
 
-[This tutorial is hosted here](https://kdakan.github.io/Tutorial-On-React-React-Router-and-Redux/)
+[https://kdakan.github.io/Tutorial-On-React-React-Router-and-Redux/](https://kdakan.github.io/Tutorial-On-React-React-Router-and-Redux/)
 
 # Tutorial on React, React Router, and Redux
 This is an extensive tutorial on React v.16, React Router v.4, and Redux. This can also serve as a mini-reference. This tutorial will take you from beginner level to intermediate/advanced level and covers enough breadth and depth to get you going with most of your projects. 
@@ -158,7 +158,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * We can only do shallow copy using ```Object.assign()``` and spread operator ```...```, but if some part of the data is not changed, it does not have to go through deep copying.
 
 ## 4. Importing components, CSS, and images:
-* If you're not comfortable with the ES6 module syntax, refer to the "ES6 modules" section in my "ES6 Tutorial" [here](https://github.com/kdakan/ES6-Tutorial#es6-modules).
+* If you're not comfortable with the ES6 module syntax, refer to the "ES6 modules" section in my "ES6 Tutorial" [here](https://github.com/kdakan/14-ES6-Tutorial#es6-modules).
 * We can import React components, like 
   ```import MyComponent from './components/myComponent'``` 
   This code loads the ```MyComponent``` which is ```default export``` either from the ```./components/myComponent.js``` file or from the ```index.js``` file inside the ```./components/myComponent``` folder. 
