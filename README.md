@@ -1,11 +1,12 @@
-https://kdakan.github.io/Tutorial-On-React-React-Router-and-Redux/
+
+[This tutorial is hosted here](https://kdakan.github.io/Tutorial-On-React-React-Router-and-Redux/)
 
 # Tutorial on React, React Router, and Redux
 This is an extensive tutorial on React v.16, React Router v.4, and Redux. This can also serve as a mini-reference. This tutorial will take you from beginner level to intermediate/advanced level and covers enough breadth and depth to get you going with most of your projects. 
 
 In the final section, we will be building an app which demonstrates most of the concepts. This app allows the user to register, login, search, list, add, edit, delete authors and courses. It has a small backend running on node and express.js. You can find the source code inside this repo.
 
-Before beginning, make sure you have some knowledge of ES6. I have a tutorial here at https://github.com/kdakan/ES6-Tutorial in case you need it.
+Before beginning, make sure you have some knowledge of ES6. I also have a tutorial on ES6 [here](https://github.com/kdakan/ES6-Tutorial).
 
 Unlike Angular, React only handles the view part of the MV* architecture. There is no controller, service, or dependency injection. Programmers mainly utilize components with props and local (temporary) state, and use a global state manager like ```Redux``` or ```Mobx``` to simplify sharing state between components across the app.
 
@@ -22,10 +23,10 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * [ 9. Routing](#9-routing)
 * [10. Context api](#10-context-api)
 * [11. State management](#11-state-management)
-* [12. State management with ```MobX```](#12-state-management-with-mobx)
-* [13. State management with ```Redux```](#13-state-management-with-redux)
-* [14. Calling an async api with ```Redux```](#14-calling-an-async-api-with-redux)
-* [15. Chaining async calls with ```Redux Thunk```](#15-chaining-async-calls-with-redux-thunk)
+* [12. State management with MobX](#12-state-management-with-mobx)
+* [13. State management with Redux](#13-state-management-with-redux)
+* [14. Calling an async api with Redux](#14-calling-an-async-api-with-redux)
+* [15. Chaining async calls with Redux Thunk](#15-chaining-async-calls-with-redux-thunk)
 * [16. React-bootstrap components](#16-react-bootstrap-components)
 * [17. Hands on project - CRUD app](#17-hands-on-project---crud-app)
 
@@ -157,7 +158,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * We can only do shallow copy using ```Object.assign()``` and spread operator ```...```, but if some part of the data is not changed, it does not have to go through deep copying.
 
 ## 4. Importing components, CSS, and images:
-* If you're not comfortable with the ES6 module syntax, refer to the "ES6 modules" section in my "ES6 Tutorial" here: https://github.com/kdakan/ES6-Tutorial#es6-modules
+* If you're not comfortable with the ES6 module syntax, refer to the "ES6 modules" section in my "ES6 Tutorial" [here](https://github.com/kdakan/ES6-Tutorial#es6-modules).
 * We can import React components, like 
   ```import MyComponent from './components/myComponent'``` 
   This code loads the ```MyComponent``` which is ```default export``` either from the ```./components/myComponent.js``` file or from the ```index.js``` file inside the ```./components/myComponent``` folder. 
@@ -599,7 +600,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * Normally, to pass data from a top level component to a bottom level component, we should pass it through props of all the components in between.
 * Using Context api, top level components can pass data to bottom level components without using the bottom level components' props.
 * To share global state, first we create a context with a default value like const ```LanguageContext = React.createContext('en');``` in its own module file and export it like ```export default LanguageContext;```
-* Then, we import it in any component that provides its value or consumes its value, refer to https://reactjs.org/docs/context.html for examples.
+* Then, we import it in any component that provides its value or consumes its value, refer to [here](https://reactjs.org/docs/context.html) for examples.
 * Context can hold any javascript object, not only primitives.
 * It is advisable to use a state management library like ```Redux``` or ```MobX``` instead of the lower level Context api.
 
@@ -616,8 +617,8 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * Inside an event handler, we do not use ```setState()``` to change state, instead, we change it like changing a regular javascript primitive value, object or array. The observable variables should be inside an object, like a component or store object, because they are implemented auto-magically internally with property getters ans setters. We also mark the component or components which uses/depends on this state variable with the ```@observer``` annotation.
 * We don't have to place the state variables inside a component, we can put it inside a store object and we can structure the code any way we want.
 * We can also use computed functions which change depending on an observable state variable (like fullname depending on firstname and lastname variables), and mark it with the ```@computed``` annotation.
-* Refer to https://mobx.js.org/getting-started.html for a quick tutorial on ```MobX```
-* Refer to https://mobx.js.org/best/store.html for best practices on structuring stores (like a single ui store and multiple domain stores)
+* Refer to [here](https://mobx.js.org/getting-started.html) for a quick tutorial on ```MobX```
+* Refer to [here](https://mobx.js.org/best/store.html) for best practices on structuring stores (like a single ui store and multiple domain stores)
 
 ## 13. State management with Redux:
 * ```Redux``` library offers an advanced, functional way to predictively manage state, using reducers and actions. It is the most popular state management library among React developers.
@@ -679,7 +680,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   export default connect(mapStateToProps)(BookList);
   ```
   Here, ```mapStateToProps()``` binds the ```BooksList``` component ```props``` to the ```books``` part of the central app state. Whenever the ```books``` changes, ```BooksList``` will be re-rendered with new values on its ```props.bookCollection```. We can have multiple ```props``` to state members mappings inside the returned object. The call to ```connect()``` function turns the dumb ```BooksList``` component into a smart component (container).
-* We can use computed functions inside ```mapStateToProps()``` to map computed state, like a filtered array, sorted array, array length, etc. This way, as long as the computed value doesn't change, our component does not re-render. We can use the ```Reselect``` library to define memoized computed functions (called selectors) that only re-compute when their parameters change, and bind props to these selectors ro increase performance and keep normalized state in the store. Refer to https://github.com/reduxjs/reselect for details.
+* We can use computed functions inside ```mapStateToProps()``` to map computed state, like a filtered array, sorted array, array length, etc. This way, as long as the computed value doesn't change, our component does not re-render. We can use the ```Reselect``` library to define memoized computed functions (called selectors) that only re-compute when their parameters change, and bind props to these selectors ro increase performance and keep normalized state in the store. Refer to [here](https://github.com/reduxjs/reselect) for details.
 * Any event which needs to change part of the app state, creates an action which is an object with a string action type and various data members, like
   ```jsx
   //inside selectBook.js
@@ -953,7 +954,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   ```
 
 ## 16. React-bootstrap components:
-* Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without need for jQuery, refer to https://react-bootstrap.github.io for details and https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121 for a quick tutorial (also shows usage of ```reactstrap```, an alternative library for using ```bootstrap``` with React)
+* Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without need for jQuery, refer to [here](https://react-bootstrap.github.io) for details and [here](https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121) for a quick tutorial (also shows usage of ```reactstrap```, an alternative library for using ```bootstrap``` with React)
 
 ## 17. Hands on project - CRUD app:
 * I have created an app which demonstrates most of the concepts. This app allows the user to register, login, search, list, add, edit, delete authors and courses. It has a small backend running on node and express.js. You can find the source code inside this repo.
