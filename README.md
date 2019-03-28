@@ -1,31 +1,33 @@
 # Tutorial on React, React Router, and Redux
-This is an extensive tutorial on React v.16 with React Router v.4, and using Redux for state management. This can also serve as a mini-reference. This tutorial will take you from beginner level to intermediate/advanced level and covers enough breadth and depth to get you going with most of your projects.
+This is an extensive tutorial on React v.16, React Router v.4, and Redux. This can also serve as a mini-reference. This tutorial will take you from beginner level to intermediate/advanced level and covers enough breadth and depth to get you going with most of your projects. 
 
-Before beginning, make sure you have some knowledge of ES6. I have a tutorial here at https://github.com/kdakan/ES6-Tutorial in case you want to brush up on ES6.
+In the final section, we will be building an app which demonstrates most of the concepts. This app allows the user to register, login, search, list, add, edit, delete authors and courses. It has a small backend running on node and express.js. You can find the source code inside this repo.
 
-Unlike Angular, React only handles the view part of the MV* architecture. There is no controller, service, or dependency injection. Programmers mainly utilize components with props and optional local (temporary) state, and use a global state manager like ```Redux``` or ```Mobx``` to simplify sharing persistent state between components across the app. 
+Before beginning, make sure you have some knowledge of ES6. I have a tutorial here at https://github.com/kdakan/ES6-Tutorial in case you need it.
+
+Unlike Angular, React only handles the view part of the MV* architecture. There is no controller, service, or dependency injection. Programmers mainly utilize components with props and local (temporary) state, and use a global state manager like ```Redux``` or ```Mobx``` to simplify sharing state between components across the app.
 
 ## Table of contents
-* [Installation](#installation)
-* [Creating and running an app](#creating-and-running-an-app)
-* [Components](#components)
-* [Immutable objects and arrays](#immutable-objects-and-arrays)
-* [Importing components, CSS, and images](#importing-components-css-and-images)
-* [Binding this to event handlers](#binding-this-to-event-handlers)
-* [Lifecycle methods](#lifecycle-methods)
-* [Working with forms, inputs, and refs](#working-with-forms-inputs-and-refs)
-* [Type-checking on props](#type-checking-on-props)
-* [Routing](#routing)
-* [Context api](#context-api)
-* [State management](#state-management)
-* [State management with ```MobX```](#state-management-with-mobx)
-* [State management with ```Redux```](#state-management-with-redux)
-* [Calling an async api with ```Redux```](#calling-an-async-api-with-redux)
-* [Chaining async calls with ```Redux Thunk```](#chaining-async-calls-with-redux-thunk)
-* [React-bootstrap components](#react-bootstrap-components)
-* [Hands on project - Search and CRUD forms](#hands-on-project---search-and-crud-forms)
+* [ 0. Setup](#setup)
+* [ 1. Creating and running an app](#creating-and-running-an-app)
+* [ 2. Components](#components)
+* [ 3. Immutable objects and arrays](#immutable-objects-and-arrays)
+* [ 4. Importing components, CSS, and images](#importing-components-css-and-images)
+* [ 5. Binding this to event handlers](#binding-this-to-event-handlers)
+* [ 6. Lifecycle methods](#lifecycle-methods)
+* [ 7. Working with forms, inputs, and refs](#working-with-forms-inputs-and-refs)
+* [ 8. Type-checking on props](#type-checking-on-props)
+* [ 9. Routing](#routing)
+* [10. Context api](#context-api)
+* [11. State management](#state-management)
+* [12. State management with ```MobX```](#state-management-with-mobx)
+* [13. State management with ```Redux```](#state-management-with-redux)
+* [14. Calling an async api with ```Redux```](#calling-an-async-api-with-redux)
+* [15. Chaining async calls with ```Redux Thunk```](#chaining-async-calls-with-redux-thunk)
+* [16. React-bootstrap components](#react-bootstrap-components)
+* [17. Hands on project - CRUD app](#hands-on-project---crud-app)
 
-## Installation:
+## 0. Setup:
 * We can use the official CLI ```create-react-app``` to start developing in React, without getting lost in ```webpack``` and ```babel``` tool configuration.
 * ```npm install -g npm@latest```
 * ```cd c:\repos```
@@ -39,13 +41,13 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * In ```VSCode``` editor, install ```Debugger for Chrome``` extension, and change the port to 3000 inside launch.json file, to debug inside the editor. Without this extension, you can still debug inside the ```Chrome``` browser.
 * In ```Chrome```, install ```React Developer Tools``` extension, to see React component hierarchy, props and state inside Chrome F12 React tab.
 
-## Creating and running an app:
+## 1. Creating and running an app:
 * ```npm start``` (starts the app in development mode, with hot reload, so that you can see the changes without restarting the app)
 * ```npm test``` (runs ```jest``` tests in the app)
 * ```npm build``` (builds the app for xcopy deployment to production)
 * ```npm eject``` (ejects the app source from ```create-react-app```, use this if you need to change ```webpack``` config, after ejecting, you cannot use create-react-app again for the same app source)
 
-## Components:
+## 2. Components:
 * A React app is a tree of components, which communicate with each other via their props, which can be of any type, including primitives, objects, arrays, sets, and callback functions.
 * There is a root ```App``` component, which hosts all other components, and is rendered on a ```div``` with ```id=app``` inside   ```index.html```, using 
   ```jsx 
@@ -146,13 +148,13 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * When structuring an app into components, it is easier to start with components without state, DOM events, and callback functions, and visualize a static page, and later add state, DOM events, and callback functions later one by one.
 * It is better to place functions that do not use props or state or this, outside the component function or class.
 
-## Immutable objects and arrays:
+## 3. Immutable objects and arrays:
 * In javascript, strings, booleans, numbers are immutable, but objects, arrays and functions are not. When you assign a new value to an item of an array, or assign a new value to a property on an object, the array's or the object's reference (memory location) does not change. This is why arrays and objects are not immutable. To change arrays and objects in an immutable way, we need to clone it first.
 * To clone an array, ```someArray.slice()```, ```[].concat(someArray)```, or spread operator ```[...someArray]``` can be used. To clone an array and add an item, we can use ```someArray.concat([item])``` or ```[...someArray, item]```. To remove an item from an array, we would normally use ```someArray.splice(index, 1)```, but to clone and remove an item we use ```someArray.slice(0, index).concat(someArray.slice(index + 1))```, which clones elements up to index and clones elements from index + 1 up to end and concatenates them. This is the same as ```[...someArray.slice(0, index), ...someArray.slice(index + 1)]```. To increment an item in an array without mutating it, we can similarly use ```someArray.slice(0, index).concat(someArray[index] + 1).concat(someArray.slice(index + 1))```, or ```[...someArray.slice(0, index), someArray[index] + 1, ...someArray.slice(index + 1)]```. To do more complicated manipulations on a cloned array, we can use ```someArray.map(item => ...code that returns a cloned and modified element...)```.
 * To clone an object (shallow copy, meaning that members are copied but not cloned), we can use ```Object.assign({}, someObject)``` or ```{...someObject}```. To clone an object and change a field, we can use ```Object.assign({}, someObject, { someField: someValue })``` or ```{...someObject, someField: someValue}```.
 * We can only do shallow copy using ```Object.assign()``` and spread operator ```...```, but if some part of the data is not changed, it does not have to go through deep copying.
 
-## Importing components, CSS, and images:
+## 4. Importing components, CSS, and images:
 * If you're not comfortable with the ES6 module syntax, refer to the "ES6 modules" section in my "ES6 Tutorial" here: https://github.com/kdakan/ES6-Tutorial#es6-modules
 * We can import React components, like 
   ```import MyComponent from './components/myComponent'``` 
@@ -223,7 +225,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   <img src={myImage} />
   ```
  
-## Binding this to event handlers:
+## 5. Binding this to event handlers:
 * When using a class component, we need to bind ```this``` to DOM event handler callback functions, in order to access component members such as ```this.props``` or ```this.state```.
 * For performance reasons, and to prevent memory leaks, we should either bind ```this``` explicitly inside the constructor, like
   ```jsx
@@ -264,7 +266,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   }
   ``` 
 
-## Lifecycle methods:
+## 6. Lifecycle methods:
 * Components are mounted when they are first time inserted into the DOM. Later they are updated when their props or state changes. Finally they are unmounted when they are removed from the DOM.
 * In each of these phases, class components invoke specific methods in a specific order, these are called the lifecycle methods.
 * When mounting, the following methods are inoked in this order:
@@ -326,7 +328,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   }
   ```
 
-## Working with forms, inputs, and refs:
+## 7. Working with forms, inputs, and refs:
 * React DOM events are synthetic events, which wrap DOM events in a cross-browser way.
 * We need to explicitly call ```e.preventDefault()``` or ```e.stopPropogating()``` inside a DOM event handler like submitting a form or navigating to a link, to prevent normal event actions and bubbling. This is unlike the case where jquery implicitly calls both ```e.preventDefault()``` and ```e.stopPropogating()``` if you return in an event handler.
 * When we bind a form input's value to a state property, this is called a controlled component, like 
@@ -385,7 +387,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   }
   ``` 
 
-## Type-checking on props:
+## 8. Type-checking on props:
 * To check for missing or mis-typed props passed at development runtime, we add a ```propTypes``` member on the component class or function, with prop fields and their types, like
   ```jsx
   const MyComponent = (props) => {
@@ -399,7 +401,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   ```
 * PropTypes can be ```string```, ```number```, ```bool```, ```array```, ```object```, ```func```, ```symbol```, ```node```, ```element```, ```instanceOf(someJSClass)```, ```oneOf(someArrayOfVales)```, ```oneOfType(someArrayOfPropTypes)```, ```shape({ name: PropTypes.string.isRequired, age: PropTypes.number })```, etc.
 
-## Routing:
+## 9. Routing:
 * We need routing for the browser back/forward buttons to work properly and also allow deep linking via urls, without reloading the ```index.html``` from the server and losing all the state.
 * We need server side routing/rendering to serve public pages for better SEO, and we need client routing/rendering to serve authorized content for better user experience (for faster transitions without loading the full page).
 * We need at least one route on the server, to serve the ```index.html``` and its js and css files (the React app), like
@@ -590,7 +592,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   }
   ```
 
-## Context api:
+## 10. Context api:
 * Global state (language, user info, theme, etc.) is usually stored in the root component state properties.
 * Normally, to pass data from a top level component to a bottom level component, we should pass it through props of all the components in between.
 * Using Context api, top level components can pass data to bottom level components without using the bottom level components' props.
@@ -599,14 +601,14 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * Context can hold any javascript object, not only primitives.
 * It is advisable to use a state management library like ```Redux``` or ```MobX``` instead of the lower level Context api.
 
-## State management:
+## 11. State management:
 * When starting a new app or a new component tree, it is easier to start without thinking about any state and interaction, and just breaking down the target HTML output we want, into dumb visual components with no state or DOM events. The root component of the app or the component tree can be fed through its props with static data for prototyping the visuals.
 * Next, we should identify the changing parts of the data and turn these parts into state. How we implement state is different depending on whether we are using a state management library or not. In any case, we do not put derived values into their own state, instead we use functions, getters, or in case of ```MobX```, ```@computed``` functions to compute derived state from true state.
 * If we are not using a state management library (meaning that if our app is very small), then we need to find the components which will host this state.
 * If we are using a state management library (meaning that if our app is not very small), then we need to place this state into a store or multiple stores and pass the store to the component via its props, and fire actions on DOM events without using setState()
 * Handling state with ```setState()``` inside an individual component is simple, however when there is a component that depends on another component's state, things get complicated. Without using a state management library like ```Redux``` or ```MobX```, a common way to share state between components is called lifting the state up to a common ancestor component. Here we put the state changing code on the common ancestor component, and share the code (callback function) and shared state down the tree to the other components through their props. Inside the child components, we bind to this shared state passed on props, and call the callback function passed on props to change this state and trigger other components which depend on this state. As the app grows larger, this way of sharing state leads to complex and unmaintainable code and it is hard to find dependent components inside the codebase.
 
-## State management with ```MobX```:
+## 12. State management with MobX:
 * ```MobX``` library offers a simple, object oriented way to manage state, using observables, observers, and optional actions.
 * With ```MobX```, we do not initialize the component's state property, instead, we mark the state variable with the ```@observable``` annotation.
 * Inside an event handler, we do not use ```setState()``` to change state, instead, we change it like changing a regular javascript primitive value, object or array. The observable variables should be inside an object, like a component or store object, because they are implemented auto-magically internally with property getters ans setters. We also mark the component or components which uses/depends on this state variable with the ```@observer``` annotation.
@@ -615,7 +617,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * Refer to https://mobx.js.org/getting-started.html for a quick tutorial on ```MobX```
 * Refer to https://mobx.js.org/best/store.html for best practices on structuring stores (like a single ui store and multiple domain stores)
 
-## State management with ```Redux```:
+## 13. State management with Redux:
 * ```Redux``` library offers an advanced, functional way to predictively manage state, using reducers and actions. It is the most popular state management library among React developers.
 * With ```Redux```, we need to write more verbose code than we were doing with ```MobX```, because there is less magic but more trackable state interactions.
 * With ```Redux```, the app state is kept in a single store as a tree of keys and data parts corresponding to these keys. We do not directly manipulate app state inside the components.
@@ -849,7 +851,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
     3. Connect component
     4. Dispatch action
     
-## Calling an async api with ```Redux```:
+## 14. Calling an async api with Redux:
 * We can call an asynchronous api inside the component lifecycle methods and dispatch an action when the call finishes (the promise resolves and returns a result), but this is not the best way to do this.
 * Also, we should not call an api inside a reducer function, because reducer functions should be pure functions (the result should only depend on the function arguments, and there should be no side effects).
 * A better way of calling an asynchronous api is inside the actions, but then we cannot return the result, only the promise. For the reducers to work with an action that returns a promise, we need the ```redux-promise``` middleware. A middleware is a function that sits between actions and reducers, and can modify an action or even cancel it before it reaches the reducers.
@@ -873,7 +875,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   }
   ```
 
-## Chaining async calls with ```Redux Thunk```
+## 15. Chaining async calls with Redux Thunk
 * To chain actions which return promises, or to chain async calls inside an action, or to catch errors from an async api call in an action, we need to use the ```redux-thunk``` library.
 * With ```redux-thunk```, inside our action creator, we can return a fuction which takes ```dispatch``` and ```getState``` as parameters and returns an action. ```dispatch``` is the function which actually dispatches an action to all reducers. We can create the same action as in the previous example, but this time returning a function rather than a promise, like
   ```jsx
@@ -948,8 +950,8 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   export default connect(mapStateToProps)(WeatherInfo);
   ```
 
-## React-bootstrap components:
+## 16. React-bootstrap components:
 * Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without need for jQuery, refer to https://react-bootstrap.github.io for details and https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121 for a quick tutorial (also shows usage of ```reactstrap```, an alternative library for using ```bootstrap``` with React)
 
-## Hands on project - Register, Login, Search and CRUD forms:
+## 17. Hands on project - CRUD app:
 * I have created an app which demonstrates most of the concepts. This app allows the user to register, login, search, list, add, edit, delete authors and courses. It has a small backend running on node and express.js. You can find the source code inside this repo.
