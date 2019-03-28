@@ -443,7 +443,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   ...
   <NavLink to='/search' style={normalLinkStyle} activeStyle={{ fontWeight: "bold", color: "red" }}>Search</NavLink>
   ```
-  Here, both the ```style``` and ```activeStyle``` props accept an object as a value, that is why ```{{``` ```}}``` is needed. The outer ```{}``` is for props binding syntax, the inner ```{}``` is for object literal syntax.
+  Here, both the ```style``` and ```activeStyle``` props accept an object as a value. The outer ```{}``` here, is for props binding syntax, and the inner ```{}``` is for object literal syntax.
 * We can declare a route and associate it with a component to render, like 
   ```jsx
   <Route exact path='/' component={Home} />
