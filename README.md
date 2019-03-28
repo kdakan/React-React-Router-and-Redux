@@ -6,7 +6,7 @@ This is an extensive tutorial on React v.16, React Router v.4, and Redux. This c
 
 In the final section, we will be building an app which demonstrates most of the concepts. This app allows the user to register, login, search, list, add, edit, delete authors and courses. It has a small backend running on node and express.js. You can find the source code inside this repo.
 
-Before beginning, make sure you have some knowledge of ES6. I also have a tutorial on ES6 [here](https://github.com/kdakan/ES6-Tutorial).
+Before beginning, make sure you have some knowledge of ES6. I also have a tutorial on ES6 [here](https://kdakan.github.io/ES6-Tutorial).
 
 Unlike Angular, React only handles the view part of the MV* architecture. There is no controller, service, or dependency injection. Programmers mainly utilize components with props and local (temporary) state, and use a global state manager like ```Redux``` or ```Mobx``` to simplify sharing state between components across the app.
 
@@ -158,7 +158,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * We can only do shallow copy using ```Object.assign()``` and spread operator ```...```, but if some part of the data is not changed, it does not have to go through deep copying.
 
 ## 4. Importing components, CSS, and images:
-* If you're not comfortable with the ES6 module syntax, refer to the "ES6 modules" section in my "ES6 Tutorial" [here](https://github.com/kdakan/14-ES6-Tutorial#es6-modules).
+* If you're not comfortable with the ES6 module syntax, refer to the "ES6 modules" section in my "ES6 Tutorial" [here](https://kdakan.github.io/ES6-Tutorial#14-es6-modules).
 * We can import React components, like 
   ```import MyComponent from './components/myComponent'``` 
   This code loads the ```MyComponent``` which is ```default export``` either from the ```./components/myComponent.js``` file or from the ```index.js``` file inside the ```./components/myComponent``` folder. 
