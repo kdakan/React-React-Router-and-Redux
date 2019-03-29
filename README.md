@@ -279,7 +279,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   4. ```componentDidMount()```: Here we can make AJAX requests and set state, and also mount a jQuery plugin.
 * When updating, the following methods are invoked in this order: 
   1. ```static getDerivedStateFromProps(props, state)```: Usage is not recommended. We can return an object as the new state, or return null if we don't want to change state here. Derived data should normally be computed from a pure function inside ```render()```, not here.
-  2. ```shouldComponentUpdate(nextProps, nextState)```: This is rarely used, for performance optimization, and later may become obsolete. We can return false to prevent updating of component.
+  2. ```shouldComponentUpdate(nextProps, nextState)```: This is rarely used, for performance optimization, and later may become obsolete. We can return false to prevent updating of component. If we use ```PureComponent``` instead of ```Component```, this is automatically implemented and returns false if the ```props``` and ```state``` did not mutate (```this.props===nextProps && this.state===nextState```), so that if we do not mutate state and derive our component from ```PureComponent```, we can prevent unnecessary renders and improve performance automatically.
   3. ```render()```: Here we render the JSX markup, we should not set state here.
   4. ```getSnapshotBeforeUpdate(prevProps, prevState)```: This is rarely used, for example to set the scroll position.
   5. ```componentDidUpdate(prevProps, prevState, snapshot)```: Here we can make AJAX requests and set state, but we should compare ```this.props``` fields to ```prevProps``` fields and set state only if they are different, else there will be an infinite loop.
@@ -643,9 +643,10 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   Here, the ```booksReducer``` does not need any parameter, but reducers in general can take ```state``` and ```action``` as a parameter.
 * Reducer functions are triggered by actions and normally return specific part of state data based on the action type, refer to actions below for more details.
 * Components which are interested in any part of the central app state are called containers (or smart components), components which only bind to their props without communicating with the central app state are simply called components (or dumb components).
-* A reducer is responsible for managing changes to some small state, and it defines its branch (part or slice) of the larger app state object tree (considering each property of every object inside the app state as a branch or slice). A reducer does not need to manage the whole subtree, it can call other reducers responsible for the branches of the subtree, and use their results to create the new subtree to return. 
-* At the start of the app, all top level reducers are combined into the single app state (root reducer) by using ```combineReducers()```, like
+* A reducer is responsible for managing changes to some small state, and it defines its branch (part or slice) of the larger app state object tree (considering each property of every object inside the app state as a branch or slice). A reducer does not need to manage the whole subtree, it can call other reducers responsible for the branches of the subtree, and use their results to create the new subtree to return. Note that, instead of doing this manually, you can use ```combineReducers()```, which will do this automatically for the combined reducers.
+* At the start of the app, all top level reducers are combined into the single root reducer, by using ```combineReducers()```, like
   ```jsx
+  //inside rootReducer.js
   const rootReducer = combineReducers(
     {
       books: booksReducer,
@@ -656,13 +657,22 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   
   export default rootReducer;
   ```
-  And we wrap the ```<App>``` component with a ```<Provider>```, and pass the app store created by ```createStore()```, like
+  The root reducer is responsible for the single app state. Then we wrap the ```<App>``` component with a ```<Provider>```, and pass the app store created by ```createStore(rootReducer)```, like
   ```jsx
   <Provider store={createStore(rootReducer)}>
     <App/>
   </Provider>
   ```
-* Note that, the root reducer resulting from ```combineReducers()```, automatically calls each combined reducer. We can also use ```combineReducers()``` to combine lower level reducers, in order to decompose a large deep app state into more maintainable smaller units.
+* Note that, the root reducer resulting from ```combineReducers()```, automatically calls each combined reducer. So the above example is the same as
+  ```jsx
+  //inside rootReducer.js
+  export default function(state, action) {
+    let books = booksReducer(state.books, action);
+    let selectedBook = selectedBookReducer(state.selectedBook, action);
+    return { books, selectedBook };
+  }
+  ```
+We can also use ```combineReducers()``` to combine lower level reducers, in order to decompose a large deep app state into more maintainable smaller units.
 * If we want to load some persisted state at the startup (from a database, ```localStorage```, api, etc.), we can load initial data into a variable like ```persistedState```, and call ```createStore()``` like ```createStore(rootReducer, persistedState)```, so  that parts of state coming from ```persistedState``` will override the state coming from ```rootReducer```
 * The ```Redux``` store has ```getState()``` (gets the store state), ```subscribe()``` (subscribes to state changes), and ```dispatch()``` (dispatches an action to all reducers) methods which implement a pub/sub pattern and action dispatching. The root ```<App>``` component subscribes to the store to re-render when any part of the state in the store changes (the store calls ```ReactDOM.render()``` each time state changes inside the store). However, wo don't use these methods inside other components, instead we use functions which come with ```react-redux``` to bind component properties to store state and to dispatch actions using action creators. We typically place all reducers inside a ```reducers``` folder, and all actions into an ```actions``` folder in the project structure.
 * Inside the container, the props of the container are bound to a reducer (part of the central app state) by declaring a ```mapStateToProps()``` function, and calling ```connect()``` function, like
