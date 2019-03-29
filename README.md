@@ -621,6 +621,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * Refer to [here](https://mobx.js.org/best/store.html) for best practices on structuring stores (like a single ui store and multiple domain stores)
 
 ## 13. State management with Redux:
+
 * ```Redux``` library offers an advanced, functional way to predictively manage state, using reducers and actions. It is the most popular state management library among React developers.
 * With ```Redux```, we need to write more verbose code than we were doing with ```MobX```, because there is less magic but more trackable state interactions.
 * With ```Redux```, the app state is kept in a single store as a tree of keys and data parts corresponding to these keys. We do not directly manipulate app state inside the components.
@@ -747,7 +748,35 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   }
   ```
   Here, the ```state``` parameter is not the whole central app state, instead it is the ```selectedBook``` part inside ```rootReducer```, which this reducer is responsible for, and it is the value that was previously returned by this reducer. Also, the initial parameter value ```state = null``` applies only to the initial first call where there is no previously set state and it comes as undefined. We can define the initial state value for ```selectedBook``` part this way.
-* In ```Redux```, the parts of the app state returned by reducers should be immutable, so a reducer should not return a mutated version of the state, it should return create a fresh new one and return that. Reducers should be pure functions, meaning that their output only depends on their inputs (function parameters), and they should not mutate their input parameters either. They should not have side-effects, like making a database or network api call, or print something to the screen.
+* In ```Redux```, the parts of the app state returned by reducers should be immutable (should not be mutated). So, inside a reducer we should not return a mutated version of the state, instead we should create a fresh new state and return that. If the state parameter of the reducer is an array or object, we need to create a new one with a new reference, and return that. Note that we do not need to deep clone the state parameter, meaning that we do not need to recreate the elements of the array or properties of the object, if the elements or properties did not change. We only need to recreate the state parameter array/object, and recreate its changed elements/properties. For example, in a todo app let's have a todos reducer, its state parameter is the todo items array, with todo objects as elements of the array. Inside the reducer, we can mark a todo item complete by creating a new todo items array, copying the unchanged todo items objects exactly (without creating new todo objects), and creating a new todo item object with the changed status (completed), like
+  ```jsx
+  //inside todosReducer.js
+  export default function(state = [], action) {
+    switch (action.type) {
+      case ADD_TODO:
+        return [
+          ...state,
+          {
+            text: action.text,
+            completed: false
+          }
+        ];
+      case TOGGLE_TODO:
+        return state.map((todo, index) => {
+          if (index === action.index) {
+            return Object.assign({}, todo, {
+              completed: !todo.completed
+            });
+          }
+          else
+	    return todo;
+        })
+      default:
+        return state;
+    }
+  }
+  ```
+* Reducers should be pure functions, meaning that their result value only depends on their inputs (function parameters), and they should not mutate their input parameters either. They should be deterministic and return the same result when called with the same parameters, so they should not generate random numbers or ids, or get the current date. They should also not have side-effects, like making a database or network api call, or print something to the screen, or log to the console. We should do the nondeterministic and side-effect operations in the action creators instead and pass the side-effects to the reducer inside its action parameter, like a clientside or serverside generated guid or timestamp, or fetched values over a network api (get, post, put, etc.), etc. Generic operations like logging, should be carried out inside ```Redux``` middleware functions, which intercept all the reducers.
 * We can define the reducer which responds to this "SELECT_BOOK" action, like
   ```jsx
   //inside selectedBookReducer.js
