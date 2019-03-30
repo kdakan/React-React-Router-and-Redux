@@ -694,7 +694,53 @@ We can also use ```combineReducers()``` to combine lower level reducers, in orde
   export default connect(mapStateToProps)(BookList);
   ```
   Here, ```mapStateToProps()``` binds the ```BooksList``` component ```props``` to the ```books``` part of the central app state. Whenever the ```books``` changes, ```BooksList``` will be re-rendered with new values on its ```props.bookCollection```. We can have multiple ```props``` to state members mappings inside the returned object. The call to ```connect()``` function turns the dumb ```BooksList``` component into a smart component (container).
-* We can use computed functions inside ```mapStateToProps()``` to map computed state, like a filtered array, sorted array, array length, etc. This way, as long as the computed value doesn't change, our component does not re-render. We can use the ```Reselect``` library to define memoized computed functions (called selectors) that only re-compute when their parameters change, and bind props to these selectors ro increase performance and keep normalized state in the store. Refer to [here](https://github.com/reduxjs/reselect) for details.
+* We can use computed functions inside ```mapStateToProps()``` to map computed state, like a filtered array, sorted array, array length, etc. This way, as long as the computed value doesn't change, our component does not re-render. 
+* We can also use the ```Reselect``` library to define memoized computed functions (called selectors) that only re-compute when their parameters change, and bind props to these selectors to increase performance and keep normalized state in the store. Selectors can also be combined. For example, we can define a selector ```visibleTodosSelector```, like
+  ```jsx
+  //inside selectors/visibleTodosSelector.js
+  import { createSelector } from 'reselect'
+
+  const getVisibilityFilter = state => state.visibilityFilter
+  const getTodos = state => state.todos
+
+  export const visibleTodosSelector = createSelector(
+    [getVisibilityFilter, getTodos],
+    (visibilityFilter, todos) => {
+      switch (visibilityFilter) {
+        case 'SHOW_ALL':
+          return todos
+        case 'SHOW_COMPLETED':
+          return todos.filter(t => t.completed)
+        case 'SHOW_ACTIVE':
+          return todos.filter(t => !t.completed)
+      }
+    }
+  )
+  ```
+  and we can define a combined selector ```visibleTodosFilteredByKeywordSelector```, like
+  ```jsx
+  //inside selectors/visibleTodosFilteredByKeywordSelector.js
+  import { createSelector } from 'reselect'
+
+  const getKeyword = state => state.keyword
+
+  export const visibleTodosFilteredByKeywordSelector = createSelector(
+    [getVisibleTodos, getKeyword],
+    (visibleTodos, keyword) =>
+      visibleTodos.filter(todo => todo.text.indexOf(keyword) > -1)
+  )
+  ```
+  and we can connect it to a component, like
+  ```jsx
+  import { getVisibleTodosFilteredByKeyword } from '../selectors'
+
+  const mapStateToProps = state => {
+    return {
+      todos: getVisibleTodosFilteredByKeywordSelector(state)
+    }
+  }
+  ```
+Refer to [here](https://github.com/reduxjs/reselect) for details.
 * Any event which needs to change part of the app state, creates an action which is an object with a string action type and various data members, like
   ```jsx
   //inside actions/selectBook.js
