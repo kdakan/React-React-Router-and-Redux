@@ -27,8 +27,9 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * [13. State management with Redux](#13-state-management-with-redux)
 * [14. Calling an async api with Redux](#14-calling-an-async-api-with-redux)
 * [15. Chaining async calls with Redux Thunk](#15-chaining-async-calls-with-redux-thunk)
-* [16. React-bootstrap components](#16-react-bootstrap-components)
-* [17. Hands on project - CRUD app](#17-hands-on-project---crud-app)
+* [16. Integrating React Router with Redux](#16-integrating-react-router-with-redux)
+* [17. React-bootstrap components](#17-react-bootstrap-components)
+* [18. Hands on project - CRUD app](#18-hands-on-project---crud-app)
 
 ## 0. Setup:
 * We can use the official CLI ```create-react-app``` to start developing in React, without getting lost in ```webpack``` and ```babel``` tool configuration.
@@ -880,6 +881,27 @@ We can also use ```combineReducers()``` to combine lower level reducers, in orde
   store.subscribe(() => setStateToLocalStorage(store.getState()));
   ```
   This way we don't lose state even when the user refreshes the page.
+* The way with the least boilerblate to bind redux state and actions to props is like
+  ```jsx
+  import { connect } from 'react-redux'
+  import { increment, decrement, reset } from './actionCreators'
+
+  //Counter component
+  //const Counter = ...
+
+  const mapStateToProps = (state /*, ownProps*/) => {
+    {
+      counter: state.counter
+    }
+  }
+
+  const mapDispatchToProps = { increment, decrement, reset }
+
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Counter)
+  ```
 * In summary, there are 8 steps when initially setting up ```Redux```:
     1. Create action
     2. Create reducer
@@ -1025,9 +1047,97 @@ We can also use ```combineReducers()``` to combine lower level reducers, in orde
   
   export default connect(mapStateToProps)(WeatherInfo);
   ```
+## 16. Integrating React Router with Redux:
+* If we are using create-react-app, we won't need to configure a fallback url. But if we are serving index.html from express, we need a server-side route, like:
+  ```jsx
+  app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'))
+  })
+  ```
+* We can import ```BrowserRouter``` and ```Provider```, like
+  ```jsx
+  import { BrowserRouter as Router, Route } from 'react-router-dom'
+  import { Provider } from 'react-redux'
+  ```
+  and wrap our ```App``` with ```Provider``` and ```BowserRouter```, and define ```:filter``` on the route, like
+  ```jsx
+  import React from 'react'
+  import PropTypes from 'prop-types'
+  import { Provider } from 'react-redux'
+  import { BrowserRouter as Router, Route } from 'react-router-dom'
+  import App from './App'
 
-## 16. React-bootstrap components:
+  const Root = ({ store }) => (
+    <Provider store={store}>
+      <Router>
+        <Route path="/:filter?" component={App} />
+      </Router>
+    </Provider>
+  )
+
+  Root.propTypes = {
+    store: PropTypes.object.isRequired
+  }
+
+  export default Root
+  ```
+* Our startup ```index.js``` will be, like
+  ```jsx
+  import React from 'react'
+  import { render } from 'react-dom'
+  import { createStore } from 'redux'
+  import todoApp from './reducers'
+  import Root from './components/Root'
+
+  const store = createStore(todoApp)
+
+  render(<Root store={store} />, document.getElementById('root'))
+  ```
+* And our components can be, like
+  ```jsx
+  const App = ({ match: { params } }) => {
+    return (
+      <div>
+        <AddTodo />
+        <VisibleTodoList filter={params.filter || 'SHOW_ALL'} />
+        <Footer />
+      </div>
+    )
+  }
+  
+  const FilterLink = ({ filter, children }) => (
+    <NavLink
+      to={filter === 'SHOW_ALL' ? '/' : `/${filter}`}
+      activeStyle={{
+        textDecoration: 'none',
+        color: 'black'
+      }}
+    >
+      {children}
+    </NavLink>
+  )
+
+  const Footer = () => (
+    <p>
+      Show: <FilterLink filter={VisibilityFilters.SHOW_ALL}>All</FilterLink>
+      {', '}
+      <FilterLink filter={VisibilityFilters.SHOW_ACTIVE}>Active</FilterLink>
+      {', '}
+      <FilterLink filter={VisibilityFilters.SHOW_COMPLETED}>Completed</FilterLink>
+    </p>
+  )
+  ```
+  and the ```VisibleTodoList``` component can be connected to Redux state and Route filter, like
+  ```jsx
+  const mapStateToProps = (state, ownProps) => {
+    return {
+      todos: getVisibleTodos(state.todos, ownProps.filter) // previously was getVisibleTodos(state.todos, state.visibilityFilter)
+    }
+  }
+  ```
+
+## 17. React-bootstrap components:
 * Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without need for jQuery, refer to [here](https://react-bootstrap.github.io) for details and [here](https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121) for a quick tutorial (also shows usage of ```reactstrap```, an alternative library for using ```bootstrap``` with React)
 
-## 17. Hands on project - CRUD app:
+## 18. Hands on project - CRUD app:
 * I have created an app which demonstrates most of the concepts. This app allows the user to register, login, search, list, add, edit, delete authors and courses. It has a small backend running on node and express.js. You can find the source code inside this repo.
