@@ -631,7 +631,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * The ```Redux``` name comes from the combination of ```Reducer``` and ```Flux```, and it is an implementation of the ```Flux``` architecture with reducers.
 * A reducer is a function which gives part of this central app state to any component which is interested in this part of state. We can write a reducer which returns some static data, like
   ```jsx
-  //inside booksReducer.js
+  //inside reducers/booksReducer.js
   export default function() {
     return [
        { id: 1, title: "some title" },
@@ -646,7 +646,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * A reducer is responsible for managing changes to some small state, and it defines its branch (part or slice) of the larger app state object tree (considering each property of every object inside the app state as a branch or slice). A reducer does not need to manage the whole subtree, it can call other reducers responsible for the branches of the subtree, and use their results to create the new subtree to return. Note that, instead of doing this manually, you can use ```combineReducers()```, which will do this automatically for the combined reducers.
 * At the start of the app, all top level reducers are combined into the single root reducer, by using ```combineReducers()```, like
   ```jsx
-  //inside rootReducer.js
+  //inside reducers/rootReducer.js
   const rootReducer = combineReducers(
     {
       books: booksReducer,
@@ -665,7 +665,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   ```
 * Note that, the root reducer resulting from ```combineReducers()```, automatically calls each combined reducer. So the above example is the same as
   ```jsx
-  //inside rootReducer.js
+  //inside reducers/rootReducer.js
   export default function(state, action) {
     let books = booksReducer(state.books, action);
     let selectedBook = selectedBookReducer(state.selectedBook, action);
@@ -682,12 +682,12 @@ We can also use ```combineReducers()``` to combine lower level reducers, in orde
       const items = this.props.bookCollection.map(item => <li key={item.id}>{item.title}</li>);
       return <ul>{items}</ul>;
     }
-    
-    mapStateToProps(state) {
-      return {
-        bookCollection: state.books
-      };
-    }
+  }
+  
+  mapStateToProps(state) {
+    return {
+      bookCollection: state.books
+    };
   }
   
   export default connect(mapStateToProps)(BookList);
@@ -696,7 +696,7 @@ We can also use ```combineReducers()``` to combine lower level reducers, in orde
 * We can use computed functions inside ```mapStateToProps()``` to map computed state, like a filtered array, sorted array, array length, etc. This way, as long as the computed value doesn't change, our component does not re-render. We can use the ```Reselect``` library to define memoized computed functions (called selectors) that only re-compute when their parameters change, and bind props to these selectors ro increase performance and keep normalized state in the store. Refer to [here](https://github.com/reduxjs/reselect) for details.
 * Any event which needs to change part of the app state, creates an action which is an object with a string action type and various data members, like
   ```jsx
-  //inside selectBook.js
+  //inside actions/selectBook.js
   export function selectBook(book) {
     return { type: "SELECT_BOOK", book: book };
   }
@@ -711,45 +711,45 @@ We can also use ```combineReducers()``` to combine lower level reducers, in orde
       );
       return <ul>{items}</ul>;
     }
-
-    mapStateToProps(state) {
-      return {
-        bookCollection: state.books
-      };
-    }
-
-    mapDispatchToProps(dispatch) {
-      return bindActionCreators({selectBook: selectBook}, dispatch);
-    }
   }
-   
+  
+  mapStateToProps(state) {
+    return {
+      bookCollection: state.books
+    };
+  }
+
+  mapDispatchToProps(dispatch) {
+    return bindActionCreators({selectBook: selectBook}, dispatch);
+  }
+  
   export default connect(mapStateToProps, mapDispatchToProps)(BookList);
   ```
   Here, ```mapDispatchToProps()``` allows dispatching of selectBook action to all reducers, and also adds ```selectBook``` on the ```BooksList``` component ```props```, so that we can call it like ```this.props.selectBook(...)``` to create a ```"SELECT_BOOK"``` action. We can have multiple ```props``` to ```action``` mappings inside the first parameter to ```mapDispatchToProps()``` call. We also pass ```mapStateToProps``` and ```mapDispatchToProps``` as parameters to the ```connect()``` function call.
 * There are three different ways to use the ```mapDispatchToProps()``` function, first one is using ```bindActionCreators()``` as in the previous example given above. Second, we can use the long manual mapping, like
   ```jsx
-    mapDispatchToProps(dispatch) {
-      return {
-        selectBook: (item) => { dispatch(selectBook(item)); },
-	addBook: (item) => { dispatch(addBook(item)); },
-	deleteBook: (item) => { dispatch(deleteBook(item)); }
-      };
-    }
+  mapDispatchToProps(dispatch) {
+    return {
+      selectBook: (item) => { dispatch(selectBook(item)); },
+      addBook: (item) => { dispatch(addBook(item)); },
+      deleteBook: (item) => { dispatch(deleteBook(item)); }
+    };
+  }
   ```
   and third, the simplest way is return an object with the action creators as its fields, like
   ```jsx
-      mapDispatchToProps(dispatch) {
-      return {
-        selectBook,
-	addBook,
-	deleteBook
-      };
-    }
+  mapDispatchToProps(dispatch) {
+    return {
+      selectBook,
+      addBook,
+      deleteBook
+    };
+  }
   ```
 * We can still dispatch an action even without using the ```mapDispatchToProps()``` function, like ```this.props.dispatch(this.props.selectBook(item))```, but this is not recommended.
 * We can define the reducer which responds to this "SELECT_BOOK" action, like
   ```jsx
-  //inside selectedBookReducer.js
+  //inside reducers/selectedBookReducer.js
   export default function(state = null, action) {
     switch(action.type) {
       case "SELECT_BOOK":
@@ -762,7 +762,7 @@ We can also use ```combineReducers()``` to combine lower level reducers, in orde
   Here, the ```state``` parameter is not the whole central app state, instead it is the ```selectedBook``` part inside ```rootReducer```, which this reducer is responsible for, and it is the value that was previously returned by this reducer. Also, the initial parameter value ```state = null``` applies only to the initial first call where there is no previously set state and it comes as undefined. We can define the initial state value for ```selectedBook``` part this way.
 * In ```Redux```, the parts of the app state returned by reducers should be immutable (should not be mutated). So, inside a reducer we should not return a mutated version of the state, instead we should create a fresh new state and return that. If the state parameter of the reducer is an array or object, we need to create a new one with a new reference, and return that. Note that we do not need to deep clone the state parameter, meaning that we do not need to recreate the elements of the array or properties of the object, if the elements or properties did not change. We only need to recreate the state parameter array/object, and recreate its changed elements/properties. For example, in a todo app let's have a todos reducer, its state parameter is the todo items array, with todo objects as elements of the array. Inside the reducer, we can mark a todo item complete by creating a new todo items array, copying the unchanged todo items objects exactly (without creating new todo objects), and creating a new todo item object with the changed status (completed), like
   ```jsx
-  //inside todosReducer.js
+  //inside reducers/todosReducer.js
   export default function(state = [], action) {
     switch (action.type) {
       case ADD_TODO:
@@ -791,7 +791,7 @@ We can also use ```combineReducers()``` to combine lower level reducers, in orde
 * Reducers should be pure functions, meaning that their result value only depends on their inputs (function parameters), and they should not mutate their input parameters either. They should be deterministic and return the same result when called with the same parameters, so they should not generate random numbers or ids, or get the current date. They should also not have side-effects, like making a database or network api call, or print something to the screen, or log to the console. We should do the nondeterministic and side-effect operations in the action creators instead and pass the side-effects to the reducer inside its action parameter, like a clientside or serverside generated guid or timestamp, or fetched values over a network api (get, post, put, etc.), etc. Generic operations like logging, should be carried out inside ```Redux``` middleware functions, which intercept all the reducers.
 * We can define the reducer which responds to this "SELECT_BOOK" action, like
   ```jsx
-  //inside selectedBookReducer.js
+  //inside reducers/selectedBookReducer.js
   export default function(state = null, action) {
     switch(action.type) {
       case "SELECT_BOOK":
@@ -849,7 +849,7 @@ We can also use ```combineReducers()``` to combine lower level reducers, in orde
   ```
 * We can define operations to put state into and get state out of ```localStorage```, like
   ```jsx
-  //inside localStorage.js
+  //inside localStorageState.js
   export function getStateFromLocalStorage() {
     try {
       const str = localStorage.getItem("state");
@@ -895,20 +895,52 @@ We can also use ```combineReducers()``` to combine lower level reducers, in orde
     3. Connect component
     4. Dispatch action
     
-## 14. Calling an async api with Redux:
-* We can call an asynchronous api inside the component lifecycle methods and dispatch an action when the call finishes (the promise resolves and returns a result), but this is not the best way to do this.
-* Also, we should not call an api inside a reducer function, because reducer functions should be pure functions (the result should only depend on the function arguments, and there should be no side effects).
-* A better way of calling an asynchronous api is inside the actions, but then we cannot return the result, only the promise. For the reducers to work with an action that returns a promise, we need the ```redux-promise``` middleware. A middleware is a function that sits between actions and reducers, and can modify an action or even cancel it before it reaches the reducers.
-* We send the promise returned from the async api, such as ```axios.get(someURL)```, as the payload data in the action. ```redux-promise``` will just wait until the promise resolves and change the promise payload on the action and turn it into the result data coming from the promise, so that the reducers only see the result data, not the promise payload on their action parameter. We can code the action creator, like
+## 14. Calling an async api with Redux and redux-promise:
+* We should not call an api inside a reducer function, because reducer functions should be pure functions (the result should only depend on the function arguments, and there should be no side effects).
+* We can call an asynchronous api inside the component lifecycle methods and dispatch an action when the the promise resolves and returns a result, like
   ```jsx
-  //inside fetchWeather.js
+  //inside component
+    componentDidMount() {
+      axios.get(...someURL...)
+      .then(weather => this.props.dispatch(fetchWeather(this.props.city, weather)));
+  ```
+  and the action, like
+  ```jsx
+  //inside actions/fetchWeather.js
+  export function fetchWeather(city, weather) {
+    return { type: "FETCH_WEATHER", city: city, weather: weather };
+  }
+  ```
+* We can also chain promises and dispatch action in each chain, like
+  ```jsx
+  //inside actions/showNotificationWithTimeout.js
+  let nextNotificationId = 0
+  export function showNotificationWithTimeout(dispatch, text) {
+    const id = nextNotificationId++
+    dispatch(showNotification(id, text))
+
+    setTimeout(() => {
+      dispatch(hideNotification(id))
+    }, 5000)
+  }
+  ```
+  and dispatch it inside a component, like
+  ```jsx
+  // component.js
+  showNotificationWithTimeout(this.props.dispatch, 'You just logged in.')
+  ```
+  However, in order to call ```dispatch()```, any component needs to be a container, meaning it needs to be a connected component.
+* Another way of calling an asynchronous api, is calling it inside the actions, but then we cannot return the result, only the promise. For the reducers to work with an action that returns a promise, we need the ```redux-promise``` middleware. A middleware is a function that sits between actions and reducers, and can modify an action or even cancel it before it reaches the reducers. 
+* We can send the promise returned from the async api, such as ```axios.get(someURL)```, as the payload data in the action. ```redux-promise``` will just wait until the promise resolves and change the promise payload on the action and turn it into the result data coming from the promise, so that the reducers only see the result data, not the promise payload on their action parameter. We can code the action creator, like
+  ```jsx
+  //inside actions/fetchWeather.js
   export function fetchWeather(city) {
     return { type: "FETCH_WEATHER", weather: axios.get(...someURL...) };
   }
   ```
   and the reducer, like
   ```jsx
-  //inside fetchedWeatherReducer.js
+  //inside reducers/fetchedWeatherReducer.js
   export default function(state = null, action) {
     switch(action.type) {
       case "FETCH_WEATHER":
@@ -923,7 +955,7 @@ We can also use ```combineReducers()``` to combine lower level reducers, in orde
 * To chain actions which return promises, or to chain async calls inside an action, or to catch errors from an async api call in an action, we need to use the ```redux-thunk``` library.
 * With ```redux-thunk```, inside our action creator, we can return a fuction which takes ```dispatch``` and ```getState``` as parameters and returns an action. ```dispatch``` is the function which actually dispatches an action to all reducers. We can create the same action as in the previous example, but this time returning a function rather than a promise, like
   ```jsx
-  //inside fetchWeather.js
+  //inside actions/fetchWeather.js
   export function fetchWeather(city) {
     const promise = axios.get(...someURL...);
     return (dispatch) => {
@@ -933,7 +965,7 @@ We can also use ```combineReducers()``` to combine lower level reducers, in orde
   ```
 * To display a busy indicator and to display errors from an api call inside a component, we can make multiple dispatches, first with a "FETCH_WEATHER_BUSY", then on success a "FETCH_WEATHER_SUCCESS", and in case of errors a "FETCH_WEATHER_ERROR", and we can even cache fetched data, like
   ```jsx
-  //inside fetchWeather.js
+  //inside actions/fetchWeather.js
   export function fetchWeather(city) {
     const promise = axios.get(...someURL...);
     return function(dispatch, getState) {
@@ -981,14 +1013,14 @@ We can also use ```combineReducers()``` to combine lower level reducers, in orde
         <p>{this.props.weather.temperature}</p>
       );
     }
-
-    mapStateToProps(state) {
-      return {
-        weather: state.weather,
-        isBusy: state.isBusy,
-        error: state.error
-      };
-    }
+  }
+  
+  mapStateToProps(state) {
+    return {
+      weather: state.weather,
+      isBusy: state.isBusy,
+      error: state.error
+    };
   }
   
   export default connect(mapStateToProps)(WeatherInfo);
