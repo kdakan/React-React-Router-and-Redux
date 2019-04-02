@@ -26,6 +26,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * [12. State management with MobX](#12-state-management-with-mobx)
 * [13. State management with Redux](#13-state-management-with-redux)
 * [14. Calling an async api with Redux](#14-calling-an-async-api-with-redux)
+* [14. Calling an async api with Redux and redux-promise](#14-calling-an-async-api-with-redux-and-redux-promise)
 * [15. Chaining async calls with Redux Thunk](#15-chaining-async-calls-with-redux-thunk)
 * [16. Integrating React Router with Redux](#16-integrating-react-router-with-redux)
 * [17. React-bootstrap components](#17-react-bootstrap-components)
@@ -1202,4 +1203,4 @@ Refer to [here](https://github.com/reduxjs/reselect) for details.
 * Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without need for jQuery, refer to [here](https://react-bootstrap.github.io) for details and [here](https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121) for a quick tutorial (also shows usage of ```reactstrap```, an alternative library for using ```bootstrap``` with React)
 
 ## 18. Hands on project - CRUD app:
-* I have created an app which demonstrates most of the concepts. This app allows the user to register, login, search, list, add, edit, delete authors and courses. It has a small backend running on node and express.js. You can find the source code inside this repo.
+* I have created [here](https://github.com/kdakan/react-crud-app) an app which demonstrates most of the concepts. This app offers paginated and searchable lists, edit forms, client-side routing, and an api layer, with Bootstrap layout.
