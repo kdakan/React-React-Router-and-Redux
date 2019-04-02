@@ -25,7 +25,6 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * [11. State management](#11-state-management)
 * [12. State management with MobX](#12-state-management-with-mobx)
 * [13. State management with Redux](#13-state-management-with-redux)
-* [14. Calling an async api with Redux](#14-calling-an-async-api-with-redux)
 * [14. Calling an async api with Redux and redux-promise](#14-calling-an-async-api-with-redux-and-redux-promise)
 * [15. Chaining async calls with Redux Thunk](#15-chaining-async-calls-with-redux-thunk)
 * [16. Integrating React Router with Redux](#16-integrating-react-router-with-redux)
