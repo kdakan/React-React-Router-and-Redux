@@ -4,7 +4,7 @@
 # Tutorial on React, React Router, and Redux
 This is an extensive tutorial on React v.16, React Router v.4, and Redux. This can also serve as a mini-reference. This tutorial will take you from beginner level to intermediate/advanced level and covers enough breadth and depth to get you going with most of your projects. 
 
-In the final section, we will be building an app which demonstrates most of the concepts. This app allows the user to register, login, search, list, add, edit, delete authors and courses. It has a small backend running on node and express.js. You can find the source code inside this repo.
+In the final section [18. Hands on project - CRUD app](#18-hands-on-project---crud-app), we will be building an app which demonstrates most of the concepts. 
 
 Before beginning, make sure you have some knowledge of ES6. I also have a tutorial on ES6 [here](https://kdakan.github.io/ES6-Tutorial).
 
