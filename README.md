@@ -286,7 +286,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   5. ```componentDidUpdate(prevProps, prevState, snapshot)```: Here we can make AJAX requests and set state, but we should compare ```this.props``` fields to ```prevProps``` fields and set state only if they are different, else there will be an infinite loop.
 * When unmounting, ```componentWillUnmount()``` is invoked. Here we can unmount/destroy a jQuery plugin,  we should not set state here.
 * OBSOLETE!!! Note that ```componentWillMount()``` and ```componentWillReceieProps()``` methods are obsolete/unsafe and should not be used anymore.
-* To use async/await pattern to call an async api (async api meaning the api returns a ```Promise``` instead of data result), we can use ```async```   before ```componentDidMount()``` and use ```await``` before the api call, like 
+* To use async/await pattern to call an async API (async API meaning the API returns a ```Promise``` instead of data result), we can use ```async```   before ```componentDidMount()``` and use ```await``` before the API call, like 
   ```jsx
   async componentDidMount() { 
     let data = await api.fetchData(); 
@@ -306,7 +306,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
     clearInterval(this.state.intervalId)
   }
   ```
-* To catch all kind of errors inside the app, then display and log them using an api, we can wrap the root ```App``` component with another component (conventionally named ```ErrorBoundary```), we can use its ```componentDidCatch(error, info)``` and ```getDerivedStateFromError(error)``` lifecycle methods, like
+* To catch all kind of errors inside the app, then display and log them using an API, we can wrap the root ```App``` component with another component (conventionally named ```ErrorBoundary```), we can use its ```componentDidCatch(error, info)``` and ```getDerivedStateFromError(error)``` lifecycle methods, like
   ```jsx
   class ErrorBoundary extends React.Component {
     constructor(props) {
@@ -596,10 +596,10 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   }
   ```
 
-## 10. Context api:
+## 10. Context API:
 * Global state (language, user info, theme, etc.) is usually stored in the root component state properties.
 * Normally, to pass data from a top-level component to a bottom level component, we should pass it through props of all the components in between.
-* Using Context api, top-level components can pass data to bottom level components without using the bottom level components' props.
+* Using Context API, top-level components can pass data to bottom level components without using the bottom level components' props.
 * To share global state, first we create a context with a default value like const ```LanguageContext = React.createContext('en');``` in its own module file and export it like ```export default LanguageContext;```
 * Then, we import it in any component that provides its value or consumes its value, refer to [here](https://reactjs.org/docs/context.html) for examples.
 * Context can hold any javascript object, not only primitives.
@@ -674,7 +674,7 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
   }
   ```
 We can also use ```combineReducers()``` to combine lower level reducers, in order to decompose a large deep app state into more maintainable smaller units.
-* If we want to load some persisted state at the startup (from a database, ```localStorage```, api, etc.), we can load initial data into a variable like ```persistedState```, and call ```createStore()``` like ```createStore(rootReducer, persistedState)```, so  that parts of state coming from ```persistedState``` will override the state coming from ```rootReducer```
+* If we want to load some persisted state at the startup (from a database, ```localStorage```, API, etc.), we can load initial data into a variable like ```persistedState```, and call ```createStore()``` like ```createStore(rootReducer, persistedState)```, so  that parts of state coming from ```persistedState``` will override the state coming from ```rootReducer```
 * The ```Redux``` store has ```getState()``` (gets the store state), ```subscribe()``` (subscribes to state changes), and ```dispatch()``` (dispatches an action to all reducers) methods which implement a pub/sub pattern and action dispatching. The root ```<App>``` component subscribes to the store to re-render when any part of the state in the store changes (the store calls ```ReactDOM.render()``` each time state changes inside the store). However, we don't use these methods inside other components, instead, we use functions which come with ```react-redux``` to bind component properties to store state and to dispatch actions using action creators. We typically place all reducers inside a ```reducers``` folder, and all actions into an ```actions``` folder in the project structure.
 * Inside the container, the props of the container are bound to a reducer (part of the central app state) by declaring a ```mapStateToProps()``` function, and calling ```connect()``` function, like
   ```jsx
@@ -835,7 +835,7 @@ Refer to [here](https://github.com/reduxjs/reselect) for details.
     }
   }
   ```
-* Reducers should be pure functions, meaning that their result value only depends on their inputs (function parameters), and they should not mutate their input parameters either. They should be deterministic and return the same result when called with the same parameters, so they should not generate random numbers or ids, or get the current date. They should also not have side-effects, like making a database or network api call, or print something to the screen, or log to the console. We should do the nondeterministic and side-effect operations in the action creators instead and pass the side-effects to the reducer inside its action parameter, like a client-side or server-side generated guid or timestamp, or fetched values over a network api (get, post, put, etc.), etc. Generic operations like logging, should be carried out inside ```Redux``` middleware functions, which intercept all the reducers.
+* Reducers should be pure functions, meaning that their result value only depends on their inputs (function parameters), and they should not mutate their input parameters either. They should be deterministic and return the same result when called with the same parameters, so they should not generate random numbers or ids, or get the current date. They should also not have side-effects, like making a database or network API call, or print something to the screen, or log to the console. We should do the nondeterministic and side-effect operations in the action creators instead and pass the side-effects to the reducer inside its action parameter, like a client-side or server-side generated guid or timestamp, or fetched values over a network API (get, post, put, etc.), etc. Generic operations like logging, should be carried out inside ```Redux``` middleware functions, which intercept all the reducers.
 * The reason behind reducers being pure functions is because, the ```connect()``` mechanism does a shallow comparison, it checks the reference of the state slice returned from the reducer to decide if a re-render is necessary. If the state slice is mutated (its reference is same yet its content is changed), Redux will not notice the change and will not re-render the component. The reason for not mutating inner parts of the state returned by reducers, is because if we mutate it, we will lose the history of the state changes and lose the ability to track and debug state.
 * When we need to change an inner nested member of the slice state, we need to clone both that member and all its parents, else Redux will not notice the change and re-render the connected component. For example, to change the value of state.a1.b1 inside a reducer, we need to clone and change b1, then clone a1, and clone the state parameter. We don't need to clone the other members of the state, like state.a2 or state.a2.b1, so these can keep the same references as before. Note that it is not recommended to store deeply referenced objects inside state. We can clone members and merge them with the spread operator ```...``` and object literal syntax ```{``` ```}```, like
   ```jsx
@@ -979,9 +979,9 @@ Refer to [here](https://github.com/reduxjs/reselect) for details.
     3. Connect component
     4. Dispatch action
     
-## 14. Calling an async api with Redux and redux-promise:
-* We should not call an api inside a reducer function, because reducer functions should be pure functions (the result should only depend on the function arguments, and there should be no side effects).
-* We can call an asynchronous api inside the component lifecycle methods and dispatch an action when the promise resolves and returns a result, like
+## 14. Calling an async API with Redux and redux-promise:
+* We should not call an API inside a reducer function, because reducer functions should be pure functions (the result should only depend on the function arguments, and there should be no side effects).
+* We can call an asynchronous API inside the component lifecycle methods and dispatch an action when the promise resolves and returns a result, like
   ```jsx
   //inside component
     componentDidMount() {
@@ -1014,8 +1014,8 @@ Refer to [here](https://github.com/reduxjs/reselect) for details.
   showNotificationWithTimeout(this.props.dispatch, 'You just logged in.')
   ```
   However, in order to call ```dispatch()```, any component needs to be a container, meaning it needs to be a connected component.
-* Another way of calling an asynchronous api, is calling it inside the actions, but then we cannot return the result, only the promise. For the reducers to work with an action that returns a promise, we need the ```redux-promise``` middleware. A middleware is a function that sits between actions and reducers, and can modify an action or even cancel it before it reaches the reducers. 
-* We can send the promise returned from the async api, such as ```axios.get(someURL)```, as the payload data in the action. ```redux-promise``` will just wait until the promise resolves and change the promise payload on the action and turn it into the result data coming from the promise, so that the reducers only see the result data, not the promise payload on their action parameter. We can code the action creator, like
+* Another way of calling an asynchronous API, is calling it inside the actions, but then we cannot return the result, only the promise. For the reducers to work with an action that returns a promise, we need the ```redux-promise``` middleware. A middleware is a function that sits between actions and reducers, and can modify an action or even cancel it before it reaches the reducers. 
+* We can send the promise returned from the async API, such as ```axios.get(someURL)```, as the payload data in the action. ```redux-promise``` will just wait until the promise resolves and change the promise payload on the action and turn it into the result data coming from the promise, so that the reducers only see the result data, not the promise payload on their action parameter. We can code the action creator, like
   ```jsx
   //inside actions/fetchWeather.js
   export function fetchWeather(city) {
@@ -1036,7 +1036,7 @@ Refer to [here](https://github.com/reduxjs/reselect) for details.
   ```
 
 ## 15. Chaining async calls with Redux Thunk
-* To chain actions which return promises, or to chain async calls inside an action, or to catch errors from an async api call in an action, we need to use the ```redux-thunk``` library.
+* To chain actions which return promises, or to chain async calls inside an action, or to catch errors from an async API call in an action, we need to use the ```redux-thunk``` library.
 * With ```redux-thunk```, inside our action creator, we can return a function which takes ```dispatch``` and ```getState``` as parameters and returns an action. ```dispatch``` is the function which actually dispatches an action to all reducers. We can create the same action as in the previous example, but this time returning a function rather than a promise, like
   ```jsx
   //inside actions/fetchWeather.js
@@ -1047,7 +1047,7 @@ Refer to [here](https://github.com/reduxjs/reselect) for details.
     }
   }
   ```
-* To display a busy indicator and to display errors from an api call inside a component, we can make multiple dispatches, first with a "FETCH_WEATHER_BUSY", then on success a "FETCH_WEATHER_SUCCESS", and in case of errors a "FETCH_WEATHER_ERROR", and we can even cache fetched data, like
+* To display a busy indicator and to display errors from an API call inside a component, we can make multiple dispatches, first with a "FETCH_WEATHER_BUSY", then on success a "FETCH_WEATHER_SUCCESS", and in case of errors a "FETCH_WEATHER_ERROR", and we can even cache fetched data, like
   ```jsx
   //inside actions/fetchWeather.js
   export function fetchWeather(city) {
@@ -1202,4 +1202,4 @@ Refer to [here](https://github.com/reduxjs/reselect) for details.
 * Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without the need for jQuery, refer to [here](https://react-bootstrap.github.io) for details and [here](https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121) for a quick tutorial (also shows usage of ```reactstrap```, an alternative library for using ```bootstrap``` with React)
 
 ## 18. Hands-on project - CRUD app:
-* I have created [here](https://github.com/kdakan/react-redux-crud-app) an app which demonstrates most of the concepts, using Redux. This app offers paginated and searchable lists, edit forms, client-side routing, Redux actions and reducers, and an api layer, with Bootstrap components like date picker and notifications. There is another version of the same app without Redux [here](https://github.com/kdakan/react-crud-app).
+* I have created [here](https://github.com/kdakan/react-redux-crud-app) an app which demonstrates most of the concepts, using Redux. This app offers paginated and searchable lists, edit forms, client-side routing, Redux actions and reducers, and an API layer, with Bootstrap components like date picker and notifications. There is another version of the same app without Redux [here](https://github.com/kdakan/react-crud-app).
