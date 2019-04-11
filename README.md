@@ -2,17 +2,16 @@
 [https://kdakan.github.io/Tutorial-On-React-React-Router-and-Redux/](https://kdakan.github.io/Tutorial-On-React-React-Router-and-Redux/)
 
 # Tutorial on React, React Router, and Redux
-This is an extensive tutorial on React v.16, React Router v.4, and Redux. This can also serve as a mini-reference. This tutorial will take you from beginner level to intermediate/advanced level and covers enough breadth and depth to get you going with most of your projects. 
+This is an extensive tutorial on using React v.16, React Router v.4, and Redux. This tutorial will take you from the beginner level to intermediate/advanced level and covers enough information with examples to get you going with most of your projects. 
 
-In the final section [18. Hands-on project - CRUD app](#18-hands-on-project---crud-app), we will be building an app which demonstrates most of the concepts. 
+In the final section [18. Hands-on project - CRUD app](#18-hands-on-project---crud-app), we will be building an app which demonstrates the concepts. 
 
-Before beginning, make sure you have some knowledge of ES6. I also have a tutorial on ES6 [here](https://kdakan.github.io/ES6-Tutorial).
+Before beginning, make sure you have some knowledge of ES6. I cover ES6 in my tutorial [here](https://kdakan.github.io/ES6-Tutorial).
 
-Unlike Angular, React only handles the view part of the MV* architecture. There is no controller, service, or dependency injection. Programmers mainly utilize components with props and local (temporary) state, and use a global state manager like ```Redux``` or ```Mobx``` to simplify sharing state between components across the app.
+Unlike Angular, React only handles the view part of the MV* architecture. There is no controller, service, or dependency injection. Programmers mainly utilize React components which have props and local (temporary) state, and use a global state manager like ```Redux``` to simplify sharing state between components across the app.
 
 ## Table of contents
-* [ 0. Setup](#0-setup)
-* [ 1. Creating and running an app](#1-creating-and-running-an-app)
+* [ 1. Setup, creating and running an app](#1-setup-creating-and-running-an-app)
 * [ 2. Components](#2-components)
 * [ 3. Immutable objects and arrays](#3-immutable-objects-and-arrays)
 * [ 4. Importing components, CSS, and images](#4-importing-components-css-and-images)
@@ -23,15 +22,14 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * [ 9. Routing](#9-routing)
 * [10. Context API](#10-context-api)
 * [11. State management](#11-state-management)
-* [12. State management with MobX](#12-state-management-with-mobx)
-* [13. State management with Redux](#13-state-management-with-redux)
-* [14. Calling an async API with Redux and redux-promise](#14-calling-an-async-api-with-redux-and-redux-promise)
-* [15. Chaining async calls with Redux Thunk](#15-chaining-async-calls-with-redux-thunk)
-* [16. Integrating React Router with Redux](#16-integrating-react-router-with-redux)
-* [17. React-bootstrap components](#17-react-bootstrap-components)
-* [18. Hands-on project - CRUD app](#18-hands-on-project---crud-app)
+* [12. State management with Redux](#12-state-management-with-redux)
+* [13. Calling an async API with Redux and redux-promise](#13-calling-an-async-api-with-redux-and-redux-promise)
+* [14. Chaining async calls with Redux Thunk](#14-chaining-async-calls-with-redux-thunk)
+* [15. Integrating React Router with Redux](#15-integrating-react-router-with-redux)
+* [16. React-bootstrap components](#16-react-bootstrap-components)
+* [17. Hands-on project - CRUD app](#17-hands-on-project---crud-app)
 
-## 0. Setup:
+## 1. Setup, creating and running an app:
 * We can use the official CLI ```create-react-app``` to start developing in React, without getting lost in ```webpack``` and ```babel``` tool configuration.
 * ```npm install -g npm@latest```
 * ```cd c:\repos```
@@ -44,8 +42,6 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * ```npm install --save redux redux-thunk``` (if using ```redux``` for state management)
 * In ```VSCode``` editor, install ```Debugger for Chrome``` extension, and change the port to 3000 inside launch.json file, to debug inside the editor. Without this extension, you can still debug inside the ```Chrome``` browser.
 * In ```Chrome```, install ```React Developer Tools``` extension, to see React component hierarchy, props, and state inside Chrome F12 React tab.
-
-## 1. Creating and running an app:
 * ```npm start``` (starts the app in development mode, with hot reload, so that you can see the changes without restarting the app)
 * ```npm test``` (runs ```jest``` tests in the app)
 * ```npm build``` (builds the app for xcopy deployment to production)
@@ -603,28 +599,19 @@ Unlike Angular, React only handles the view part of the MV* architecture. There 
 * To share global state, first we create a context with a default value like const ```LanguageContext = React.createContext('en');``` in its own module file and export it like ```export default LanguageContext;```
 * Then, we import it in any component that provides its value or consumes its value, refer to [here](https://reactjs.org/docs/context.html) for examples.
 * Context can hold any javascript object, not only primitives.
-* It is advisable to use a state management library like ```Redux``` or ```MobX``` instead of the lower level Context api.
+* It is advisable to use a state management library like ```Redux``` instead of the lower level Context api.
 
 ## 11. State management:
 * When starting a new app or a new component tree, it is easier to start without thinking about any state and interaction, and just breaking down the target HTML output we want, into dumb visual components with no state or DOM events. The root component of the app or the component tree can be fed through its props with static data for prototyping the visuals.
-* Next, we should identify the changing parts of the data and turn these parts into state. How we implement state is different depending on whether we are using a state management library or not. In any case, we do not put derived values into their own state, instead, we use functions, getters, or in case of ```MobX```, ```@computed``` functions to compute derived state from true state.
+* Next, we should identify the changing parts of the data and turn these parts into state. How we implement state is different depending on whether we are using a state management library or not. In any case, we do not put derived values into their own state, instead, we use functions or getters to compute derived state from true state.
 * If we are not using a state management library (meaning that if our app is very small), then we need to find the components which will host this state.
 * If we are using a state management library (meaning that if our app is not very small), then we need to place this state into a store or multiple stores and pass the store to the component via its props, and fire actions on DOM events without using setState()
-* Handling state with ```setState()``` inside an individual component is simple, however, when there is a component that depends on another component's state, things get complicated. Without using a state management library like ```Redux``` or ```MobX```, a common way to share state between components is called lifting the state up to a common ancestor component. Here we put the state changing code on the common ancestor component, and share the code (callback function) and shared state down the tree to the other components through their props. Inside the child components, we bind to this shared state passed on props, and call the callback function passed on props to change this state and trigger other components which depend on this state. As the app grows larger, this way of sharing state leads to complex and unmaintainable code and it is hard to find dependent components inside the codebase.
+* Handling state with ```setState()``` inside an individual component is simple, however, when there is a component that depends on another component's state, things get complicated. Without using a state management library like ```Redux```, a common way to share state between components is called lifting the state up to a common ancestor component. Here we put the state changing code on the common ancestor component, and share the code (callback function) and shared state down the tree to the other components through their props. Inside the child components, we bind to this shared state passed on props, and call the callback function passed on props to change this state and trigger other components which depend on this state. As the app grows larger, this way of sharing state leads to complex and unmaintainable code and it is hard to find dependent components inside the codebase.
 
-## 12. State management with MobX:
-* ```MobX``` library offers a simple, object-oriented way to manage state, using observables, observers, and optional actions.
-* With ```MobX```, we do not initialize the component's state property, instead, we mark the state variable with the ```@observable``` annotation.
-* Inside an event handler, we do not use ```setState()``` to change state, instead, we change it like changing a regular javascript primitive value, object or array. The observable variables should be inside an object, like a component or store object, because they are implemented auto-magically internally with property getters and setters. We also mark the component or components which uses/depends on this state variable with the ```@observer``` annotation.
-* We don't have to place the state variables inside a component, we can put it inside a store object and we can structure the code anyway we want.
-* We can also use computed functions which change depending on an observable state variable (like fullname depending on firstname and lastname variables), and mark it with the ```@computed``` annotation.
-* Refer to [here](https://mobx.js.org/getting-started.html) for a quick tutorial on ```MobX```
-* Refer to [here](https://mobx.js.org/best/store.html) for best practices on structuring stores (like a single UI store and multiple domain stores)
-
-## 13. State management with Redux:
+## 12. State management with Redux:
 
 * ```Redux``` library offers an advanced, functional way to predictively manage state, using reducers and actions. It is the most popular state management library among React developers.
-* With ```Redux```, we need to write more verbose code than we were doing with ```MobX```, because there is less magic but more trackable state interactions.
+* With ```Redux```, we need to write some verbose code to allow more trackable state interactions.
 * With ```Redux```, the app state is kept in a single store as a tree of keys and data parts corresponding to these keys. We do not directly manipulate app state inside the components.
 * Inside the component DOM events and lifecycle methods, we create (fire/dispatch) actions which describe what happened. An action is a serializable object with a string ```type``` field and zero or more data fields (data fields cannot be a ```function``` or ```Promise``` because it needs to be serializable). These actions are then processed by reducer functions, which return the new version of the corresponding state part, which then replaces that part of the app state inside the store.
 * State of an app is managed in a central store, and is created from and fed by the combined root reducer, which is a combination of all the reducers in the app. Components can bind to parts of this app state by connecting to reducers responsible for that part of the app state, and can change parts of this app state by creating actions, which are dispatched to (caught up by) reducers which again return the changed state.
@@ -979,7 +966,7 @@ Refer to [here](https://github.com/reduxjs/reselect) for details.
     3. Connect component
     4. Dispatch action
     
-## 14. Calling an async API with Redux and redux-promise:
+## 13. Calling an async API with Redux and redux-promise:
 * We should not call an API inside a reducer function, because reducer functions should be pure functions (the result should only depend on the function arguments, and there should be no side effects).
 * We can call an asynchronous API inside the component lifecycle methods and dispatch an action when the promise resolves and returns a result, like
   ```jsx
@@ -1035,7 +1022,7 @@ Refer to [here](https://github.com/reduxjs/reselect) for details.
   }
   ```
 
-## 15. Chaining async calls with Redux Thunk
+## 14. Chaining async calls with Redux Thunk
 * To chain actions which return promises, or to chain async calls inside an action, or to catch errors from an async API call in an action, we need to use the ```redux-thunk``` library.
 * With ```redux-thunk```, inside our action creator, we can return a function which takes ```dispatch``` and ```getState``` as parameters and returns an action. ```dispatch``` is the function which actually dispatches an action to all reducers. We can create the same action as in the previous example, but this time returning a function rather than a promise, like
   ```jsx
@@ -1109,7 +1096,7 @@ Refer to [here](https://github.com/reduxjs/reselect) for details.
   
   export default connect(mapStateToProps)(WeatherInfo);
   ```
-## 16. Integrating React Router with Redux:
+## 15. Integrating React Router with Redux:
 * If we are using create-react-app, we won't need to configure a fallback url. But if we are serving index.html from express, we need a server-side route, like:
   ```jsx
   app.get('/*', (req, res) => {
@@ -1198,8 +1185,8 @@ Refer to [here](https://github.com/reduxjs/reselect) for details.
   }
   ```
 
-## 17. React-bootstrap components:
+## 16. React-bootstrap components:
 * Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without the need for jQuery, refer to [here](https://react-bootstrap.github.io) for details and [here](https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121) for a quick tutorial (also shows usage of ```reactstrap```, an alternative library for using ```bootstrap``` with React)
 
-## 18. Hands-on project - CRUD app:
+## 17. Hands-on project - CRUD app:
 * I have created [here](https://github.com/kdakan/react-redux-crud-app) an app which demonstrates most of the concepts, using Redux. This app offers paginated and searchable lists, edit forms, client-side routing, Redux actions and reducers, and an API layer, with Bootstrap components like date picker and notifications. There is another version of the same app without Redux [here](https://github.com/kdakan/react-crud-app).
