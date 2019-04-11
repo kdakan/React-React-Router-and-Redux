@@ -1187,6 +1187,7 @@ Refer to [here](https://github.com/reduxjs/reselect) for details.
 
 ## 16. React-bootstrap components:
 * Bootstrap components originally require jQuery, but ```react-bootstrap``` offers these as React components without the need for jQuery, refer to [here](https://react-bootstrap.github.io) for details and [here](https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121) for a quick tutorial (also shows usage of ```reactstrap```, an alternative library for using ```bootstrap``` with React)
+* Note that usage of a large ui component library is not recommended, because we won't need 99% of the components included and it will increase our bundle size for no substantial benefit. We can find individual components that we need, or build our own components, instead of including a large ui component library in our project dependencies.
 
 ## 17. Hands-on project - CRUD app:
 * I have created [here](https://github.com/kdakan/react-redux-crud-app) an app which demonstrates most of the concepts, using Redux. This app offers paginated and searchable lists, edit forms, client-side routing, Redux actions and reducers, and an API layer, with Bootstrap components like date picker and notifications. There is another version of the same app without Redux [here](https://github.com/kdakan/react-crud-app).
