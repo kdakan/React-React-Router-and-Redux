@@ -1,5 +1,5 @@
 
-[https://kdakan.github.io/React-React-Router-and-Redux/](https://kdakan.github.io/Tutorial-On-React-React-Router-and-Redux/)
+[https://kdakan.github.io/React-React-Router-and-Redux/](https://kdakan.github.io/React-React-Router-and-Redux/)
 
 # React, React Router, and Redux
 This is an extensive tutorial on using React v.16, React Router v.4, and Redux. This tutorial will take you from the beginner level to intermediate/advanced level and covers enough information with examples to get you going with most of your projects. 
