@@ -1,7 +1,7 @@
 
-[https://kdakan.github.io/Tutorial-On-React-React-Router-and-Redux/](https://kdakan.github.io/Tutorial-On-React-React-Router-and-Redux/)
+[https://kdakan.github.io/React-React-Router-and-Redux/](https://kdakan.github.io/Tutorial-On-React-React-Router-and-Redux/)
 
-# Tutorial on React, React Router, and Redux
+# React, React Router, and Redux
 This is an extensive tutorial on using React v.16, React Router v.4, and Redux. This tutorial will take you from the beginner level to intermediate/advanced level and covers enough information with examples to get you going with most of your projects. 
 
 In the final section [17. Hands-on project - CRUD app](#18-hands-on-project---crud-app), we will be building an app which demonstrates the concepts. 
